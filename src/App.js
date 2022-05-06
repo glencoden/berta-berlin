@@ -1,25 +1,24 @@
-import logo from './logo.svg';
 import './App.css';
+import { useEffect } from 'react';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    useEffect(() => {
+        console.log(
+            '%cglencoden ❤️ version 0.0.1',
+            `font-size: 1rem;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0.5rem;
+            color: white;
+            background:linear-gradient(#E66465, #9198E5);`
+        );
+    }, []);
+
+    return (
+        <div className="App">
+            glen coden - berta berlin
+        </div>
+    );
 }
 
 export default App;
