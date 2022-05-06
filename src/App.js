@@ -1,4 +1,3 @@
-import './App.css';
 import { useEffect } from 'react';
 
 function App() {
@@ -15,7 +14,7 @@ function App() {
     }, []);
 
     return (
-        <div className="App">
+        <div className="text-3xl font-bold text-center py-12">
             glen coden - berta berlin
         </div>
     );
