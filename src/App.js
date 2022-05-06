@@ -11,6 +11,12 @@ function App() {
             color: white;
             background:linear-gradient(#E66465, #9198E5);`
         );
+
+        // fetch('https://www.googleapis.com/youtube/v3/videos?id=7lCDEYXw3mM&key=KEY&part=snippet,contentDetails,statistics,status')
+        //     .then(response => {
+        //         response.json()
+        //             .then(result => console.log(result));
+        //     });
     }, []);
 
     return (
