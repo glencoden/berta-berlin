@@ -1,27 +1,120 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { requestService } from './services/requestService';
+
+let MOUNTED = false;
+
+let player = null;
+
+function makePlayer(id) {
+    if (player) {
+        return Promise.resolve(player);
+    }
+    if (!window.YT) {
+        return new Promise(resolve => {
+            setTimeout(() => resolve(makePlayer(id)), 1000);
+        });
+    }
+
+    player = new window.YT.Player('player', {
+        height: '360',
+        width: '640',
+        videoId: id,
+        playerVars: { autoplay: 1, controls: 0 },
+        events: {
+            'onReady': onPlayerReady,
+            'onStateChange': onPlayerStateChange,
+        },
+    });
+
+    // 4. The API will call this function when the video player is ready.
+    function onPlayerReady(event) {
+        // console.log('event.target', event.target)
+        // setTimeout(player.playVideo, 3000)
+    }
+
+    // 5. The API calls this function when the player's state changes.
+    //    The function indicates that when playing a video (state=1),
+    //    the player should play for six seconds and then stop.
+    let done = false;
+
+    function onPlayerStateChange(event) {
+        if (event.data == window.YT.PlayerState.PLAYING && !done) {
+            // setTimeout(stopVideo, 6000);
+            // setTimeout(() => console.log(player.getOptions()), 8000);
+            done = true;
+        }
+    }
+
+    // function stopVideo() {
+    //     player.stopVideo();
+    // }
+
+    return Promise.resolve(player);
+}
 
 function App() {
-    useEffect(() => {
-        console.log(
-            '%cglencoden ❤️ version 0.0.1',
-            `font-size: 1rem;
-            padding: 1rem;
-            margin: 1rem 0;
-            border-radius: 0.5rem;
-            color: white;
-            background:linear-gradient(#E66465, #9198E5);`
-        );
+    const [ videoId, setVideoId ] = useState('');
 
-        // fetch('https://www.googleapis.com/youtube/v3/videos?id=7lCDEYXw3mM&key=KEY&part=snippet,contentDetails,statistics,status')
-        //     .then(response => {
-        //         response.json()
-        //             .then(result => console.log(result));
-        //     });
+    useEffect(() => {
+        if (MOUNTED) {
+            return;
+        }
+        MOUNTED = true;
+
+        // requestService.getAll().then(result => {
+        //     const id = result.items[0].id.videoId;
+        //     setVideoId(id);
+        // });
+
+        // requestService.getVideo('oHrP7GHheks').then(res => console.log(JSON.stringify(res, null, 4)));
+
+        // requestService.getPlaylists().then(result => console.log(result))
+        setVideoId('oHrP7GHheks');
     }, []);
 
+    useEffect(() => {
+        if (!videoId) {
+            return;
+        }
+        const tag = document.createElement('script');
+        tag.src = 'https://www.youtube.com/iframe_api';
+        document.body.appendChild(tag);
+
+        makePlayer(videoId);
+    }, [ videoId ]);
+
+    const onPlay = () => {
+        if (player === null) {
+            console.log('no player')
+            return
+        }
+        console.log('glen was here', player)
+        player.playVideo()
+    }
+
     return (
-        <div className="text-3xl font-bold text-center py-12">
-            glen coden - berta berlin
+        <div>
+            <div className="text-3xl font-bold text-center py-12">
+                glen coden - berta berlin
+            </div>
+
+            <button style={{ width: '100px', height: '50px', backgroundColor: 'lime' }} type="button" onClick={onPlay} />
+
+            {/*<iframe*/}
+            {/*    src={`https://www.youtube.com/embed/${videoId}`}*/}
+            {/*    frameBorder="0"*/}
+            {/*    allow="autoplay; encrypted-media"*/}
+            {/*    allowFullScreen*/}
+            {/*    title="video"*/}
+            {/*/>*/}
+
+            <div id="player"/>
+
+            <iframe width="640" height="360"
+                    src="http://www.youtube.com/embed/videoseries?list=PL5E56nME5FEWLqVOK-vo40vViHTIBc3vn"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe>
         </div>
     );
 }

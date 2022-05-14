@@ -1,0 +1,101 @@
+{
+    "kind": "youtube#videoListResponse",
+    "etag": "fbDMCUolC6t2uGLOAoosRH-arzk",
+    "items": [
+        {
+            "kind": "youtube#video",
+            "etag": "bOTREn5rsfwttt4OV8GKKr0tWiI",
+            "id": "oHrP7GHheks",
+            "snippet": {
+                "publishedAt": "2021-07-27T09:00:32Z",
+                "channelId": "UCz74WCGrXmY3On0l96NNaVA",
+                "title": "Triorität - live @ Club Gretchen | LIVING IN A BOX",
+                "description": "Triorität - live @ Club Gretchen | 2021\n\nMoody, crafty jams along the lines of dancefloor jazz.\n\n🔔 Subscribe to berta.berlin & hit the bell to get notified about new performances: https://bit.ly/subscribe_berta_berlin \n\nTracklist\n00:00 Death Pacito\n07:35 Chromosong\n14:47 Inelegant Peeing \n\nPerformer\nAlexander Hoffmann - drums\nGerrit Ebeling - keys, synth\nGrégoire Pignède - bass\n\nMore about Triorität\n▶ On berta.berlin: https://www.berta.berlin/trioritat \n▶ On Facebook: https://www.facebook.com/trioritaet\n▶ On Instagram: https://www.instagram.com/trioritaet\n▶ On Spotify: https://open.spotify.com/artist/4Q9lS5h0MBIJGE5SqXoj2C\n\nCredits\nDate: 21.04.2021\nLocation: Club Gretchen\nPromoter: berta.berlin\nVideo: Beat Halberschmidt\nLight: Aljoscha Kiss\nMix & Mastering: Roland “Roy” Knauf\nRecording: Goh Nakada\n\nLIVING IN A BOX is a series by Club Gretchen & berta.berlin.\n\nFollow berta.berlin\n▶ On Website: https://berta.berlin \n▶ On Facebook: https://www.facebook.com/bertaberlinofficial \n▶ On Instagram: https://www.instagram.com/bertaberlinofficial \n\nberta.berlin is a music platform that makes unique live performances accessible. We believe that great diverse musical content has the power to make each life richer and happier, and our society stronger and more tolerant. No matter what genre or discipline we are looking for meaning, blood, sweat and tears. All berta.berlin shows focus 100% on music and capture an authentic live performance of the artists.\n\n#bertaberlin​ #Triorität​ #LivingInABox",
+                "thumbnails": {
+                    "default": {
+                        "url": "https://i.ytimg.com/vi/oHrP7GHheks/default.jpg",
+                        "width": 120,
+                        "height": 90
+                    },
+                    "medium": {
+                        "url": "https://i.ytimg.com/vi/oHrP7GHheks/mqdefault.jpg",
+                        "width": 320,
+                        "height": 180
+                    },
+                    "high": {
+                        "url": "https://i.ytimg.com/vi/oHrP7GHheks/hqdefault.jpg",
+                        "width": 480,
+                        "height": 360
+                    }
+                },
+                "channelTitle": "berta.berlin",
+                "tags": [
+                    "live",
+                    "live set",
+                    "berta berlin",
+                    "bertaberlin",
+                    "berta",
+                    "berlin",
+                    "christian lillinger",
+                    "lillinger",
+                    "noah fürbringer",
+                    "westergaard",
+                    "cäthe",
+                    "derya yildirim",
+                    "ctm festival",
+                    "footprint project",
+                    "modular synth",
+                    "experimental jazz",
+                    "ecm",
+                    "jib",
+                    "berlin jazz",
+                    "improvised jazz",
+                    "live music stream",
+                    "pop music",
+                    "indie rock",
+                    "in concert",
+                    "live performance",
+                    "world music",
+                    "experimental music",
+                    "hip hop",
+                    "indie",
+                    "living in a box",
+                    "live in berlin",
+                    "club gretchen",
+                    "triorität",
+                    "gerrit ebeling",
+                    "gregoire pignede",
+                    "alexander hoffmann"
+                ],
+                "categoryId": "10",
+                "liveBroadcastContent": "none",
+                "localized": {
+                    "title": "Triorität - live @ Club Gretchen | LIVING IN A BOX",
+                    "description": "Triorität - live @ Club Gretchen | 2021\n\nMoody, crafty jams along the lines of dancefloor jazz.\n\n🔔 Subscribe to berta.berlin & hit the bell to get notified about new performances: https://bit.ly/subscribe_berta_berlin \n\nTracklist\n00:00 Death Pacito\n07:35 Chromosong\n14:47 Inelegant Peeing \n\nPerformer\nAlexander Hoffmann - drums\nGerrit Ebeling - keys, synth\nGrégoire Pignède - bass\n\nMore about Triorität\n▶ On berta.berlin: https://www.berta.berlin/trioritat \n▶ On Facebook: https://www.facebook.com/trioritaet\n▶ On Instagram: https://www.instagram.com/trioritaet\n▶ On Spotify: https://open.spotify.com/artist/4Q9lS5h0MBIJGE5SqXoj2C\n\nCredits\nDate: 21.04.2021\nLocation: Club Gretchen\nPromoter: berta.berlin\nVideo: Beat Halberschmidt\nLight: Aljoscha Kiss\nMix & Mastering: Roland “Roy” Knauf\nRecording: Goh Nakada\n\nLIVING IN A BOX is a series by Club Gretchen & berta.berlin.\n\nFollow berta.berlin\n▶ On Website: https://berta.berlin \n▶ On Facebook: https://www.facebook.com/bertaberlinofficial \n▶ On Instagram: https://www.instagram.com/bertaberlinofficial \n\nberta.berlin is a music platform that makes unique live performances accessible. We believe that great diverse musical content has the power to make each life richer and happier, and our society stronger and more tolerant. No matter what genre or discipline we are looking for meaning, blood, sweat and tears. All berta.berlin shows focus 100% on music and capture an authentic live performance of the artists.\n\n#bertaberlin​ #Triorität​ #LivingInABox"
+                }
+            },
+            "contentDetails": {
+                "duration": "PT21M3S",
+                "dimension": "2d",
+                "definition": "hd",
+                "caption": "false",
+                "licensedContent": true,
+                "contentRating": {},
+                "projection": "rectangular"
+            },
+            "statistics": {
+                "viewCount": "5635",
+                "likeCount": "250",
+                "favoriteCount": "0",
+                "commentCount": "16"
+            },
+            "player": {
+                "embedHtml": "<iframe width=\"480\" height=\"270\" src=\"//www.youtube.com/embed/oHrP7GHheks\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen></iframe>"
+            }
+        }
+    ],
+    "pageInfo": {
+        "totalResults": 1,
+        "resultsPerPage": 1
+    }
+}
