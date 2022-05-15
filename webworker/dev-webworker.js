@@ -9,8 +9,12 @@ const path = require('path');
  */
 const YOUTUBE_CHANNEL_ID = process.env.REACT_APP_YOUTUBE_CHANNEL_ID;
 const YOUTUBE_API_KEY = process.env.REACT_APP_YOUTUBE_API_KEY;
+
+const YOUTUBE_API_URL = 'https://www.googleapis.com/youtube/v3';
 const GOOGLE_API_MAX_RESULTS = 50;
-const BASE_URL = 'https://www.googleapis.com/youtube/v3';
+
+const CACHE_PATH = path.resolve('src', 'cache');
+const CACHE_FILE_NAME = 'videos.json';
 
 /**
  * Request service
@@ -20,9 +24,6 @@ class RequestService {
     _get(url, search = {}) {
         const requestUrl = new URL(url);
         requestUrl.search = new URLSearchParams(search).toString();
-
-        // TODO find way to get comma separated search values with .toString
-        console.log('requestUrl.toString()', requestUrl.toString());
 
         return new Promise((resolve, reject) => {
             https.get(requestUrl.toString(), resp => {
@@ -39,23 +40,24 @@ class RequestService {
 
     searchVideos(pageToken) {
         return this._get(
-            `${BASE_URL}/search`,
+            `${YOUTUBE_API_URL}/search`,
             {
                 key: YOUTUBE_API_KEY,
                 channelId: YOUTUBE_CHANNEL_ID,
                 maxResults: GOOGLE_API_MAX_RESULTS,
-                ...(pageToken ? { pageToken } : {})
+                ...(pageToken ? { pageToken } : {}),
+                type: 'video'
             }
         );
     }
 
-    getVideo(ids) {
+    getVideoData(ids) {
         return this._get(
-            `${BASE_URL}/videos`,
+            `${YOUTUBE_API_URL}/videos`,
             {
                 key: YOUTUBE_API_KEY,
                 id: ids,
-                part: [ 'snippet', 'contentDetails', 'statistics' ]
+                part: [ 'snippet', 'statistics' ]
             }
         );
     }
@@ -82,14 +84,11 @@ onInvalidCache()
  * Request and build data from youtube API
  */
 async function assembleVideoData() {
-    // const searchResult = await iterateSearch();
-    // console.log('searchResult', searchResult); // TODO map videos
-    // return searchResult;
-
-    const result = await requestService.getVideo(['oHrP7GHheks']);
-    console.log('result', result);
-
-    return {};
+    const searchItems = await iterateSearch();
+    if (!Array.isArray(searchItems)) {
+        return null;
+    }
+    return searchItems;
 }
 
 /**
@@ -97,9 +96,21 @@ async function assembleVideoData() {
  */
 async function iterateSearch(pageToken, prevResultList = []) {
     const currentResult = await requestService.searchVideos(pageToken);
+    if (!Array.isArray(currentResult.items)) {
+        return null;
+    }
+    const videoIds = currentResult.items.map(item => item?.id?.videoId);
+    const videoData = await requestService.getVideoData(videoIds);
+    if (!Array.isArray(videoData.items)) {
+        return null;
+    }
+    const parsedVideos = videoData.items.map(parseVideo);
+
+    const resultList = [...prevResultList, ...parsedVideos];
+
     const maxResultListLength = currentResult.pageInfo?.totalResults;
     const nextPageToken = currentResult.nextPageToken;
-    const resultList = [...prevResultList, ...currentResult.items];
+
     if (resultList.length >= maxResultListLength) {
         return resultList;
     }
@@ -107,8 +118,35 @@ async function iterateSearch(pageToken, prevResultList = []) {
 }
 
 /**
+ * Video data parser
+ */
+function parseVideo(video) {
+    return {
+        id: video?.id,
+        statistics: video?.statistics,
+        title: video?.snippet?.title,
+        description: video?.snippet?.description,
+        thumbnails: video?.snippet?.thumbnails,
+        publishedAt: video?.snippet?.publishedAt,
+        genres: video?.snippet?.tags, // TODO filter for genres
+    };
+}
+
+/**
  * Write to storage
  */
 async function updateCache(data) {
+    const file = JSON.stringify(data, null, 4);
+    const filePath = path.join(CACHE_PATH, CACHE_FILE_NAME);
 
+    return new Promise((resolve, reject) => {
+        fs.mkdir(CACHE_PATH, { recursive: true }, () => {
+            fs.writeFile(filePath, file, (err) => {
+                if (err !== null) {
+                    reject(err);
+                }
+                resolve();
+            })
+        });
+    });
 }

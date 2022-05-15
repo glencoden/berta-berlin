@@ -61,15 +61,9 @@ function App() {
         }
         MOUNTED = true;
 
-        // requestService.getAll().then(result => {
-        //     const id = result.items[0].id.videoId;
-        //     setVideoId(id);
-        // });
+        requestService.getVideos()
 
-        // requestService.getVideo('oHrP7GHheks').then(res => console.log(JSON.stringify(res, null, 4)));
-
-        // requestService.getPlaylists().then(result => console.log(result))
-        setVideoId('oHrP7GHheks');
+        setVideoId('hbx-atIPXxA');
     }, []);
 
     useEffect(() => {
