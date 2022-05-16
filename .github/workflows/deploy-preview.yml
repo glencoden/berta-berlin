@@ -15,6 +15,8 @@ jobs:
         run: npm install
       - name: build app
         run: npm run build
+        env:
+          PUBLIC_URL: "https://glencoden.github.io/berta-berlin"
       - name: Push
         uses: s0/git-publish-subdir-action@develop
         env:
