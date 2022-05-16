@@ -7,8 +7,8 @@ import channelCache from '../cache/channel.json'
 /**
  * Environment
  */
-const YOUTUBE_API_KEY = process.env.REACT_APP_YOUTUBE_API_KEY;
-const YOUTUBE_API_URL = 'https://www.googleapis.com/youtube/v3';
+// const YOUTUBE_API_KEY = process.env.REACT_APP_YOUTUBE_API_KEY;
+// const YOUTUBE_API_URL = 'https://www.googleapis.com/youtube/v3';
 const CACHE_WEBWORKER_URL = 'https://berta.glencoden.workers.dev/';
 
 class RequestService {

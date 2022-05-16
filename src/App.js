@@ -38,7 +38,7 @@ function makePlayer(id) {
     let done = false;
 
     function onPlayerStateChange(event) {
-        if (event.data == window.YT.PlayerState.PLAYING && !done) {
+        if (event.data === window.YT.PlayerState.PLAYING && !done) {
             // setTimeout(stopVideo, 6000);
             // setTimeout(() => console.log(player.getOptions()), 8000);
             done = true;
@@ -104,11 +104,15 @@ function App() {
 
             <div id="player"/>
 
-            <iframe width="640" height="360"
-                    src="http://www.youtube.com/embed/videoseries?list=PL5E56nME5FEWLqVOK-vo40vViHTIBc3vn"
-                    frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen></iframe>
+            <iframe
+                title="berta berlin playlist"
+                width="640"
+                height="360"
+                src="http://www.youtube.com/embed/videoseries?list=PL5E56nME5FEWLqVOK-vo40vViHTIBc3vn"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen
+            ></iframe>
         </div>
     );
 }
