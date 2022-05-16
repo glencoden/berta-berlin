@@ -19,7 +19,6 @@ const CACHE_FILE_NAME = 'videos.json';
 /**
  * Request service
  */
-
 class RequestService {
     _get(url, search = {}) {
         const requestUrl = new URL(url);
@@ -66,9 +65,9 @@ class RequestService {
 const requestService = new RequestService();
 
 /**
- * Refresh invalid cache upon video data request to web worker
+ * Refresh invalid cache
  */
-async function onInvalidCache() {
+async function refreshInvalidCache() {
     const videoData = await assembleVideoData(YOUTUBE_CHANNEL_ID);
     if (videoData === null) {
         throw new Error('received no video data');
@@ -76,12 +75,12 @@ async function onInvalidCache() {
     await updateCache(videoData);
 }
 
-onInvalidCache()
+refreshInvalidCache()
     .then(() => console.log('successfully cached video data'))
     .catch(console.error);
 
 /**
- * Request and build data from youtube API
+ * Assemble video data
  */
 async function assembleVideoData() {
     const searchItems = await iterateSearch();
@@ -92,29 +91,29 @@ async function assembleVideoData() {
 }
 
 /**
- * Iterate through youtube API search pages
+ * Iterate over youtube API search pages and build video data
  */
-async function iterateSearch(pageToken, prevResultList = []) {
-    const currentResult = await requestService.searchVideos(pageToken);
-    if (!Array.isArray(currentResult.items)) {
+async function iterateSearch(pageToken, prevItems = []) {
+    const searchResult = await requestService.searchVideos(pageToken);
+    if (!Array.isArray(searchResult.items)) {
         return null;
     }
-    const videoIds = currentResult.items.map(item => item?.id?.videoId);
-    const videoData = await requestService.getVideoData(videoIds);
-    if (!Array.isArray(videoData.items)) {
+    const maxItemsResultLength = searchResult.pageInfo?.totalResults;
+    const nextPageToken = searchResult.nextPageToken;
+
+    const videoIds = searchResult.items.map(item => item?.id?.videoId);
+    const videoDataResult = await requestService.getVideoData(videoIds);
+    if (!Array.isArray(videoDataResult.items)) {
         return null;
     }
-    const parsedVideos = videoData.items.map(parseVideo);
+    const currentItems = videoDataResult.items.map(parseVideo);
 
-    const resultList = [...prevResultList, ...parsedVideos];
+    const itemsResult = [...prevItems, ...currentItems];
 
-    const maxResultListLength = currentResult.pageInfo?.totalResults;
-    const nextPageToken = currentResult.nextPageToken;
-
-    if (resultList.length >= maxResultListLength) {
-        return resultList;
+    if (itemsResult.length >= maxItemsResultLength) {
+        return itemsResult;
     }
-    return iterateSearch(nextPageToken, resultList);
+    return iterateSearch(nextPageToken, itemsResult);
 }
 
 /**
