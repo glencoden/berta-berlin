@@ -12,9 +12,9 @@ jobs:
       - name: install node
         uses: actions/setup-node@v2
       - name: install dependencies
-        run: yarn install
+        run: npm install
       - name: build app
-        run: yarn build
+        run: npm run build
       - name: Push
         uses: s0/git-publish-subdir-action@develop
         env:
