@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { requestService } from './services/requestService';
 import { PlayerProvider } from './components/Player/context';
+import { ThemeProvider } from '@mui/material';
+import { theme } from './styles/mui-theme';
 import Player from './components/Player/Player';
 import VideoTile from './components/VideoTile/VideoTile';
 
@@ -14,17 +16,14 @@ function App() {
     }, []);
 
     return (
-        <PlayerProvider>
-            <div>
-                <div className="text-3xl font-bold text-center py-12">
-                    glen was here - berta berlin
-                </div>
-
-                <VideoTile video={videos && videos[0]} />
-
-                <Player />
-            </div>
-        </PlayerProvider>
+        <ThemeProvider theme={theme}>
+            <PlayerProvider>
+                <>
+                    <VideoTile video={videos && videos[0]}/>
+                    <Player/>
+                </>
+            </PlayerProvider>
+        </ThemeProvider>
     );
 }
 

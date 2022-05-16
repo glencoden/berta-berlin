@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { getPlayer } from './helpers/getPlayer';
 import { usePlayerContext } from './context';
+import Button from '@mui/material/Button';
 
 let PLAYER_INITIATED = false;
 
@@ -51,8 +52,7 @@ function Player() {
         <div>
             <div id="youtube-player"/>
 
-            <button style={{ width: '100px', height: '50px', backgroundColor: 'blue' }} type="button" onClick={onPlay}/>
-            <button style={{ width: '100px', height: '50px', backgroundColor: 'red' }} type="button" onClick={onPause}/>
+            <Button variant="contained" onClick={onPlay}>&#9658; PLAY</Button>
         </div>
     );
 }
