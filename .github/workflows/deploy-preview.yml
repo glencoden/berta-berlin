@@ -4,7 +4,7 @@ on:
       - develop
 
 jobs:
-  provide-prod-build:
+  deploy-preview:
     runs-on: ubuntu-latest
     steps:
       - name: check out repository

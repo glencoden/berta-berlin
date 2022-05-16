@@ -89,7 +89,7 @@ function App() {
     return (
         <div>
             <div className="text-3xl font-bold text-center py-12">
-                glen coden - berta berlin
+                glen was here - berta berlin
             </div>
 
             <button style={{ width: '100px', height: '50px', backgroundColor: 'lime' }} type="button" onClick={onPlay} />
