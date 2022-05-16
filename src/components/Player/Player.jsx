@@ -42,11 +42,11 @@ function Player() {
         });
     };
 
-    const onPause = () => {
-        getPlayer().then(player => {
-            player.stopVideo();
-        });
-    };
+    // const onPause = () => {
+    //     getPlayer().then(player => {
+    //         player.stopVideo();
+    //     });
+    // };
 
     return (
         <div>
