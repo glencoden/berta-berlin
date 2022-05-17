@@ -1,19 +1,20 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { StyledLane } from './styled-components/StyledLane';
 import Player from '../Player/Player';
 import Controls from './components/Controls/Controls';
 import { mapItemToTile } from './helpers/mapItemToTile';
-import { laneTileHideClass, laneTileOffset } from '../../styles/variables';
-import { getHideTileOffset } from './helpers/getHideTileOffset';
-import { StyledTile } from './styled-components/StyledTile';
+import { laneTileAnimationOffset, laneTileOffset } from '../../styles/variables';
 import Image from '../Image/Image';
+import Tile from './components/Tile/Tile';
 
+// TODO implement onSlideOutComplete
 
 function Lane({ items, type, onSlideOutComplete }) {
     const [ activeIndex, setActiveIndex ] = useState(0);
     const [ tiles, setTiles ] = useState(null);
-    const [ showTiles, setShowTiles ] = useState(false);
     const [ size ] = useState({ width: 1280, height: 720 });
+
+    const numItemsRef = useRef(0);
 
     const activeItem = items?.[activeIndex];
 
@@ -21,43 +22,29 @@ function Lane({ items, type, onSlideOutComplete }) {
         if (!items) {
             return;
         }
+        numItemsRef.current = items.length;
         const tiles = items.map(mapItemToTile);
         setTiles(tiles);
     }, [ items ]);
 
-    useEffect(() => {
-        if (!tiles) {
-            setShowTiles(false);
-            return;
-        }
-        setTimeout(() => setShowTiles(true), 100); // TODO fix race condition or solve slide in/out better alltogether
-    }, [ tiles ]);
-
-    const onTransitionEnd = () => {
-        if (Array.isArray(items)) {
-            return;
-        }
-        if (typeof onSlideOutComplete === 'function') {
-            onSlideOutComplete();
-        }
-        setTiles(null);
-    };
-
     return (
-        <StyledLane size={size} onTransitionEnd={onTransitionEnd}>
+        <StyledLane size={size}>
             <Player/>
 
             {tiles?.map((tile, index) => {
                 const displayIndex = index - activeIndex;
                 const hide = !items || displayIndex < 0;
-                const transform = hide ? -(getHideTileOffset(size.width)) : displayIndex * laneTileOffset;
+                const transform = displayIndex * laneTileOffset;
                 const zIndex = tiles?.length - index;
+                const delay = (hide ? displayIndex : (tiles.length - 1 - index)) * laneTileAnimationOffset;
                 return (
-                    <StyledTile
-                        className={!showTiles && laneTileHideClass}
+                    <Tile
+                        key={tile.title + index}
+                        hide={hide}
                         transform={transform}
                         zIndex={zIndex}
                         size={size}
+                        delay={delay}
                     >
                         <Image
                             url={tile.url}
@@ -65,7 +52,7 @@ function Lane({ items, type, onSlideOutComplete }) {
                             height={size.height}
                             title={tile.title}
                         />
-                    </StyledTile>
+                    </Tile>
                 );
             })}
 

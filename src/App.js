@@ -31,7 +31,7 @@ function App() {
                     <div onClick={() => setCurrentVideoList(null)}>HIDE</div>
                     <div onClick={() => setCurrentVideoList(editorService.getVideos(videos))}>SHOW</div>
 
-                    <Lane items={currentVideoList} type={LaneItemType.VIDEO} />
+                    <Lane items={currentVideoList} type={LaneItemType.VIDEO}/>
                 </>
             </PlayerProvider>
         </ThemeProvider>

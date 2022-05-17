@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { animationLong } from '../../../styles/variables';
+import { animationLong } from '../../../../../styles/variables';
 
 export const StyledTile = styled.div`
     position: absolute;
