@@ -28,6 +28,7 @@ function Image({ url, width, height, title }) {
         <StyledImage width={width} height={height} >
             {src && (
                 <img
+                    className="image"
                     style={imageStyle}
                     ref={imageRef}
                     src={src}

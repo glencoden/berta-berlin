@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
-import { laneItemOffset, laneLeft, laneTop, showTileClassname } from '../../../styles/variables';
+import { laneLeft, laneTileHideClass, laneTop } from '../../../styles/variables';
+import { getHideTileOffset } from '../helpers/getHideTileOffset';
 
 export const StyledLane = styled.div`
     position: absolute;
@@ -7,9 +8,8 @@ export const StyledLane = styled.div`
     top: ${laneTop}px;
     width: ${({ size }) => size.width}px;
     height: ${({ size }) => size.height}px;
-    transform: translateX(${({ offset }) => offset * laneItemOffset}px);
     
-    .${showTileClassname} {
-        transform: translateX(0);
+    .${laneTileHideClass} {
+        transform: translateX(-${({ size }) => getHideTileOffset(size.width)}px);
     }
 `;

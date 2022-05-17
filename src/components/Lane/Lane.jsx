@@ -2,13 +2,17 @@ import { useEffect, useState } from 'react';
 import { StyledLane } from './styled-components/StyledLane';
 import Player from '../Player/Player';
 import Controls from './components/Controls/Controls';
-import Tile from './components/Tile/Tile';
 import { mapItemToTile } from './helpers/mapItemToTile';
+import { laneTileHideClass, laneTileOffset } from '../../styles/variables';
+import { getHideTileOffset } from './helpers/getHideTileOffset';
+import { StyledTile } from './styled-components/StyledTile';
+import Image from '../Image/Image';
 
 
-function Lane({ items, type }) {
+function Lane({ items, type, onSlideOutComplete }) {
     const [ activeIndex, setActiveIndex ] = useState(0);
     const [ tiles, setTiles ] = useState(null);
+    const [ showTiles, setShowTiles ] = useState(false);
     const [ size ] = useState({ width: 1280, height: 720 });
 
     const activeItem = items?.[activeIndex];
@@ -21,38 +25,74 @@ function Lane({ items, type }) {
         setTiles(tiles);
     }, [ items ]);
 
-    if (!items) {
-        return null;
-    }
+    useEffect(() => {
+        if (!tiles) {
+            setShowTiles(false);
+            return;
+        }
+        setTimeout(() => setShowTiles(true), 100); // TODO fix race condition or solve slide in/out better alltogether
+    }, [ tiles ]);
 
-    const laneOffset = Math.max(items.length - 1, 0);
-    const correction = (activeIndex === 0 || activeIndex === items.length) ? 0 : activeIndex;
+    const onTransitionEnd = () => {
+        if (Array.isArray(items)) {
+            return;
+        }
+        if (typeof onSlideOutComplete === 'function') {
+            onSlideOutComplete();
+        }
+        setTiles(null);
+    };
 
     return (
-        <StyledLane
-            offset={laneOffset - correction}
-            size={size}
-        >
-            {tiles?.reverse().map((tile, reverseIndex) => (
-                <Tile
-                    key={tile.title}
-                    reverseIndex={reverseIndex}
-                    activeIndex={activeIndex}
-                    numTiles={tiles?.length || 0}
-                    url={tile.url}
-                    size={size}
-                    title={tile.title}
-                />
-            ))}
-
+        <StyledLane size={size} onTransitionEnd={onTransitionEnd}>
             <Player/>
+
+            {tiles?.map((tile, index) => {
+                const displayIndex = index - activeIndex;
+                const hide = !items || displayIndex < 0;
+                const transform = hide ? -(getHideTileOffset(size.width)) : displayIndex * laneTileOffset;
+                const zIndex = tiles?.length - index;
+                return (
+                    <StyledTile
+                        className={!showTiles && laneTileHideClass}
+                        transform={transform}
+                        zIndex={zIndex}
+                        size={size}
+                    >
+                        <Image
+                            url={tile.url}
+                            width={size.width}
+                            height={size.height}
+                            title={tile.title}
+                        />
+                    </StyledTile>
+                );
+            })}
 
             <Controls item={activeItem} type={type}/>
 
-            <div style={{ position: 'absolute', left: '20px', top: '-50px' }} onClick={activeIndex < items.length ? () => setActiveIndex(Math.max(activeIndex - 1, 0)) : undefined}>DOWN</div>
-            <div style={{ position: 'absolute', left: '100px', top: '-50px' }} onClick={activeIndex < items.length ? () => setActiveIndex(Math.min(activeIndex + 1, items.length - 1)) : undefined}>UP</div>
-            <div style={{ position: 'absolute', left: '180px', top: '-50px' }} onClick={() => setActiveIndex(items.length)}>OUT</div>
-            <div style={{ position: 'absolute', left: '240px', top: '-50px' }} onClick={() => setActiveIndex(0)}>IN</div>
+            {items && (
+                <>
+                    <div style={{
+                        position: 'absolute',
+                        left: '20px',
+                        top: '-70px',
+                        backgroundColor: 'lime',
+                        padding: '20px',
+                    }}
+                         onClick={activeIndex < items.length ? () => setActiveIndex(Math.max(activeIndex - 1, 0)) : undefined}>DOWN
+                    </div>
+                    <div style={{
+                        position: 'absolute',
+                        left: '100px',
+                        top: '-70px',
+                        backgroundColor: 'blue',
+                        padding: '20px',
+                    }}
+                         onClick={activeIndex < items.length ? () => setActiveIndex(Math.min(activeIndex + 1, items.length - 1)) : undefined}>UP
+                    </div>
+                </>
+            )}
         </StyledLane>
     );
 }

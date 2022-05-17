@@ -9,10 +9,6 @@ export const animationLong = 0.4; // seconds
  */
 export const laneLeft = 100;
 export const laneTop = 100;
-export const laneItemOffset = 50;
-
-/**
- * Tile
- */
-export const tileAnimationDelayUnit = 50; // ms
-export const showTileClassname = 'show-tile';
+export const laneTileOffset = 50;
+export const laneTileSlideInDelay = 0.3; // seconds
+export const laneTileHideClass = 'hide-tile';
