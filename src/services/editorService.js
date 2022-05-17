@@ -4,9 +4,13 @@ class EditorService {
             console.warn('no videos');
             return;
         }
+        const dupe = [ ...videos ];
         const result = [];
         for (let i = 0; i < 10; i++) {
-            result.push(videos[Math.floor(Math.random() * videos.length)]);
+            const randomIndex = Math.floor(Math.random() * dupe.length);
+            const randomItem = { ...dupe[ randomIndex ] };
+            dupe.splice(randomIndex, 1);
+            result.push(randomItem);
         }
         return result;
     }

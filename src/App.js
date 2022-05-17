@@ -3,9 +3,9 @@ import { requestService } from './services/requestService';
 import { PlayerProvider } from './components/Player/context';
 import { ThemeProvider } from '@mui/material';
 import { theme } from './styles/mui-theme';
-import Player from './components/Player/Player';
-import VideoTile from './components/VideoTile/VideoTile';
 import { editorService } from './services/editorService';
+import Lane from './components/Lane/Lane';
+import { LaneItemType } from './components/Lane/enums/LaneItemType';
 
 
 function App() {
@@ -24,14 +24,11 @@ function App() {
             .then(setVideos);
     }, [ videos ]);
 
-    console.log('currentVideoList', currentVideoList);
-
     return (
         <ThemeProvider theme={theme}>
             <PlayerProvider>
                 <>
-                    <VideoTile video={currentVideoList && currentVideoList[0]} width={1000}/>
-                    <Player/>
+                    <Lane items={currentVideoList} type={LaneItemType.VIDEO} />
                 </>
             </PlayerProvider>
         </ThemeProvider>
