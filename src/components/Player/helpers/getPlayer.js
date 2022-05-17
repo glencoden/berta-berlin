@@ -1,32 +1,31 @@
 // Youtube player javascript API https://developers.google.com/youtube/iframe_api_reference#Queueing_Functions
 
+import { PlayerActionType } from '../context/PlayerActionType';
+
 const POLL_INTERVAL = 50; // ms
 
 let player = null;
 
-export const getPlayer = () => {
+export const getPlayer = (dispatch) => {
     if (player) {
         return Promise.resolve(player);
     }
 
-    console.log('window.YT', window.YT)
-
     if (!window.YT) {
-        return new Promise(resolve => setTimeout(() => resolve(getPlayer()), POLL_INTERVAL));
+        return new Promise(resolve => setTimeout(() => resolve(getPlayer(dispatch)), POLL_INTERVAL));
     }
 
     return new Promise((resolve, reject) => {
         window.YT.ready(() => {
             player = new window.YT.Player('youtube-player', {
                 playerVars: {
-                    // autoplay: 0,
                     controls: 0,
-                    enablejsapi: 1
+                    enablejsapi: 1,
                 },
                 events: {
                     'onReady': onPlayerReady,
                     'onStateChange': onPlayerStateChange,
-                    'onError': onError
+                    'onError': onError,
                 },
             });
 
@@ -39,8 +38,21 @@ export const getPlayer = () => {
             }
 
             function onPlayerStateChange(event) {
-                console.log('onPlayerStateChange', event); // TODO do sth with this or remove it
+                switch (event.data) {
+                    case window.YT?.PlayerState.ENDED:
+                        dispatch({ type: PlayerActionType.STOP });
+                        break;
+                    case window.YT?.PlayerState.PLAYING:
+                        dispatch({ type: PlayerActionType.PLAY });
+                        break;
+                    case window.YT?.PlayerState.PAUSED:
+                        dispatch({ type: PlayerActionType.STOP });
+                        break;
+                    case window.YT?.PlayerState.BUFFERING:
+                    case window.YT?.PlayerState.CUED:
+                    default:
+                }
             }
         });
     });
-}
+};

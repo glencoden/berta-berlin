@@ -2,7 +2,7 @@ import { createContext, useContext } from 'react';
 import { initialPlayerState, usePlayerReducer } from './reducer';
 
 const initialContext = {
-    state: initialPlayerState,
+    playerState: initialPlayerState,
     dispatch: null
 };
 
@@ -14,7 +14,7 @@ export const PlayerProvider = ({ children }) => {
     const [state, dispatch] = usePlayerReducer();
 
     return (
-        <PlayerContext.Provider value={{ state, dispatch }}>
+        <PlayerContext.Provider value={{ playerState: state, dispatch }}>
             {children}
         </PlayerContext.Provider>
     );

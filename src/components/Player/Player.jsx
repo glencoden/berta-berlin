@@ -1,7 +1,6 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { getPlayer } from './helpers/getPlayer';
 import { usePlayerContext } from './context';
-import Button from '@mui/material/Button';
 
 let PLAYER_INITIATED = false;
 
@@ -9,7 +8,9 @@ let PLAYER_INITIATED = false;
  * This component should only be rendered once
  */
 function Player() {
-    const { state } = usePlayerContext();
+    const [ player, setPlayer ] = useState(null);
+
+    const { playerState, dispatch } = usePlayerContext();
 
     /**
      * Init youtube player instance
@@ -23,38 +24,50 @@ function Player() {
         const playerScript = document.createElement('script');
         playerScript.src = 'https://www.youtube.com/iframe_api';
         document.body.appendChild(playerScript);
+
+        getPlayer(dispatch).then(setPlayer);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    // TODO refactor below
-    // player.loadVideoById('1_jOHpHwGoo')
-    // player.setSize(1000, 600)
-    // player.loadPlaylist({
-    //     listType: 'playlist',
-    //     list: 'PL5E56nME5FEVq_73oZ29ch-EWBa1jIuDj'
-    // })
-
-    const onPlay = () => {
-        if (state.video === null) {
+    /**
+     * Play video when not null
+     */
+    useEffect(() => {
+        if (playerState.video === null || player === null) {
             return;
         }
-        getPlayer().then(player => {
-            player.loadVideoById(state.video.id);
+        player.loadVideoById(playerState.video.id);
+    }, [ playerState.video, player ]);
+
+    /**
+     * Play playlist when not null
+     */
+    useEffect(() => {
+        if (playerState.playlist === null || player === null) {
+            return;
+        }
+        player.loadPlaylist({
+            listType: 'playlist',
+            list: playerState.playlist.id,
         });
-    };
+    }, [ playerState.playlist, player ]);
 
-    // const onPause = () => {
-    //     getPlayer().then(player => {
-    //         player.stopVideo();
-    //     });
-    // };
+    /**
+     * Set size when it changes
+     */
+    useEffect(() => {
+        if (player === null) {
+            return;
+        }
+        player.setSize(playerState.size.width, playerState.size.height);
+    }, [ playerState.size, player ]);
 
-    return (
-        <div>
-            <div id="youtube-player"/>
+    /**
+     * Set position when it changes
+     */
+    // TODO implement useEffect
 
-            <Button variant="contained" onClick={onPlay}>&#9658; PLAY</Button>
-        </div>
-    );
+    return <div id="youtube-player"/>;
 }
 
 export default Player;

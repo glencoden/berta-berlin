@@ -3,6 +3,16 @@ import { PlayerActionType } from './PlayerActionType';
 
 function reducer(state, action) {
     switch (action.type) {
+        case PlayerActionType.PLAY:
+            return {
+                ...state,
+                isPlaying: true,
+            };
+        case PlayerActionType.STOP:
+            return {
+                ...state,
+                isPlaying: false,
+            };
         case PlayerActionType.SET_VIDEO:
             return {
                 ...state,
@@ -32,6 +42,7 @@ function reducer(state, action) {
 }
 
 export const initialPlayerState = {
+    isPlaying: false,
     video: null,
     playlist: null,
     size: {
