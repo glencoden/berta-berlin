@@ -14,13 +14,15 @@ const YOUTUBE_API_URL = 'https://www.googleapis.com/youtube/v3';
 const GOOGLE_API_MAX_RESULTS = 50;
 
 const CACHE_PATH = path.resolve('src', 'cache');
-const CACHE_FILE_NAME = 'videos.json';
+const CACHE_FILE_NAME = 'youtube-api-cache.json';
 
 /**
  * Request service
  */
 class RequestService {
     _get(url, search = {}) {
+        console.log(`GET - ${url}`);
+
         const requestUrl = new URL(url);
         requestUrl.search = new URLSearchParams(search).toString();
 
@@ -37,17 +39,21 @@ class RequestService {
         });
     }
 
-    searchVideos(pageToken) {
+    _search(type, pageToken) {
         return this._get(
             `${YOUTUBE_API_URL}/search`,
             {
                 key: YOUTUBE_API_KEY,
                 channelId: YOUTUBE_CHANNEL_ID,
                 maxResults: GOOGLE_API_MAX_RESULTS,
+                type,
                 ...(pageToken ? { pageToken } : {}),
-                type: 'video'
-            }
+            },
         );
+    }
+
+    searchVideos(pageToken) {
+        return this._search('video', pageToken);
     }
 
     getVideoData(ids) {
@@ -56,8 +62,36 @@ class RequestService {
             {
                 key: YOUTUBE_API_KEY,
                 id: ids,
-                part: [ 'snippet', 'statistics' ]
-            }
+                part: [ 'snippet', 'statistics' ],
+            },
+        );
+    }
+
+    searchPlaylists(pageToken) {
+        return this._search('playlist', pageToken);
+    }
+
+    getPlaylistData(id) {
+        return this._get(
+            `${YOUTUBE_API_URL}/playlists`,
+            {
+                key: YOUTUBE_API_KEY,
+                id,
+                part: [ 'snippet', 'status' ],
+            },
+        );
+    }
+
+    getPlaylistItems(playlistId, pageToken) {
+        return this._get(
+            `${YOUTUBE_API_URL}/playlistItems`,
+            {
+                key: YOUTUBE_API_KEY,
+                maxResults: GOOGLE_API_MAX_RESULTS,
+                part: 'snippet',
+                playlistId,
+                ...(pageToken ? { pageToken } : {}),
+            },
         );
     }
 }
@@ -68,32 +102,37 @@ const requestService = new RequestService();
  * Refresh invalid cache
  */
 async function refreshInvalidCache() {
-    const videoData = await assembleVideoData(YOUTUBE_CHANNEL_ID);
-    if (videoData === null) {
+    const videos = await assembleVideoData();
+    if (videos === null) {
         throw new Error('received no video data');
     }
-    await updateCache(videoData);
+    const playlists = await assemblePlaylistData();
+    if (playlists === null) {
+        throw new Error('received no playlist data');
+    }
+    const result = {
+        videos,
+        playlists,
+    };
+    await updateCache(result);
 }
 
 refreshInvalidCache()
-    .then(() => console.log('successfully cached video data'))
+    .then(() => console.log('successfully updated cache'))
     .catch(console.error);
 
 /**
  * Assemble video data
  */
 async function assembleVideoData() {
-    const searchItems = await iterateSearch();
+    const searchItems = await iterateVideoSearch();
     if (!Array.isArray(searchItems)) {
         return null;
     }
     return searchItems;
 }
 
-/**
- * Iterate over youtube API search pages and build video data
- */
-async function iterateSearch(pageToken, prevItems = []) {
+async function iterateVideoSearch(pageToken, prevItems = []) {
     const searchResult = await requestService.searchVideos(pageToken);
     if (!Array.isArray(searchResult.items)) {
         return null;
@@ -108,17 +147,14 @@ async function iterateSearch(pageToken, prevItems = []) {
     }
     const currentItems = videoDataResult.items.map(parseVideo);
 
-    const itemsResult = [...prevItems, ...currentItems];
+    const itemsResult = [ ...prevItems, ...currentItems ];
 
     if (itemsResult.length >= maxItemsResultLength) {
         return itemsResult;
     }
-    return iterateSearch(nextPageToken, itemsResult);
+    return iterateVideoSearch(nextPageToken, itemsResult);
 }
 
-/**
- * Video data parser
- */
 function parseVideo(video) {
     return {
         id: video?.id,
@@ -130,6 +166,91 @@ function parseVideo(video) {
         genres: video?.snippet?.tags, // TODO filter for genres
     };
 }
+
+/**
+ * Assemble playlist data
+ */
+async function assemblePlaylistData() {
+    const searchItems = await iteratePlaylistSearch();
+    if (!Array.isArray(searchItems)) {
+        return null;
+    }
+    return searchItems;
+}
+
+async function iteratePlaylistSearch(pageToken, prevPlaylists = []) {
+    const searchResult = await requestService.searchPlaylists(pageToken);
+    if (!Array.isArray(searchResult.items)) {
+        return null;
+    }
+    const maxItemsResultLength = searchResult.pageInfo?.totalResults;
+    const nextPageToken = searchResult.nextPageToken;
+
+    const playlistIds = searchResult.items.map(item => item?.id?.playlistId);
+    const currentPlaylists = await iteratePlaylists(playlistIds);
+
+    const playlistsResult = [ ...prevPlaylists, ...currentPlaylists ];
+
+    if (playlistsResult.length >= maxItemsResultLength) {
+        return playlistsResult;
+    }
+    return iteratePlaylistSearch(nextPageToken, playlistsResult);
+}
+
+async function iteratePlaylists(playlistIds, prevPlaylists = []) {
+    const currentPlaylistId = playlistIds.shift();
+    const playlistResult = await requestService.getPlaylistData(currentPlaylistId);
+    if (!Array.isArray(playlistResult.items)) {
+        return null;
+    }
+    const videoIds = await iteratePlaylistItems(currentPlaylistId);
+    if (videoIds === null) {
+        return null;
+    }
+    const currentPlaylist = {
+        ...parsePlaylist(playlistResult.items[0]),
+        videoIds,
+    };
+    const playlistsResult = [ ...prevPlaylists, currentPlaylist ];
+    if (playlistIds.length === 0) {
+        return playlistsResult;
+    }
+    return iteratePlaylists(playlistIds, playlistsResult);
+}
+
+function parsePlaylist(playlist) {
+    return {
+        id: playlist?.id,
+        title: playlist?.snippet?.title,
+        description: playlist?.snippet?.description,
+        thumbnails: playlist?.snippet?.thumbnails,
+        publishedAt: playlist?.snippet?.publishedAt,
+        isPrivate: playlist?.status?.privacyStatus !== 'public',
+    };
+}
+
+async function iteratePlaylistItems(playlistId, pageToken, prevItems = []) {
+    const playlistItemsResult = await requestService.getPlaylistItems(playlistId, pageToken);
+    if (!Array.isArray(playlistItemsResult.items)) {
+        return null;
+    }
+    const maxItemsResultLength = playlistItemsResult.pageInfo?.totalResults;
+    const nextPageToken = playlistItemsResult.nextPageToken;
+
+    const currentItems = playlistItemsResult.items.map(parsePlaylistItem);
+
+    const itemsResult = [ ...prevItems, ...currentItems ];
+
+    if (itemsResult.length >= maxItemsResultLength) {
+        return itemsResult;
+    }
+    return iteratePlaylistItems(playlistId, nextPageToken, itemsResult);
+}
+
+function parsePlaylistItem(playlistItem) {
+    return playlistItem?.snippet?.resourceId?.videoId;
+}
+
 
 /**
  * Write to storage
@@ -145,7 +266,7 @@ async function updateCache(data) {
                     reject(err);
                 }
                 resolve();
-            })
+            });
         });
     });
 }

@@ -1,7 +1,7 @@
 /**
  * Local cache
  */
-import videoCache from '../cache/videos.json';
+import youtubeApiCache from '../cache/youtube-api-cache.json';
 import channelCache from '../cache/channel.json'
 
 /**
@@ -19,9 +19,9 @@ class RequestService {
             .catch(console.error);
     }
 
-    getVideos() {
+    getYoutubeApiCache() {
         return process.env.NODE_ENV === 'development'
-            ? Promise.resolve(videoCache)
+            ? Promise.resolve(youtubeApiCache)
             : this._get(CACHE_WEBWORKER_URL);
     }
 

@@ -20,8 +20,8 @@ function App() {
         if (videos !== null) {
             return;
         }
-        requestService.getVideos()
-            .then(setVideos);
+        requestService.getYoutubeApiCache()
+            .then(response => setVideos(response.videos));
     }, [ videos ]);
 
     return (
