@@ -14,7 +14,6 @@ const YOUTUBE_API_URL = 'https://www.googleapis.com/youtube/v3';
 const GOOGLE_API_MAX_RESULTS = 50;
 
 const CACHE_PATH = path.resolve('src', 'cache');
-const CACHE_FILE_NAME = 'youtube-api-cache.json';
 
 /**
  * Request service
@@ -99,27 +98,68 @@ class RequestService {
 const requestService = new RequestService();
 
 /**
- * Refresh invalid cache
+ * Simulate stale cache
  */
-async function refreshInvalidCache() {
-    const videos = await assembleVideoData();
-    if (videos === null) {
-        throw new Error('received no video data');
-    }
-    const playlists = await assemblePlaylistData();
-    if (playlists === null) {
-        throw new Error('received no playlist data');
-    }
-    const result = {
-        videos,
-        playlists,
-    };
-    await updateCache(result);
+async function onStaleCache() {
+    const videoResourceKey = 'video';
+    const playlistResourceKey = 'playlist';
+
+    const videoCache = await refreshInvalidCache(videoResourceKey);
+    const playlistCache = await refreshInvalidCache(playlistResourceKey);
+
+    await writeToStorage(videoCache, videoResourceKey);
+    await writeToStorage(playlistCache, playlistResourceKey);
 }
 
-refreshInvalidCache()
+onStaleCache()
     .then(() => console.log('successfully updated cache'))
     .catch(console.error);
+
+async function writeToStorage(data, name) {
+    const file = JSON.stringify(data, null, 4);
+    const filePath = path.join(CACHE_PATH, `${name}.json`);
+
+    return new Promise((resolve, reject) => {
+        fs.mkdir(CACHE_PATH, { recursive: true }, () => {
+            fs.writeFile(filePath, file, (err) => {
+                if (err !== null) {
+                    reject(err);
+                }
+                resolve();
+            });
+        });
+    });
+}
+
+/**
+ * Refresh invalid cache
+ */
+async function refreshInvalidCache(resource) {
+    switch (resource) {
+        case 'video': {
+            const videos = await assembleVideoData();
+            if (videos === null) {
+                throw new Error('received no video data');
+            }
+            return {
+                updatedAt: Date.now(),
+                videos,
+            };
+        }
+        case 'playlist': {
+            const playlists = await assemblePlaylistData();
+            if (playlists === null) {
+                throw new Error('received no playlist data');
+            }
+            return {
+                updatedAt: Date.now(),
+                playlists,
+            };
+        }
+        default:
+            return 'unknown resource type';
+    }
+}
 
 /**
  * Assemble video data
@@ -249,24 +289,4 @@ async function iteratePlaylistItems(playlistId, pageToken, prevItems = []) {
 
 function parsePlaylistItem(playlistItem) {
     return playlistItem?.snippet?.resourceId?.videoId;
-}
-
-
-/**
- * Write to storage
- */
-async function updateCache(data) {
-    const file = JSON.stringify(data, null, 4);
-    const filePath = path.join(CACHE_PATH, CACHE_FILE_NAME);
-
-    return new Promise((resolve, reject) => {
-        fs.mkdir(CACHE_PATH, { recursive: true }, () => {
-            fs.writeFile(filePath, file, (err) => {
-                if (err !== null) {
-                    reject(err);
-                }
-                resolve();
-            });
-        });
-    });
 }

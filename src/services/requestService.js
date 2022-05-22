@@ -1,8 +1,9 @@
 /**
  * Local cache
  */
-import youtubeApiCache from '../cache/youtube-api-cache.json';
-import channelCache from '../cache/channel.json'
+import video from '../cache/video.json';
+import playlist from '../cache/playlist.json';
+import channelCache from '../cache/channel.json';
 
 /**
  * Environment
@@ -12,17 +13,28 @@ import channelCache from '../cache/channel.json'
 const CACHE_WEBWORKER_URL = 'https://berta.glencoden.workers.dev/';
 
 class RequestService {
-    // TODO implement URL API
-    _get(url) {
-        return fetch(url)
-            .then(resp => resp.json())
+    _get(url, search = {}) {
+        const requestUrl = new URL(url);
+        requestUrl.search = new URLSearchParams(search).toString();
+
+        return fetch(requestUrl.toString())
+            .then(response => response.json())
             .catch(console.error);
     }
 
     getYoutubeApiCache() {
-        return process.env.NODE_ENV === 'development'
-            ? Promise.resolve(youtubeApiCache)
-            : this._get(CACHE_WEBWORKER_URL);
+        if (process.env.NODE_ENV === 'development') {
+            return Promise.all([
+                Promise.resolve(video),
+                Promise.resolve(playlist),
+            ])
+                .then(result => ({ videos: result[0]?.videos, playlists: result[1]?.playlists }));
+        }
+        return Promise.all([
+            this._get(CACHE_WEBWORKER_URL, { resource: 'video' }),
+            this._get(CACHE_WEBWORKER_URL, { resource: 'playlist' }),
+        ])
+            .then(result => ({ videos: result[0]?.videos, playlists: result[1]?.playlists }));
     }
 
     getChannel() {
