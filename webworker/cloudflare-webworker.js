@@ -195,7 +195,7 @@ function parseVideo(video) {
         description: video?.snippet?.description,
         thumbnails: video?.snippet?.thumbnails,
         publishedAt: video?.snippet?.publishedAt,
-        genres: video?.snippet?.tags, // TODO filter for genres
+        tags: video?.snippet?.tags,
     };
 }
 

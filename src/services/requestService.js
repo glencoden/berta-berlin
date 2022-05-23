@@ -22,18 +22,11 @@ class RequestService {
             .catch(console.error);
     }
 
-    getVideos() {
+    getYoutubeApiCache(resource) {
         if (process.env.NODE_ENV === 'development') {
             return Promise.resolve(video);
         }
-        return this._get(CACHE_WEBWORKER_URL, { resource: 'video' });
-    }
-
-    getPlaylists() {
-        if (process.env.NODE_ENV === 'development') {
-            return Promise.resolve(playlist);
-        }
-        return this._get(CACHE_WEBWORKER_URL, { resource: 'playlist' });
+        return this._get(CACHE_WEBWORKER_URL, { resource });
     }
 
     getChannel() {

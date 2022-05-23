@@ -5,22 +5,24 @@ import { ThemeProvider } from '@mui/material';
 import { theme } from './styles/mui-theme';
 import { editorService } from './services/editorService';
 import Lane from './components/Lane/Lane';
-import { LaneItemType } from './components/Lane/enums/LaneItemType';
+import { ResourceType } from './enums/ResourceType';
 
 
 function App() {
     const [ videos, setVideos ] = useState(null);
-    const [ currentVideoList, setCurrentVideoList ] = useState(null);
+    const [ playlists, setPlaylists ] = useState(null);
+
+    const [ resourceType, setResourceType ] = useState(ResourceType.VIDEO);
+    const [ items, setItems ] = useState(null);
 
     useEffect(() => {
-        // TODO implement on page change
-        const currentList = editorService.getVideos(videos);
-        setCurrentVideoList(currentList);
-
         if (videos !== null) {
+            // TODO implement on page change
+            const currentItems = editorService.getVideos(videos);
+            setItems(currentItems);
             return;
         }
-        requestService.getVideos()
+        requestService.getYoutubeApiCache(resourceType)
             .then(response => setVideos(response.videos));
     }, [ videos ]);
 
@@ -28,10 +30,10 @@ function App() {
         <ThemeProvider theme={theme}>
             <PlayerProvider>
                 <>
-                    <div onClick={() => setCurrentVideoList(null)}>HIDE</div>
-                    <div onClick={() => setCurrentVideoList(editorService.getVideos(videos))}>SHOW</div>
+                    <div onClick={() => setItems(null)}>HIDE</div>
+                    <div onClick={() => setItems(editorService.getVideos(videos))}>SHOW</div>
 
-                    <Lane items={currentVideoList} type={LaneItemType.VIDEO}/>
+                    <Lane items={items} type={resourceType}/>
                 </>
             </PlayerProvider>
         </ThemeProvider>

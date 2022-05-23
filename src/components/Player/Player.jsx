@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
 import { getPlayer } from './helpers/getPlayer';
 import { usePlayerContext } from './context';
+import { StyledPlayer } from './styled-components/StyledPlayer';
 
 let PLAYER_INITIATED = false;
 
 /**
  * This component should only be rendered once
  */
-function Player() {
+function Player({ zIndex }) {
     const [ player, setPlayer ] = useState(null);
 
     const { playerState, dispatch } = usePlayerContext();
@@ -67,7 +68,11 @@ function Player() {
      */
     // TODO implement useEffect
 
-    return <div id="youtube-player"/>;
+    return (
+        <StyledPlayer zIndex={zIndex}>
+            <div id="youtube-player"/>
+        </StyledPlayer>
+    );
 }
 
 export default Player;

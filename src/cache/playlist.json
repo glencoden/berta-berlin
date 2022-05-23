@@ -1,5 +1,5 @@
 {
-    "updatedAt": 1653236083619,
+    "updatedAt": 1653311908502,
     "playlists": [
         {
             "id": "PL5E56nME5FEXHwx1rwcWOEZUInqCTRr4D",
@@ -622,16 +622,6 @@
                     "url": "https://i.ytimg.com/vi/LIBTbjPilbw/hqdefault.jpg",
                     "width": 480,
                     "height": 360
-                },
-                "standard": {
-                    "url": "https://i.ytimg.com/vi/LIBTbjPilbw/sddefault.jpg",
-                    "width": 640,
-                    "height": 480
-                },
-                "maxres": {
-                    "url": "https://i.ytimg.com/vi/LIBTbjPilbw/maxresdefault.jpg",
-                    "width": 1280,
-                    "height": 720
                 }
             },
             "publishedAt": "2021-02-22T10:19:56Z",

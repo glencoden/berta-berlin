@@ -1,4 +1,4 @@
-export const LaneItemType = {
+export const ResourceType = {
     VIDEO: 'video',
     PLAYLIST: 'playlist'
 };
