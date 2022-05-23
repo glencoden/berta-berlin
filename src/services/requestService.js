@@ -22,19 +22,18 @@ class RequestService {
             .catch(console.error);
     }
 
-    getYoutubeApiCache() {
+    getVideos() {
         if (process.env.NODE_ENV === 'development') {
-            return Promise.all([
-                Promise.resolve(video),
-                Promise.resolve(playlist),
-            ])
-                .then(result => ({ videos: result[0]?.videos, playlists: result[1]?.playlists }));
+            return Promise.resolve(video);
         }
-        return Promise.all([
-            this._get(CACHE_WEBWORKER_URL, { resource: 'video' }),
-            this._get(CACHE_WEBWORKER_URL, { resource: 'playlist' }),
-        ])
-            .then(result => ({ videos: result[0]?.videos, playlists: result[1]?.playlists }));
+        return this._get(CACHE_WEBWORKER_URL, { resource: 'video' });
+    }
+
+    getPlaylists() {
+        if (process.env.NODE_ENV === 'development') {
+            return Promise.resolve(playlist);
+        }
+        return this._get(CACHE_WEBWORKER_URL, { resource: 'playlist' });
     }
 
     getChannel() {
