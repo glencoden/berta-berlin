@@ -33,7 +33,10 @@ function App() {
                     <div onClick={() => setItems(null)}>HIDE</div>
                     <div onClick={() => setItems(editorService.getVideos(videos))}>SHOW</div>
 
-                    <Lane items={items} type={resourceType}/>
+                    <Lane
+                        items={items}
+                        resourceType={resourceType}
+                    />
                 </>
             </PlayerProvider>
         </ThemeProvider>

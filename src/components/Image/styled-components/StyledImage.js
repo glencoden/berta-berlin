@@ -1,7 +1,5 @@
 import styled from '@emotion/styled';
 
-// TODO get transition time from mui theme
-
 export const StyledImage = styled.div`
     width: ${({ width }) => width}px;
     height: ${({ height }) => height}px;
@@ -10,5 +8,6 @@ export const StyledImage = styled.div`
     
     .image {
         object-fit: cover;
+        transition: opacity ${({ theme }) => (theme.transitions.duration.shorter / 1000)}s;
     }
 `;

@@ -6,9 +6,19 @@ function reducer(state, action) {
         case PlayerActionType.PLAY:
             return {
                 ...state,
-                isPlaying: true,
+                shouldPlay: true,
             };
         case PlayerActionType.STOP:
+            return {
+                ...state,
+                shouldPlay: false,
+            };
+        case PlayerActionType.ON_PLAY:
+            return {
+                ...state,
+                isPlaying: true,
+            };
+        case PlayerActionType.ON_STOP:
             return {
                 ...state,
                 isPlaying: false,
@@ -16,12 +26,14 @@ function reducer(state, action) {
         case PlayerActionType.SET_VIDEO:
             return {
                 ...state,
+                shouldPlay: true,
                 video: action.payload,
                 playlist: null,
             };
         case PlayerActionType.SET_PLAYLIST:
             return {
                 ...state,
+                shouldPlay: true,
                 video: null,
                 playlist: action.payload,
             };
@@ -42,6 +54,7 @@ function reducer(state, action) {
 }
 
 export const initialPlayerState = {
+    shouldPlay: false,
     isPlaying: false,
     video: null,
     playlist: null,

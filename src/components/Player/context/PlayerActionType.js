@@ -1,6 +1,8 @@
 export const PlayerActionType = {
     PLAY: 'play',
     STOP: 'stop',
+    ON_PLAY: 'on-play',
+    ON_STOP: 'on-stop',
     SET_VIDEO: 'set-video',
     SET_PLAYLIST: 'set-playlist',
     SET_SIZE: 'set-size',

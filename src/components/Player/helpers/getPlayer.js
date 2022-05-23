@@ -40,13 +40,13 @@ export const getPlayer = (dispatch) => {
             function onPlayerStateChange(event) {
                 switch (event.data) {
                     case window.YT?.PlayerState.ENDED:
-                        dispatch({ type: PlayerActionType.STOP });
+                        dispatch({ type: PlayerActionType.ON_STOP });
                         break;
                     case window.YT?.PlayerState.PLAYING:
-                        dispatch({ type: PlayerActionType.PLAY });
+                        dispatch({ type: PlayerActionType.ON_PLAY });
                         break;
                     case window.YT?.PlayerState.PAUSED:
-                        dispatch({ type: PlayerActionType.STOP });
+                        dispatch({ type: PlayerActionType.ON_STOP });
                         break;
                     case window.YT?.PlayerState.BUFFERING:
                     case window.YT?.PlayerState.CUED:

@@ -8,7 +8,7 @@ let PLAYER_INITIATED = false;
 /**
  * This component should only be rendered once
  */
-function Player({ zIndex }) {
+function Player({ className }) {
     const [ player, setPlayer ] = useState(null);
 
     const { playerState, dispatch } = usePlayerContext();
@@ -29,6 +29,18 @@ function Player({ zIndex }) {
         getPlayer(dispatch).then(setPlayer);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    /**
+     * Play/pause on player state shouldPlay change
+     */
+    useEffect(() => {
+        if (player === null) {
+            return;
+        }
+        playerState.shouldPlay
+            ? player.playVideo()
+            : player.pauseVideo();
+    }, [ playerState.shouldPlay, player ]);
 
     /**
      * Play video when not null
@@ -69,7 +81,10 @@ function Player({ zIndex }) {
     // TODO implement useEffect
 
     return (
-        <StyledPlayer zIndex={zIndex}>
+        <StyledPlayer
+            isPlaying={playerState.isPlaying}
+            className={className}
+        >
             <div id="youtube-player"/>
         </StyledPlayer>
     );

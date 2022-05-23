@@ -5,6 +5,5 @@ export const mapItemToTile = (item) => {
     return {
         url: thumbnail.url,
         title: item.title,
-        description: item.description,
     };
 };

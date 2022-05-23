@@ -25,7 +25,10 @@ function Image({ url, width, height, title }) {
     }
 
     return (
-        <StyledImage width={width} height={height} >
+        <StyledImage
+            width={width}
+            height={height}
+        >
             {src && (
                 <img
                     className="image"

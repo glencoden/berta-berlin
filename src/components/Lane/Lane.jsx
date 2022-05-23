@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { StyledLane } from './styled-components/StyledLane';
 import Player from '../Player/Player';
 import Controls from './components/Controls/Controls';
@@ -6,15 +6,10 @@ import { mapItemToTile } from './helpers/mapItemToTile';
 import { laneTileAnimationOffset, laneTileOffset } from '../../styles/variables';
 import Image from '../Image/Image';
 import Tile from './components/Tile/Tile';
-import { ResourceType } from '../../enums/ResourceType';
-import { PlayerActionType } from '../Player/context/PlayerActionType';
-import { usePlayerContext } from '../Player/context';
 
 // TODO implement onSlideOutComplete
 
-function Lane({ items, type, onSlideOutComplete }) {
-    const { playerState, dispatch } = usePlayerContext();
-
+function Lane({ items, resourceType, onSlideOutComplete }) {
     const [ size ] = useState({ width: 1280, height: 720 });
     const [ tiles, setTiles ] = useState(null);
     const [ activeIndex, setActiveIndex ] = useState(0);
@@ -29,50 +24,21 @@ function Lane({ items, type, onSlideOutComplete }) {
         setTiles(tiles);
     }, [ items ]);
 
-    useEffect(() => {
-        dispatch({
-            type: PlayerActionType.SET_SIZE,
-            payload: size,
-        });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [ size ]);
-
-    const onPlay = () => {
-        if (!activeItem) {
-            return;
-        }
-        switch (type) {
-            case ResourceType.VIDEO:
-                dispatch({
-                    type: PlayerActionType.SET_VIDEO,
-                    payload: activeItem,
-                });
-                break;
-            case ResourceType.PLAYLIST:
-                dispatch({
-                    type: PlayerActionType.SET_PLAYLIST,
-                    payload: activeItem,
-                });
-                break;
-            default:
-        }
-    };
-
     return (
-        <StyledLane size={size}>
-            <Player zIndex={tiles ? tiles.length * 10 - 5 : -1} />
-
+        <StyledLane
+            size={size}
+            numTiles={tiles?.length}
+        >
             {tiles?.map((tile, index) => {
                 const displayIndex = index - activeIndex;
                 const hide = !items || displayIndex < 0;
                 const transform = displayIndex * laneTileOffset;
-                const zIndex = (tiles.length - displayIndex) * 10;
+                const zIndex = tiles.length - displayIndex;
                 const delay = (hide ? displayIndex : (tiles.length - 1 - index)) * laneTileAnimationOffset;
                 return (
                     <Tile
                         key={tile.title + index}
                         hide={hide}
-                        isPlaying={playerState.isPlaying && displayIndex === 0}
                         transform={transform}
                         zIndex={zIndex}
                         size={size}
@@ -84,16 +50,19 @@ function Lane({ items, type, onSlideOutComplete }) {
                             height={size.height}
                             title={tile.title}
                         />
-                        <Controls
-                            size={size}
-                            tile={tile}
-                            onPlay={onPlay}
-                        />
                     </Tile>
                 );
             })}
 
-            <Controls item={activeItem} type={type}/>
+
+            <Player className="lane-player" />
+
+            <Controls
+                className="lane-controls"
+                size={size}
+                activeItem={activeItem}
+                resourceType={resourceType}
+            />
 
             {items && (
                 <>
