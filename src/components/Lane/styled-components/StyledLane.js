@@ -8,6 +8,10 @@ export const StyledLane = styled.div`
     width: ${({ size }) => size.width}px;
     height: ${({ size }) => size.height}px;
     
+    .lane-video-detail {
+        z-index: ${({ numTiles }) => numTiles ? numTiles - 1 : -1};
+    }
+    
     .lane-player {
         position: relative;
         z-index: ${({ numTiles }) => numTiles ? numTiles + 1 : -1};

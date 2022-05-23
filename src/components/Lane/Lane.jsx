@@ -6,6 +6,7 @@ import { mapItemToTile } from './helpers/mapItemToTile';
 import { laneTileAnimationOffset, laneTileOffset } from '../../styles/variables';
 import Image from '../Image/Image';
 import Tile from './components/Tile/Tile';
+import VideoDetail from './components/VideoDetail/VideoDetail';
 
 // TODO implement onSlideOutComplete
 
@@ -54,8 +55,15 @@ function Lane({ items, resourceType, onSlideOutComplete }) {
                 );
             })}
 
+            <VideoDetail
+                className="lane-video-detail"
+                size={size}
+                activeItem={activeItem}
+            />
 
             <Player className="lane-player" />
+
+            {/*TODO hide below when transitioning*/}
 
             <Controls
                 className="lane-controls"
