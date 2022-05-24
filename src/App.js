@@ -3,47 +3,78 @@ import { requestService } from './services/requestService';
 import { PlayerProvider } from './components/Player/context';
 import { ThemeProvider } from '@mui/material';
 import { theme } from './styles/mui-theme';
-import { editorService } from './services/editorService';
+import { EditorFilterValues, editorService } from './services/editorService';
 import Lane from './components/Lane/Lane';
 import { ResourceType } from './enums/ResourceType';
+import { QueryParamProvider } from 'use-query-params';
+import Navigation from './components/Navigation/Navigation';
+
+const laneSize = { width: 1280, height: 720 };
 
 
 function App() {
     const [ videos, setVideos ] = useState(null);
-    const [ playlists, setPlaylists ] = useState(null);
+    // const [ playlists, setPlaylists ] = useState(null);
 
-    const [ resourceType, setResourceType ] = useState(ResourceType.VIDEO);
+    const [ resourceType ] = useState(ResourceType.VIDEO);
     const [ items, setItems ] = useState(null);
+    const [ showItems, setShowItems ] = useState(false);
 
     useEffect(() => {
-        if (videos !== null) {
-            // TODO implement on page change
-            const currentItems = editorService.getVideos(videos);
-            setItems(currentItems);
-            return;
-        }
         requestService.getYoutubeApiCache(resourceType)
-            .then(response => setVideos(response.videos));
+            .then(response => {
+                setVideos(response.videos);
+                setShowItems(true);
+            });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ videos ]);
 
     const onSlideOutComplete = useCallback(() => {
-        console.log('time for new videos!');
+        setShowItems(true);
     }, []);
+
+    const onFilterChange = useCallback((filterValue) => {
+        console.log('filterValue', filterValue)
+        setShowItems(false);
+
+        switch (filterValue) {
+            case EditorFilterValues.TRENDING: {
+                const currentItems = editorService.getVideos(videos);
+                setItems(currentItems);
+                break;
+            }
+            case EditorFilterValues.RECENT: {
+                const currentItems = editorService.getVideos(videos);
+                setItems(currentItems);
+                break;
+            }
+            case EditorFilterValues.PLAYLISTS: {
+                const currentItems = editorService.getVideos(videos);
+                setItems(currentItems);
+                break;
+            }
+            default:
+        }
+
+        setTimeout(onSlideOutComplete, 700); // TODO implement without safety timeout
+    }, [ videos, onSlideOutComplete ]);
 
     return (
         <ThemeProvider theme={theme}>
-            <PlayerProvider>
-                <>
-                    <div onClick={() => setItems(null)}>HIDE</div>
-                    <div onClick={() => setItems(editorService.getVideos(videos))}>SHOW</div>
+            <QueryParamProvider>
+                <PlayerProvider>
+                    <>
+                        <Navigation onFilterChange={onFilterChange} />
 
-                    <Lane
-                        items={items}
-                        resourceType={resourceType}
-                        onSlideOutComplete={onSlideOutComplete}
-                    />
-                </>
-            </PlayerProvider>
+                        <Lane
+                            items={showItems ? items : null}
+                            resourceType={resourceType}
+                            size={laneSize}
+                            onSlideOutComplete={onSlideOutComplete}
+                        />
+                    </>
+                </PlayerProvider>
+            </QueryParamProvider>
         </ThemeProvider>
     );
 }

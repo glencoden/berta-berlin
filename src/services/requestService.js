@@ -3,7 +3,13 @@
  */
 import video from '../cache/video.json';
 import playlist from '../cache/playlist.json';
-import channelCache from '../cache/channel.json';
+import channel from '../cache/channel.json';
+
+const DEV_CACHE = {
+    video,
+    playlist,
+    channel
+};
 
 /**
  * Environment
@@ -24,13 +30,13 @@ class RequestService {
 
     getYoutubeApiCache(resource) {
         if (process.env.NODE_ENV === 'development') {
-            return Promise.resolve(video);
+            return Promise.resolve(DEV_CACHE[resource]);
         }
         return this._get(CACHE_WEBWORKER_URL, { resource });
     }
 
     getChannel() {
-        return Promise.resolve(channelCache);
+        return Promise.resolve(DEV_CACHE.channel);
         // return this._get(`${YOUTUBE_API_URL}/channels?id=${YOUTUBE_CHANNEL_ID}&key=${YOUTUBE_API_KEY}&part=snippet,contentDetails,brandingSettings`);
     }
 }

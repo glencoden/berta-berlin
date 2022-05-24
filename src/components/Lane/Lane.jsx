@@ -9,8 +9,7 @@ import Tile from './components/Tile/Tile';
 import VideoDetail from './components/VideoDetail/VideoDetail';
 
 
-function Lane({ items, resourceType, onSlideOutComplete }) {
-    const [ size ] = useState({ width: 1280, height: 720 });
+function Lane({ items, resourceType, size, onSlideOutComplete }) {
     const [ tiles, setTiles ] = useState(null);
     const [ doneTransitioning, setDoneTransitioning ] = useState(false);
     const [ activeIndex, setActiveIndex ] = useState(0);

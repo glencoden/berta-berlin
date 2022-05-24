@@ -1,7 +1,11 @@
 /**
  * sizing
  */
-export const laneLeft = 100; // px
+export const navigationMargin = 2; // rem
+export const navigationZIndex = 1000;
+export const sidebarWidth = 80; // px
+
+export const laneLeft = 110; // px
 export const laneTop = 100; // px
 export const laneTileOffset = 50; // px
 
