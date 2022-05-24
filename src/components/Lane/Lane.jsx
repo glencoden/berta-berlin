@@ -138,12 +138,13 @@ function Lane({ hide, size, onSlideOutComplete, navigationOpen }) {
                 const delay = (hideTile ? displayIndex : (tiles.length - 1 - index)) * laneTileAnimationOffset;
                 return (
                     <Tile
-                        key={tile.title + index}
+                        key={`${tile.title}${index}`}
                         hide={hideTile}
                         transform={transform}
                         zIndex={zIndex}
                         size={size}
                         delay={delay}
+                        setActive={() => setActiveIndex(index)}
                         observer={tileObserver}
                     >
                         <Image

@@ -15,6 +15,7 @@ function Controls({ className, size, activeItem, showControls }) {
     const { playerState, dispatch } = usePlayerContext();
 
     const [ prevActiveItem, setPrevActiveItem ] = useState(activeItem);
+    const [ videoHasStarted, setVideoHasStarted ] = useState(false);
 
     const parsedDescription = useParsedDescription(activeItem);
 
@@ -58,6 +59,7 @@ function Controls({ className, size, activeItem, showControls }) {
      * Pause callback
      */
     const onPause = useCallback(() => {
+        setVideoHasStarted(false);
         dispatch({
             type: PlayerActionType.STOP,
         });
@@ -76,6 +78,16 @@ function Controls({ className, size, activeItem, showControls }) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ activeItem, onPause ]);
 
+    /**
+     * Set has started when player is playing for the first time since active item changed
+     */
+    useEffect(() => {
+        if (!playerState.isPlaying) {
+            return;
+        }
+        setVideoHasStarted(true);
+    }, [ playerState.isPlaying ]);
+
     if (!activeItem) {
         return null;
     }
@@ -85,7 +97,7 @@ function Controls({ className, size, activeItem, showControls }) {
             className={className}
             size={size}
             show={showControls}
-            isPlaying={playerState.isPlaying}
+            videoHasStarted={videoHasStarted}
         >
             <StyledControlsOverlay>
                 <Typography
@@ -106,12 +118,13 @@ function Controls({ className, size, activeItem, showControls }) {
             <StyledControlsPlayToggleButton size={size}>
                 {!playerState.isPlaying && (
                     <Button
+                        style={{ fontSize: '2rem' }}
                         variant="contained"
                         size="large"
-                        disabled={playerState.shouldPlay !== playerState.isPlaying}
+                        disable={playerState.shouldPlay !== playerState.isPlaying}
                         onClick={playerState.isPlaying ? onPause : onPlay}
                     >
-                        PLAY
+                        &#9658; Play
                     </Button>
                 )}
             </StyledControlsPlayToggleButton>

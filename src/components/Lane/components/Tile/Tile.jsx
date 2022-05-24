@@ -5,7 +5,7 @@ import { laneLeft, laneTileSlideInDelay } from '../../../../styles/variables';
 const HIDE_OFFSET_SAFETY_MARGIN = 50;
 
 
-function Tile({ hide, transform, zIndex, size, delay, observer, children }) {
+function Tile({ hide, transform, zIndex, size, delay, setActive, observer, children }) {
     const [ showTile, setShowTile ] = useState(false);
     const [ delayOnMount, setDelayOnMount ] = useState(delay + laneTileSlideInDelay);
 
@@ -48,6 +48,7 @@ function Tile({ hide, transform, zIndex, size, delay, observer, children }) {
             transform={showTile ? transform : -(size.width + laneLeft + HIDE_OFFSET_SAFETY_MARGIN)}
             zIndex={zIndex}
             size={size}
+            onClick={setActive}
         >
             {children}
         </StyledTile>

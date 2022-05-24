@@ -2,6 +2,16 @@ import styled from '@emotion/styled';
 import { navigationMargin, navigationZIndex, sidebarWidth } from '../../../styles/variables';
 
 export const StyledSidebar = styled.div`
+    @keyframes slide-in {
+        0% {
+            transform: translateX(-${sidebarWidth}px);
+        }
+        100% {
+            transform: translateX(0);
+        }
+    }
+
+    animation: slide-in ${({ theme }) => (theme.transitions.duration.standard / 1000)}s ease;
     position: fixed;
     left: 0;
     top: 0;
