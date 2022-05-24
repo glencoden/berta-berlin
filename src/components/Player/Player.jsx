@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { getPlayer } from './helpers/getPlayer';
 import { usePlayerContext } from './context';
 import { StyledPlayer } from './styled-components/StyledPlayer';
@@ -9,9 +9,11 @@ let PLAYER_INITIATED = false;
  * This component should only be rendered once
  */
 function Player({ className }) {
+    const { playerState, dispatch } = usePlayerContext();
+
     const [ player, setPlayer ] = useState(null);
 
-    const { playerState, dispatch } = usePlayerContext();
+    const playerElement = useRef(null);
 
     /**
      * Init youtube player instance
@@ -41,6 +43,26 @@ function Player({ className }) {
             ? player.playVideo()
             : player.pauseVideo();
     }, [ playerState.shouldPlay, player ]);
+
+    /**
+     * Hide unwanted player element, enable player controls
+     */
+    useEffect(() => {
+        // TODO implement
+        if (playerElement.current === null) {
+            return;
+        }
+        // const onKeydown = (event) => {
+        //     if (event.key === 'ArrowRight') {
+        //         console.log('fast forward', event);
+        //         playerElement.current.dispatchEvent(new Event('click'));
+        //     }
+        // };
+        //
+        // window.addEventListener('keydown', onKeydown);
+        //
+        // return () => window.removeEventListener('keydown', onKeydown);
+    }, []);
 
     /**
      * Play video when not null
@@ -85,7 +107,10 @@ function Player({ className }) {
             isPlaying={playerState.isPlaying}
             className={className}
         >
-            <div id="youtube-player"/>
+            <div
+                id="youtube-player"
+                ref={playerElement}
+            />
         </StyledPlayer>
     );
 }

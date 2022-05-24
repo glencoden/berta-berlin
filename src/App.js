@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { requestService } from './services/requestService';
 import { PlayerProvider } from './components/Player/context';
 import { ThemeProvider } from '@mui/material';
@@ -26,6 +26,10 @@ function App() {
             .then(response => setVideos(response.videos));
     }, [ videos ]);
 
+    const onSlideOutComplete = useCallback(() => {
+        console.log('time for new videos!');
+    }, []);
+
     return (
         <ThemeProvider theme={theme}>
             <PlayerProvider>
@@ -36,6 +40,7 @@ function App() {
                     <Lane
                         items={items}
                         resourceType={resourceType}
+                        onSlideOutComplete={onSlideOutComplete}
                     />
                 </>
             </PlayerProvider>

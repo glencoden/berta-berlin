@@ -10,13 +10,16 @@ import { StyledControlsPlayToggleButton } from './styled-components/StyledContro
 import { useParsedDescription } from '../../hooks/useParsedDescription';
 
 
-function Controls({ className, size, activeItem, resourceType }) {
+function Controls({ className, size, activeItem, resourceType, showControls }) {
     const { playerState, dispatch } = usePlayerContext();
 
     const [ prevActiveItem, setPrevActiveItem ] = useState(activeItem);
 
     const parsedDescription = useParsedDescription(activeItem);
 
+    /**
+     * Apply player size
+     */
     useEffect(() => {
         dispatch({
             type: PlayerActionType.SET_SIZE,
@@ -25,6 +28,9 @@ function Controls({ className, size, activeItem, resourceType }) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ size ]);
 
+    /**
+     * Play callback
+     */
     const onPlay = useCallback(() => {
         if (!activeItem) {
             return;
@@ -47,6 +53,9 @@ function Controls({ className, size, activeItem, resourceType }) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ activeItem, resourceType ]);
 
+    /**
+     * Pause callback
+     */
     const onPause = useCallback(() => {
         dispatch({
             type: PlayerActionType.STOP,
@@ -54,6 +63,9 @@ function Controls({ className, size, activeItem, resourceType }) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    /**
+     * Pause player on active item change
+     */
     useEffect(() => {
         if (activeItem === prevActiveItem) {
             return;
@@ -71,6 +83,7 @@ function Controls({ className, size, activeItem, resourceType }) {
         <StyledControls
             className={className}
             size={size}
+            show={showControls}
         >
             <StyledControlsOverlay isPlaying={playerState.isPlaying}>
                 <Typography

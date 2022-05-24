@@ -8,6 +8,8 @@ export const StyledImage = styled.div`
     
     .image {
         object-fit: cover;
+        width: ${({ width }) => width}px;
+        height: ${({ height }) => height}px;
         transition: opacity ${({ theme }) => (theme.transitions.duration.shorter / 1000)}s;
     }
 `;

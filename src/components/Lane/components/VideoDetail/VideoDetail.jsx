@@ -4,7 +4,7 @@ import { StyledVideoDetail } from './styled-components/StyledVideoDetail';
 import { Typography } from '@mui/material';
 
 
-function VideoDetail({ size, activeItem }) {
+function VideoDetail({ size, activeItem, showControls }) {
     const { playerState } = usePlayerContext();
 
     const parsedDescription = useParsedDescription(activeItem);
@@ -13,6 +13,7 @@ function VideoDetail({ size, activeItem }) {
         <StyledVideoDetail
             isPlaying={playerState.isPlaying}
             size={size}
+            show={showControls}
         >
             {parsedDescription.rest.map((part, index) => (
                 <Typography
