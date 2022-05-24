@@ -40,7 +40,7 @@ function App() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const onToggleNavigationOpen = useCallback(() => setNavigationOpen(prevState => !prevState), []);
+    const onToggleNavigationOpen = useCallback((open) => setNavigationOpen(open), []);
 
     const onSlideOutComplete = useCallback(() => {
         setShowItems(true);

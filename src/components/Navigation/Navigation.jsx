@@ -40,7 +40,7 @@ function Navigation({ onFilterChange, onToggleOpen }) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ onFilterChange, filter ]);
 
-    useEffect(onToggleOpen, [ onToggleOpen, isNavigationOpen ]);
+    useEffect(() => onToggleOpen(isNavigationOpen), [ onToggleOpen, isNavigationOpen ]);
 
     const onNavButtonClick = (filterValue) => {
         setFilter(filterValue);
