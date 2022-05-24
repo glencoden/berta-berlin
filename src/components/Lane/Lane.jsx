@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { StyledLane } from './styled-components/StyledLane';
 import Player from '../Player/Player';
 import Controls from './components/Controls/Controls';
@@ -7,12 +7,17 @@ import { laneTileAnimationOffset, laneTileOffset } from '../../styles/variables'
 import Image from '../Image/Image';
 import Tile from './components/Tile/Tile';
 import VideoDetail from './components/VideoDetail/VideoDetail';
+import Switch from './components/Switch/Switch';
 
 
-function Lane({ items, resourceType, size, onSlideOutComplete }) {
+function Lane({ items, resourceType, size, onSlideOutComplete, navigationOpen }) {
     const [ tiles, setTiles ] = useState(null);
     const [ doneTransitioning, setDoneTransitioning ] = useState(false);
     const [ activeIndex, setActiveIndex ] = useState(0);
+
+    // TODO fix effect dependency
+    const onSelectPrev = useCallback(() => setActiveIndex(prevIndex => Math.max(prevIndex - 1, 0)), []);
+    const onSelectNext = useCallback(() => setActiveIndex(prevIndex => Math.min(prevIndex + 1, items?.length - 1)), [ items ]);
 
     const activeItem = items?.[activeIndex];
 
@@ -31,16 +36,13 @@ function Lane({ items, resourceType, size, onSlideOutComplete }) {
      * Arrow key navigation
      */
     useEffect(() => {
-        if (!items) {
-            return;
-        }
         const onKeydown = (event) => {
             switch (event.key) {
                 case 'ArrowLeft':
-                    setActiveIndex(prevIndex => Math.max(prevIndex - 1, 0));
+                    onSelectPrev();
                     break;
                 case 'ArrowRight':
-                    setActiveIndex(prevIndex => Math.min(prevIndex + 1, items.length - 1));
+                    onSelectNext();
                     break;
                 default:
             }
@@ -49,7 +51,7 @@ function Lane({ items, resourceType, size, onSlideOutComplete }) {
         window.addEventListener('keydown', onKeydown);
 
         return () => window.removeEventListener('keydown', onKeydown);
-    }, [ items ]);
+    }, [ onSelectPrev, onSelectNext ]);
 
     /**
      * Set num tiles that should show for intersection observer to determine transition end
@@ -107,7 +109,16 @@ function Lane({ items, resourceType, size, onSlideOutComplete }) {
         <StyledLane
             size={size}
             numTiles={tiles?.length}
+            navigationOpen={navigationOpen}
         >
+            <Switch
+                size={size}
+                onPrev={onSelectPrev}
+                onNext={onSelectNext}
+                numTiles={tiles?.length}
+                activeIndex={activeIndex}
+            />
+
             {tiles?.map((tile, index) => {
                 const displayIndex = index - activeIndex;
                 const hide = !items || displayIndex < 0;

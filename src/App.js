@@ -8,11 +8,14 @@ import Lane from './components/Lane/Lane';
 import { ResourceType } from './enums/ResourceType';
 import { QueryParamProvider } from 'use-query-params';
 import Navigation from './components/Navigation/Navigation';
-
-const laneSize = { width: 1280, height: 720 };
+import { minDeviceWidth, tileSize } from './styles/variables';
+import DeviceWall from './components/DeviceWall/DeviceWall';
 
 
 function App() {
+    const [ isDeviceLargeEnough, setIsDeviceLargeEnough ] = useState(window.innerWidth >= minDeviceWidth);
+    const [ navigationOpen, setNavigationOpen ] = useState(false);
+
     const [ videos, setVideos ] = useState(null);
     // const [ playlists, setPlaylists ] = useState(null);
 
@@ -20,21 +23,30 @@ function App() {
     const [ items, setItems ] = useState(null);
     const [ showItems, setShowItems ] = useState(false);
 
+    /**
+     * Get videos on mount
+     */
     useEffect(() => {
         requestService.getYoutubeApiCache(resourceType)
             .then(response => {
                 setVideos(response.videos);
                 setShowItems(true);
             });
+
+        const onResize = () => setIsDeviceLargeEnough(window.innerWidth >= minDeviceWidth);
+        window.addEventListener('resize', onResize);
+
+        return () => window.removeEventListener('resize', onResize);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [ videos ]);
+    }, []);
+
+    const onToggleNavigationOpen = useCallback(() => setNavigationOpen(prevState => !prevState), []);
 
     const onSlideOutComplete = useCallback(() => {
         setShowItems(true);
     }, []);
 
     const onFilterChange = useCallback((filterValue) => {
-        console.log('filterValue', filterValue)
         setShowItems(false);
 
         switch (filterValue) {
@@ -63,16 +75,23 @@ function App() {
         <ThemeProvider theme={theme}>
             <QueryParamProvider>
                 <PlayerProvider>
-                    <>
-                        <Navigation onFilterChange={onFilterChange} />
-
-                        <Lane
-                            items={showItems ? items : null}
-                            resourceType={resourceType}
-                            size={laneSize}
-                            onSlideOutComplete={onSlideOutComplete}
-                        />
-                    </>
+                    {isDeviceLargeEnough ? (
+                        <>
+                            <Navigation
+                                onFilterChange={onFilterChange}
+                                onToggleOpen={onToggleNavigationOpen}
+                            />
+                            <Lane
+                                items={showItems ? items : null}
+                                resourceType={resourceType}
+                                size={tileSize}
+                                onSlideOutComplete={onSlideOutComplete}
+                                navigationOpen={navigationOpen}
+                            />
+                        </>
+                    ) : (
+                        <DeviceWall />
+                    )}
                 </PlayerProvider>
             </QueryParamProvider>
         </ThemeProvider>

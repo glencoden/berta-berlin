@@ -7,6 +7,8 @@ export const StyledLane = styled.div`
     top: ${laneTop}px;
     width: ${({ size }) => size.width}px;
     height: ${({ size }) => size.height}px;
+    transform: translateY(${({ navigationOpen }) => navigationOpen ? `${laneTop / 2}px` : '0'});
+    transition: transform ${({ theme }) => (theme.transitions.duration.standard / 1000)}s;
     
     .lane-video-detail {
         z-index: ${({ numTiles }) => numTiles ? numTiles - 1 : -1};

@@ -16,4 +16,16 @@ export const StyledSidebar = styled.div`
         top: ${navigationMargin}rem;
         transform: translateX(-50%);
     }
+    
+    .sidebar-imprint-button {
+        position: absolute;
+        left: 50%;
+        bottom: ${navigationMargin}rem;
+        transform: translateX(-50%);
+    }
+    
+    .sidebar-imprint-button-image {
+        border-radius: ${({ theme }) => theme.shape.borderRadius}px;
+        overflow: hidden;
+    }
 `;

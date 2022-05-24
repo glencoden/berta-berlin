@@ -4,7 +4,7 @@ import { StyledImage } from './styled-components/StyledImage';
 const IMAGE_LOADING_TIMEOUT = 5;
 
 
-function Image({ url, width, height, title }) {
+function Image({ url, width, height, title, className }) {
     const imageRef = useRef(null);
 
     const [ src, setSrc ] = useState('');
@@ -26,6 +26,7 @@ function Image({ url, width, height, title }) {
 
     return (
         <StyledImage
+            className={className}
             width={width}
             height={height}
         >
