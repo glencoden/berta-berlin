@@ -4,7 +4,7 @@ import './index.css';
 import App from './App';
 
 console.log(
-    '%cglencoden ❤️ version 0.0.1',
+    '%cglencoden ❤️ version 0.0.2',
     `font-size: 1rem;
             padding: 1rem;
             margin: 1rem 0;
