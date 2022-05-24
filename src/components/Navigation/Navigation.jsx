@@ -93,8 +93,8 @@ function Navigation({ onMenuItemSelect, onToggleOpen }) {
                                     key={index}
                                     className="nav-dashboard"
                                     menuItem={menuItem}
-                                    isSelected={!!playlist}
                                     options={menuItem.options}
+                                    selectedOptionValue={playlist}
                                     onMenuItemClick={onMenuItemClick}
                                 >
                                     {menuItem.label}

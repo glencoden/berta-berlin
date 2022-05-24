@@ -4,7 +4,7 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 
 
-function SubMenu({ className, menuItem, isSelected, options, onMenuItemClick, children }) {
+function SubMenu({ className, menuItem, options, selectedOptionValue, onMenuItemClick, children }) {
     const [ anchorEl, setAnchorEl ] = useState(null);
 
     const open = Boolean(anchorEl);
@@ -28,7 +28,7 @@ function SubMenu({ className, menuItem, isSelected, options, onMenuItemClick, ch
     return (
         <div className={className}>
             <Button
-                variant={isSelected ? 'outlined' : ''}
+                variant={!!selectedOptionValue ? 'outlined' : ''}
                 onClick={handleClick}
             >
                 {children}
@@ -44,6 +44,7 @@ function SubMenu({ className, menuItem, isSelected, options, onMenuItemClick, ch
             >
                 {options.map((item, index) => (
                     <MenuItem
+                        selected={item.value === selectedOptionValue}
                         key={`${item.label}${index}`}
                         onClick={() => handleClose(item)}
                     >

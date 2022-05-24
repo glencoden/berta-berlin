@@ -6,7 +6,7 @@ import { playlistFilterKey } from '../styles/variables';
 function getRandomVideos(videos) {
     const dupe = [ ...videos ];
     const result = [];
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < Math.min(dupe.length, 10); i++) {
         const randomIndex = Math.floor(Math.random() * dupe.length);
         const randomItem = { ...dupe[randomIndex] };
         dupe.splice(randomIndex, 1);
