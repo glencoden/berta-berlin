@@ -1,8 +1,12 @@
 import styled from '@emotion/styled';
-import { controlsMargin } from '../../../../../styles/variables';
+import { controlsOverlayWidth } from '../../../../../styles/variables';
 
 export const StyledControlsPlayToggleButton = styled.div`
         position: absolute;
-        left: ${controlsMargin}rem;
-        bottom: ${controlsMargin}rem;
+        right: ${({ size }) => {
+            const rightTileAreaWidth = size.width - (size.width * controlsOverlayWidth / 100)
+            return rightTileAreaWidth / 2;
+        }}px;
+        top: 50%;
+        transform: translate(50%, -50%);
 `;

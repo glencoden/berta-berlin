@@ -16,11 +16,13 @@ function reducer(state, action) {
         case PlayerActionType.ON_PLAY:
             return {
                 ...state,
+                shouldPlay: true,
                 isPlaying: true,
             };
         case PlayerActionType.ON_STOP:
             return {
                 ...state,
+                shouldPlay: false,
                 isPlaying: false,
             };
         case PlayerActionType.SET_VIDEO:

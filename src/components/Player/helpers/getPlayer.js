@@ -19,7 +19,7 @@ export const getPlayer = (dispatch) => {
         window.YT.ready(() => {
             player = new window.YT.Player('youtube-player', {
                 playerVars: {
-                    controls: 0,
+                    // controls: 0,
                     enablejsapi: 1,
                 },
                 events: {

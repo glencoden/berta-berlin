@@ -12,4 +12,9 @@ export const StyledNavigation = styled.div`
     .nav-button {
         margin-right: ${navigationMargin}rem;
     }
+    
+    .nav-dashboard {
+        display: inline-block;
+        margin-right: ${navigationMargin}rem;
+    }
 `;

@@ -7,5 +7,6 @@ export const StyledControls = styled.div`
     width: ${({ size }) => size.width}px;
     height: ${({ size }) => size.height}px;
     opacity: ${({ show }) => show ? '1' : '0'};
-    transition: opacity ${({ theme }) => (theme.transitions.duration.standard / 1000)}s;
+    transform: translateY(${({ isPlaying }) => isPlaying ? '100%' : '0'});
+    transition: opacity ${({ theme }) => (theme.transitions.duration.standard / 1000)}s, transform ${({ theme }) => (theme.transitions.duration.standard / 1000)}s;
 `;

@@ -1,14 +1,19 @@
 import { StyledNavigation } from './styled-components/StyledNavigation';
 import Button from '@mui/material/Button';
 import { useQueryParam } from 'use-query-params';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { StyledSidebar } from './styled-components/StyledSidebar';
-import BurgerIcon from './components/BurgerIcon';
-import { EditorFilterValues } from '../../services/editorService';
+import BurgerIcon from './components/BurgerIcon/BurgerIcon';
 import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Image from '../Image/Image';
+import { UrlState } from '../../enums/UrlState';
+import { getMenuItems } from './helpers/getMenuItems';
+import { MenuItemType } from '../../enums/MenuItemType';
+import { FilterType } from '../../enums/FilterType';
+import { editorService } from '../../services/editorService';
+import SubMenu from './components/SubMenu/SubMenu';
 
 const MODAL_BOX_STYLE = {
     position: 'absolute',
@@ -22,30 +27,41 @@ const MODAL_BOX_STYLE = {
     p: 4,
 };
 
-const URL_FILTER_KEY = 'filter';
-const FILTER_VALUES = Object.values(EditorFilterValues);
 
-
-function Navigation({ onFilterChange, onToggleOpen }) {
+function Navigation({ onMenuItemSelect, onToggleOpen }) {
+    const [ menuItems ] = useState(() => getMenuItems());
     const [ isNavigationOpen, setIsNavigationOpen ] = useState(false);
     const [ isModalOpen, setIsModalOpen ] = useState(false);
 
-    const [ filter, setFilter ] = useQueryParam(URL_FILTER_KEY);
+    const [ filter, setFilter ] = useQueryParam(UrlState.FILTER);
+    const [ playlist, setPlaylist ] = useQueryParam(UrlState.PLAYLIST);
 
+    /**
+     * Update state from url state on mount
+     */
     useEffect(() => {
         if (!filter) {
-            setFilter(FILTER_VALUES[0]);
+            setFilter(FilterType.TRENDING);
         }
-        onFilterChange(filter);
+        if (!playlist) {
+            setPlaylist(playlist)
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [ onFilterChange, filter ]);
+    }, [ filter, playlist ]);
 
     useEffect(() => onToggleOpen(isNavigationOpen), [ onToggleOpen, isNavigationOpen ]);
 
-    const onNavButtonClick = (filterValue) => {
-        setFilter(filterValue);
+    const onMenuItemClick = useCallback((menuItem) => {
+        editorService.onMenuItemSelect(menuItem);
+
+        setFilter(editorService.filterType);
+        setPlaylist(editorService.selectedPlaylistId);
+
+        onMenuItemSelect();
+
         setIsNavigationOpen(false);
-    };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [ onMenuItemSelect ]);
 
     return (
         <>
@@ -72,16 +88,36 @@ function Navigation({ onFilterChange, onToggleOpen }) {
             </StyledSidebar>
 
             <StyledNavigation isOpen={isNavigationOpen}>
-                {FILTER_VALUES.map((filterValue, index) => (
-                    <Button
-                        className="nav-button"
-                        key={index}
-                        variant={filterValue === filter ? 'outlined' : ''}
-                        onClick={() => onNavButtonClick(filterValue)}
-                    >
-                        {filterValue}
-                    </Button>
-                ))}
+                {menuItems.map((menuItem, index) => {
+                    switch (menuItem.type) {
+                        case MenuItemType.FILTER:
+                            return (
+                                <Button
+                                    className="nav-button"
+                                    key={index}
+                                    variant={!playlist && menuItem.value === filter ? 'outlined' : ''}
+                                    onClick={() => onMenuItemClick(menuItem)}
+                                >
+                                    {menuItem.label}
+                                </Button>
+                            );
+                        case MenuItemType.DASHBOARD:
+                            return (
+                                <SubMenu
+                                    key={index}
+                                    className="nav-dashboard"
+                                    menuItem={menuItem}
+                                    isSelected={!!playlist}
+                                    options={menuItem.options}
+                                    onMenuItemClick={onMenuItemClick}
+                                >
+                                    {menuItem.label}
+                                </SubMenu>
+                            );
+                        default:
+                            return <div>unknown menu item type</div>;
+                    }
+                })}
             </StyledNavigation>
 
             <Modal

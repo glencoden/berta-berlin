@@ -2,7 +2,7 @@
  * sizing
  */
 export const tileSize = { width: 1280, height: 720 }; // px
-export const minDeviceWidth = 1100; // px
+export const minDeviceWidth = 600; // px
 
 export const navigationMargin = 2; // rem
 export const navigationZIndex = 1000;
@@ -22,3 +22,8 @@ export const controlsOverlayWidth = 38; // %
  */
 export const laneTileSlideInDelay = 200; // ms
 export const laneTileAnimationOffset = 50; // ms
+
+/**
+ * Editor logic
+ */
+export const playlistFilterKey = 'berta.berlin';

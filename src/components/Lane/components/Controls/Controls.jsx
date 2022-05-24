@@ -8,9 +8,10 @@ import { StyledControlsOverlay } from './styled-components/StyledControlsOverlay
 import { Typography } from '@mui/material';
 import { StyledControlsPlayToggleButton } from './styled-components/StyledControlsPlayToggleButton';
 import { useParsedDescription } from '../../hooks/useParsedDescription';
+import { editorService } from '../../../../services/editorService';
 
 
-function Controls({ className, size, activeItem, resourceType, showControls }) {
+function Controls({ className, size, activeItem, showControls }) {
     const { playerState, dispatch } = usePlayerContext();
 
     const [ prevActiveItem, setPrevActiveItem ] = useState(activeItem);
@@ -35,7 +36,7 @@ function Controls({ className, size, activeItem, resourceType, showControls }) {
         if (!activeItem) {
             return;
         }
-        switch (resourceType) {
+        switch (editorService.resourceType) {
             case ResourceType.VIDEO:
                 dispatch({
                     type: PlayerActionType.SET_VIDEO,
@@ -51,7 +52,7 @@ function Controls({ className, size, activeItem, resourceType, showControls }) {
             default:
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [ activeItem, resourceType ]);
+    }, [ activeItem ]);
 
     /**
      * Pause callback
@@ -84,8 +85,9 @@ function Controls({ className, size, activeItem, resourceType, showControls }) {
             className={className}
             size={size}
             show={showControls}
+            isPlaying={playerState.isPlaying}
         >
-            <StyledControlsOverlay isPlaying={playerState.isPlaying}>
+            <StyledControlsOverlay>
                 <Typography
                     variant="h4"
                     color="white"
@@ -101,15 +103,17 @@ function Controls({ className, size, activeItem, resourceType, showControls }) {
                 </Typography>
             </StyledControlsOverlay>
 
-            <StyledControlsPlayToggleButton>
-                <Button
-                    variant="contained"
-                    size="large"
-                    disabled={playerState.shouldPlay !== playerState.isPlaying}
-                    onClick={playerState.isPlaying ? onPause : onPlay}
-                >
-                    {playerState.isPlaying ? 'PAUSE' : 'PLAY'}
-                </Button>
+            <StyledControlsPlayToggleButton size={size}>
+                {!playerState.isPlaying && (
+                    <Button
+                        variant="contained"
+                        size="large"
+                        disabled={playerState.shouldPlay !== playerState.isPlaying}
+                        onClick={playerState.isPlaying ? onPause : onPlay}
+                    >
+                        PLAY
+                    </Button>
+                )}
             </StyledControlsPlayToggleButton>
         </StyledControls>
     );

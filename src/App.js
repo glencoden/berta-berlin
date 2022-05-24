@@ -3,7 +3,7 @@ import { requestService } from './services/requestService';
 import { PlayerProvider } from './components/Player/context';
 import { ThemeProvider } from '@mui/material';
 import { theme } from './styles/mui-theme';
-import { EditorFilterValues, editorService } from './services/editorService';
+import { editorService } from './services/editorService';
 import Lane from './components/Lane/Lane';
 import { ResourceType } from './enums/ResourceType';
 import { QueryParamProvider } from 'use-query-params';
@@ -16,60 +16,50 @@ function App() {
     const [ isDeviceLargeEnough, setIsDeviceLargeEnough ] = useState(window.innerWidth >= minDeviceWidth);
     const [ navigationOpen, setNavigationOpen ] = useState(false);
 
-    const [ videos, setVideos ] = useState(null);
-    // const [ playlists, setPlaylists ] = useState(null);
+    const [ isVideosLoading, setIsVideosLoading ] = useState(true);
+    const [ isPlaylistsLoading, setIsPlaylistsLoading ] = useState(true);
 
-    const [ resourceType ] = useState(ResourceType.VIDEO);
-    const [ items, setItems ] = useState(null);
-    const [ showItems, setShowItems ] = useState(false);
+    const [ showVideoLane, setShowVideoLane ] = useState(false);
 
     /**
      * Get videos on mount
      */
     useEffect(() => {
-        requestService.getYoutubeApiCache(resourceType)
+        requestService.getYoutubeApiCache(ResourceType.VIDEO)
             .then(response => {
-                setVideos(response.videos);
-                setShowItems(true);
+                editorService.setVideos(response.videos);
+                setIsVideosLoading(false);
+                setShowVideoLane(true);
+                requestService.getYoutubeApiCache(ResourceType.PLAYLIST)
+                    .then(response => {
+                        editorService.setPlaylists(response.playlists);
+                        setIsPlaylistsLoading(false);
+                    })
             });
 
         const onResize = () => setIsDeviceLargeEnough(window.innerWidth >= minDeviceWidth);
-        window.addEventListener('resize', onResize);
 
-        return () => window.removeEventListener('resize', onResize);
+        window.addEventListener('resize', onResize);
+        window.addEventListener('orientationchange', onResize);
+
+        return () => {
+            window.removeEventListener('resize', onResize);
+            window.removeEventListener('orientationchange', onResize);
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const onToggleNavigationOpen = useCallback((open) => setNavigationOpen(open), []);
 
     const onSlideOutComplete = useCallback(() => {
-        setShowItems(true);
+        setShowVideoLane(true);
     }, []);
 
-    const onFilterChange = useCallback((filterValue) => {
-        setShowItems(false);
-
-        switch (filterValue) {
-            case EditorFilterValues.TRENDING: {
-                const currentItems = editorService.getVideos(videos);
-                setItems(currentItems);
-                break;
-            }
-            case EditorFilterValues.RECENT: {
-                const currentItems = editorService.getVideos(videos);
-                setItems(currentItems);
-                break;
-            }
-            case EditorFilterValues.PLAYLISTS: {
-                const currentItems = editorService.getVideos(videos);
-                setItems(currentItems);
-                break;
-            }
-            default:
-        }
+    const onMenuItemSelect = useCallback(() => {
+        setShowVideoLane(false);
 
         setTimeout(onSlideOutComplete, 700); // TODO implement without safety timeout
-    }, [ videos, onSlideOutComplete ]);
+    }, [ onSlideOutComplete ]);
 
     return (
         <ThemeProvider theme={theme}>
@@ -77,17 +67,20 @@ function App() {
                 <PlayerProvider>
                     {isDeviceLargeEnough ? (
                         <>
-                            <Navigation
-                                onFilterChange={onFilterChange}
-                                onToggleOpen={onToggleNavigationOpen}
-                            />
-                            <Lane
-                                items={showItems ? items : null}
-                                resourceType={resourceType}
-                                size={tileSize}
-                                onSlideOutComplete={onSlideOutComplete}
-                                navigationOpen={navigationOpen}
-                            />
+                            {!isPlaylistsLoading && (
+                                <Navigation
+                                    onMenuItemSelect={onMenuItemSelect}
+                                    onToggleOpen={onToggleNavigationOpen}
+                                />
+                            )}
+                            {!isVideosLoading && (
+                                <Lane
+                                    hide={!showVideoLane}
+                                    size={tileSize}
+                                    onSlideOutComplete={onSlideOutComplete}
+                                    navigationOpen={navigationOpen}
+                                />
+                            )}
                         </>
                     ) : (
                         <DeviceWall />

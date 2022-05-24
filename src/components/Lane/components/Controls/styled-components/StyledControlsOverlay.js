@@ -10,8 +10,6 @@ export const StyledControlsOverlay = styled.div`
     box-sizing: border-box;
     padding-bottom: calc(${controlsMargin}rem + 42px); // adding button height
     background-color: ${({ theme }) => theme.palette.action.active};
-    transform: translateY(${({ isPlaying }) => isPlaying ? '100%' : '0'});
-    transition: transform ${({ theme }) => (theme.transitions.duration.standard / 1000)}s;
     overflow: scroll;
     
     > * {
