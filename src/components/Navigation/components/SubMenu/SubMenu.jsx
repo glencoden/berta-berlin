@@ -14,6 +14,10 @@ function SubMenu({ className, menuItem, options, selectedOptionValue, onMenuItem
     };
 
     const handleClose = (selectedOption) => {
+        if (selectedOption === null) {
+            setAnchorEl(null);
+            return;
+        }
         onMenuItemClick({
             ...menuItem,
             value: selectedOption,
@@ -37,7 +41,7 @@ function SubMenu({ className, menuItem, options, selectedOptionValue, onMenuItem
                 id="basic-menu"
                 anchorEl={anchorEl}
                 open={open}
-                onClose={handleClose}
+                onClose={() => handleClose(null)}
                 MenuListProps={{
                     'aria-labelledby': 'basic-button',
                 }}

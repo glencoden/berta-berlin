@@ -12,6 +12,7 @@ import { FilterType } from '../../enums/FilterType';
 import { editorService } from '../../services/editorService';
 import SubMenu from './components/SubMenu/SubMenu';
 import Imprint from './components/Imprint/Imprint';
+import NavigationTitle from './components/NavigationTitle/NavigationTitle';
 
 
 function Navigation({ onMenuItemSelect, onToggleOpen }) {
@@ -105,6 +106,8 @@ function Navigation({ onMenuItemSelect, onToggleOpen }) {
                     }
                 })}
             </StyledNavigation>
+
+            <NavigationTitle isNavigationOpen={isNavigationOpen} />
 
             <Imprint
                 open={isModalOpen}

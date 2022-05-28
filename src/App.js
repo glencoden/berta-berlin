@@ -9,7 +9,8 @@ import { ResourceType } from './enums/ResourceType';
 import { QueryParamProvider } from 'use-query-params';
 import Navigation from './components/Navigation/Navigation';
 import { minDeviceWidth, tileSize } from './styles/variables';
-import DeviceWall from './components/DeviceWall/DeviceWall';
+import LoadingMessage from './components/LoadingMessage/LoadingMessage';
+import Headline from './components/Headline/Headline';
 
 
 function App() {
@@ -25,17 +26,19 @@ function App() {
      * Get videos on mount
      */
     useEffect(() => {
-        requestService.getYoutubeApiCache(ResourceType.VIDEO)
-            .then(response => {
-                editorService.setVideos(response.videos);
-                setIsVideosLoading(false);
-                setShowVideoLane(true);
-                requestService.getYoutubeApiCache(ResourceType.PLAYLIST)
-                    .then(response => {
-                        editorService.setPlaylists(response.playlists);
-                        setIsPlaylistsLoading(false);
-                    })
-            });
+        setTimeout(() => {
+            requestService.getYoutubeApiCache(ResourceType.VIDEO)
+                .then(response => {
+                    editorService.setVideos(response.videos);
+                    setIsVideosLoading(false);
+                    setShowVideoLane(true);
+                    requestService.getYoutubeApiCache(ResourceType.PLAYLIST)
+                        .then(response => {
+                            editorService.setPlaylists(response.playlists);
+                            setIsPlaylistsLoading(false);
+                        })
+                });
+        }, 3000);
 
         const onResize = () => setIsDeviceLargeEnough(window.innerWidth >= minDeviceWidth);
 
@@ -65,14 +68,23 @@ function App() {
         <ThemeProvider theme={theme}>
             <QueryParamProvider>
                 <PlayerProvider>
-                    {isDeviceLargeEnough ? (
+                    {!isDeviceLargeEnough ? (
+                        <LoadingMessage visible>
+                            Please turn device or view on a larger screen<br/>(min width {minDeviceWidth}px)
+                        </LoadingMessage>
+                    ) : (
                         <>
+                            <LoadingMessage visible={isPlaylistsLoading}>
+                                <Headline />
+                            </LoadingMessage>
+
                             {!isPlaylistsLoading && (
                                 <Navigation
                                     onMenuItemSelect={onMenuItemSelect}
                                     onToggleOpen={onToggleNavigationOpen}
                                 />
                             )}
+
                             {!isVideosLoading && (
                                 <Lane
                                     hide={!showVideoLane}
@@ -82,8 +94,6 @@ function App() {
                                 />
                             )}
                         </>
-                    ) : (
-                        <DeviceWall />
                     )}
                 </PlayerProvider>
             </QueryParamProvider>
