@@ -5,6 +5,6 @@ export const StyledNavigationTitle = styled.div`
     position: absolute;
     right: ${laneLeft}px;
     top: ${navigationMargin}rem;
-    transform: ${({ isNavigationOpen }) => isNavigationOpen ? 'none' : `translate(0, calc(-${navigationMargin}rem - 100%))`};
+    transform: ${({ visible }) => visible ? 'none' : `translate(0, calc(-${navigationMargin}rem - 100%))`};
     transition: transform ${({ theme }) => (theme.transitions.duration.standard / 1000)}s;
 `;

@@ -10,15 +10,18 @@ import { getMenuItems } from './helpers/getMenuItems';
 import { MenuItemType } from '../../enums/MenuItemType';
 import { FilterType } from '../../enums/FilterType';
 import { editorService } from '../../services/editorService';
-import SubMenu from './components/SubMenu/SubMenu';
-import Imprint from './components/Imprint/Imprint';
+import DashboardMenu from './components/DashboardMenu/DashboardMenu';
+import Imprint from '../Imprint/Imprint';
 import NavigationTitle from './components/NavigationTitle/NavigationTitle';
+import { useApplicationContext } from '../../context';
+import { ApplicationActionType } from '../../context/ApplicationActionType';
 
 
-function Navigation({ onMenuItemSelect, onToggleOpen }) {
+function Navigation() {
+    const { appState, dispatch } = useApplicationContext();
+
     const [ menuItems ] = useState(() => getMenuItems());
-    const [ isNavigationOpen, setIsNavigationOpen ] = useState(false);
-    const [ isModalOpen, setIsModalOpen ] = useState(false);
+    const [ isImprintOpen, setIsImprintOpen ] = useState(false);
 
     const [ filter, setFilter ] = useQueryParam(UrlState.FILTER);
     const [ playlist, setPlaylist ] = useQueryParam(UrlState.PLAYLIST);
@@ -31,37 +34,42 @@ function Navigation({ onMenuItemSelect, onToggleOpen }) {
             setFilter(FilterType.TRENDING);
         }
         if (!playlist) {
-            setPlaylist(playlist)
+            setPlaylist(playlist);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ filter, playlist ]);
 
-    useEffect(() => onToggleOpen(isNavigationOpen), [ onToggleOpen, isNavigationOpen ]);
-
     const onMenuItemClick = useCallback((menuItem) => {
+        if (dispatch === null) {
+            return;
+        }
         editorService.onMenuItemSelect(menuItem);
 
         setFilter(editorService.filterType);
         setPlaylist(editorService.selectedPlaylistId);
 
-        onMenuItemSelect();
-
-        setIsNavigationOpen(false);
+        dispatch({
+            type: ApplicationActionType.SET_MENU_OPEN,
+            payload: false,
+        });
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [ onMenuItemSelect ]);
+    }, [ dispatch ]);
 
     return (
         <>
             <StyledSidebar>
                 <Button
                     className="sidebar-burger-button"
-                    onClick={() => setIsNavigationOpen(prevState => !prevState)}
+                    onClick={() => dispatch({
+                        type: ApplicationActionType.SET_MENU_OPEN,
+                        payload: !appState.isMenuOpen,
+                    })}
                 >
-                    <BurgerIcon showCancelIcon={isNavigationOpen}/>
+                    <BurgerIcon showCancelIcon={appState.isMenuOpen}/>
                 </Button>
                 <Button
                     className="sidebar-imprint-button"
-                    onClick={() => setIsModalOpen(true)}
+                    onClick={() => setIsImprintOpen(true)}
                     title="imprint"
                 >
                     <Image
@@ -74,7 +82,7 @@ function Navigation({ onMenuItemSelect, onToggleOpen }) {
                 </Button>
             </StyledSidebar>
 
-            <StyledNavigation isOpen={isNavigationOpen}>
+            <StyledNavigation isOpen={appState.isMenuOpen}>
                 {menuItems.map((menuItem, index) => {
                     switch (menuItem.type) {
                         case MenuItemType.FILTER:
@@ -90,7 +98,7 @@ function Navigation({ onMenuItemSelect, onToggleOpen }) {
                             );
                         case MenuItemType.DASHBOARD:
                             return (
-                                <SubMenu
+                                <DashboardMenu
                                     key={index}
                                     className="nav-dashboard"
                                     menuItem={menuItem}
@@ -99,7 +107,7 @@ function Navigation({ onMenuItemSelect, onToggleOpen }) {
                                     onMenuItemClick={onMenuItemClick}
                                 >
                                     {menuItem.label}
-                                </SubMenu>
+                                </DashboardMenu>
                             );
                         default:
                             return <div>unknown menu item type</div>;
@@ -107,11 +115,11 @@ function Navigation({ onMenuItemSelect, onToggleOpen }) {
                 })}
             </StyledNavigation>
 
-            <NavigationTitle isNavigationOpen={isNavigationOpen} />
+            <NavigationTitle visible={appState.isMenuOpen}/>
 
             <Imprint
-                open={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
+                open={isImprintOpen}
+                onClose={() => setIsImprintOpen(false)}
             />
         </>
     );

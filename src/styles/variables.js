@@ -1,8 +1,9 @@
 /**
  * sizing
  */
-export const tileSize = { width: 1280, height: 720 }; // px
+export const defaultTileSize = { width: 1280, height: 720 }; // px
 export const minDeviceWidth = 600; // px
+export const maxMobileWidth = 900; // px
 
 export const navigationMargin = 2; // rem
 export const navigationZIndex = 1000;

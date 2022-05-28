@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { requestService } from './services/requestService';
 import { PlayerProvider } from './components/Player/context';
 import { ThemeProvider } from '@mui/material';
@@ -8,39 +8,43 @@ import Lane from './components/Lane/Lane';
 import { ResourceType } from './enums/ResourceType';
 import { QueryParamProvider } from 'use-query-params';
 import Navigation from './components/Navigation/Navigation';
-import { minDeviceWidth, tileSize } from './styles/variables';
+import { minDeviceWidth } from './styles/variables';
 import LoadingMessage from './components/LoadingMessage/LoadingMessage';
 import Headline from './components/Headline/Headline';
+import { useApplicationContext } from './context';
+import { ApplicationActionType } from './context/ApplicationActionType';
 
 
 function App() {
-    const [ isDeviceLargeEnough, setIsDeviceLargeEnough ] = useState(window.innerWidth >= minDeviceWidth);
-    const [ navigationOpen, setNavigationOpen ] = useState(false);
+    const { appState, dispatch } = useApplicationContext();
 
     const [ isVideosLoading, setIsVideosLoading ] = useState(true);
     const [ isPlaylistsLoading, setIsPlaylistsLoading ] = useState(true);
-
-    const [ showVideoLane, setShowVideoLane ] = useState(false);
 
     /**
      * Get videos on mount
      */
     useEffect(() => {
+        if (dispatch === null) {
+            return;
+        }
         setTimeout(() => {
             requestService.getYoutubeApiCache(ResourceType.VIDEO)
                 .then(response => {
                     editorService.setVideos(response.videos);
                     setIsVideosLoading(false);
-                    setShowVideoLane(true);
                     requestService.getYoutubeApiCache(ResourceType.PLAYLIST)
                         .then(response => {
                             editorService.setPlaylists(response.playlists);
                             setIsPlaylistsLoading(false);
-                        })
+                        });
                 });
         }, 3000);
 
-        const onResize = () => setIsDeviceLargeEnough(window.innerWidth >= minDeviceWidth);
+        const onResize = () => {
+            dispatch({ type: ApplicationActionType.CALC_IS_MOBILE });
+            dispatch({ type: ApplicationActionType.CALC_IS_VIEWPORT_TOO_SMALL });
+        };
 
         window.addEventListener('resize', onResize);
         window.addEventListener('orientationchange', onResize);
@@ -48,50 +52,30 @@ function App() {
         return () => {
             window.removeEventListener('resize', onResize);
             window.removeEventListener('orientationchange', onResize);
-        }
+        };
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    const onToggleNavigationOpen = useCallback((open) => setNavigationOpen(open), []);
-
-    const onSlideOutComplete = useCallback(() => {
-        setShowVideoLane(true);
-    }, []);
-
-    const onMenuItemSelect = useCallback(() => {
-        setShowVideoLane(false);
-
-        setTimeout(onSlideOutComplete, 700); // TODO implement without safety timeout
-    }, [ onSlideOutComplete ]);
+    }, [ dispatch ]);
 
     return (
         <ThemeProvider theme={theme}>
             <QueryParamProvider>
                 <PlayerProvider>
-                    {!isDeviceLargeEnough ? (
+                    {appState.isViewPortTooSmall ? (
                         <LoadingMessage visible>
                             Please turn device or view on a larger screen<br/>(min width {minDeviceWidth}px)
                         </LoadingMessage>
                     ) : (
                         <>
                             <LoadingMessage visible={isPlaylistsLoading}>
-                                <Headline />
+                                <Headline/>
                             </LoadingMessage>
 
                             {!isPlaylistsLoading && (
-                                <Navigation
-                                    onMenuItemSelect={onMenuItemSelect}
-                                    onToggleOpen={onToggleNavigationOpen}
-                                />
+                                <Navigation/>
                             )}
 
                             {!isVideosLoading && (
-                                <Lane
-                                    hide={!showVideoLane}
-                                    size={tileSize}
-                                    onSlideOutComplete={onSlideOutComplete}
-                                    navigationOpen={navigationOpen}
-                                />
+                                <Lane/>
                             )}
                         </>
                     )}

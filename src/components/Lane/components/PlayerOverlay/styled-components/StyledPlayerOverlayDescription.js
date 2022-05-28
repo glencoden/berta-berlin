@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { controlsMargin, controlsOverlayWidth } from '../../../../../styles/variables';
 
-export const StyledControlsOverlay = styled.div`
+export const StyledPlayerOverlayDescription = styled.div`
     position: absolute;
     left: 0;
     top: 0;

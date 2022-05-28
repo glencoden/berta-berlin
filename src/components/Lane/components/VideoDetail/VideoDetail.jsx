@@ -4,16 +4,17 @@ import { StyledVideoDetail } from './styled-components/StyledVideoDetail';
 import { Typography } from '@mui/material';
 
 
-function VideoDetail({ size, activeItem, showControls }) {
+function VideoDetail({ size, activeItem, visible }) {
     const { playerState } = usePlayerContext();
 
     const parsedDescription = useParsedDescription(activeItem);
 
     return (
         <StyledVideoDetail
+            className="scrollbar-hidden"
             isPlaying={playerState.isPlaying}
             size={size}
-            show={showControls}
+            visible={visible}
         >
             {parsedDescription.rest.map((part, index) => (
                 <Typography

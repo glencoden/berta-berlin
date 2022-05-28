@@ -4,7 +4,7 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 
 
-function SubMenu({ className, menuItem, options, selectedOptionValue, onMenuItemClick, children }) {
+function DashboardMenu({ className, menuItem, options, selectedOptionValue, onMenuItemClick, children }) {
     const [ anchorEl, setAnchorEl ] = useState(null);
 
     const open = Boolean(anchorEl);
@@ -60,4 +60,4 @@ function SubMenu({ className, menuItem, options, selectedOptionValue, onMenuItem
     );
 }
 
-export default SubMenu;
+export default DashboardMenu;

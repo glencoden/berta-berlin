@@ -1,17 +1,18 @@
-import { StyledControls } from './styled-components/StyledControls';
+import { StyledPlayerOverlay } from './styled-components/StyledPlayerOverlay';
 import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
+import Typography from '@mui/material/Typography';
 import { useCallback, useEffect, useState } from 'react';
 import { PlayerActionType } from '../../../Player/context/PlayerActionType';
 import { ResourceType } from '../../../../enums/ResourceType';
 import { usePlayerContext } from '../../../Player/context';
-import { StyledControlsOverlay } from './styled-components/StyledControlsOverlay';
-import { Typography } from '@mui/material';
-import { StyledControlsPlayToggleButton } from './styled-components/StyledControlsPlayToggleButton';
+import { StyledPlayerOverlayDescription } from './styled-components/StyledPlayerOverlayDescription';
+import { StyledPlayerOverlayPlayButton } from './styled-components/StyledPlayerOverlayPlayButton';
 import { useParsedDescription } from '../../hooks/useParsedDescription';
 import { editorService } from '../../../../services/editorService';
 
 
-function Controls({ className, size, activeItem, showControls }) {
+function PlayerOverlay({ className, size, activeItem, visible }) {
     const { playerState, dispatch } = usePlayerContext();
 
     const [ prevActiveItem, setPrevActiveItem ] = useState(activeItem);
@@ -92,14 +93,16 @@ function Controls({ className, size, activeItem, showControls }) {
         return null;
     }
 
+    const isVideoLoading = playerState.shouldPlay !== playerState.isPlaying;
+
     return (
-        <StyledControls
+        <StyledPlayerOverlay
             className={className}
             size={size}
-            show={showControls}
+            visible={visible}
             videoHasStarted={videoHasStarted}
         >
-            <StyledControlsOverlay>
+            <StyledPlayerOverlayDescription>
                 <Typography
                     variant="h4"
                     color="white"
@@ -113,23 +116,24 @@ function Controls({ className, size, activeItem, showControls }) {
                 >
                     {parsedDescription.detail}
                 </Typography>
-            </StyledControlsOverlay>
+            </StyledPlayerOverlayDescription>
 
-            <StyledControlsPlayToggleButton size={size}>
+            <StyledPlayerOverlayPlayButton size={size}>
                 {!playerState.isPlaying && (
                     <Button
+                        className="play-button"
                         style={{ fontSize: '2rem' }}
                         variant="contained"
                         size="large"
-                        disable={playerState.shouldPlay !== playerState.isPlaying}
+                        disable={isVideoLoading}
                         onClick={playerState.isPlaying ? onPause : onPlay}
                     >
-                        &#9658; Play
+                        {isVideoLoading ? <CircularProgress /> : <>&#9658;</>}&nbsp;Play
                     </Button>
                 )}
-            </StyledControlsPlayToggleButton>
-        </StyledControls>
+            </StyledPlayerOverlayPlayButton>
+        </StyledPlayerOverlay>
     );
 }
 
-export default Controls;
+export default PlayerOverlay;

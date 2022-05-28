@@ -1,15 +1,17 @@
-import { StyledSwitch } from './styled-components/StyledSwitch';
+import { StyledTileSwitch } from './styled-components/StyledTileSwitch';
 import Button from '@mui/material/Button';
 import { StyledProgressBar } from './styled-components/StyledProgressBar';
 
-function Switch({ size, onPrev, onNext, numTiles, activeIndex }) {
-
+function TileSwitch({ size, onPrev, onNext, numTiles, activeIndex, visible }) {
     if (isNaN(numTiles)) {
         return null;
     }
 
     return (
-        <StyledSwitch size={size}>
+        <StyledTileSwitch
+            size={size}
+            visible={visible}
+        >
             <Button onClick={onPrev}>previous</Button>
 
             <StyledProgressBar
@@ -21,8 +23,8 @@ function Switch({ size, onPrev, onNext, numTiles, activeIndex }) {
             </StyledProgressBar>
 
             <Button onClick={onNext}>next</Button>
-        </StyledSwitch>
+        </StyledTileSwitch>
     );
 }
 
-export default Switch;
+export default TileSwitch;

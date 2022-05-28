@@ -1,36 +1,66 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { StyledLane } from './styled-components/StyledLane';
 import Player from '../Player/Player';
-import Controls from './components/Controls/Controls';
+import PlayerOverlay from './components/PlayerOverlay/PlayerOverlay';
 import { mapItemToTile } from './helpers/mapItemToTile';
 import { laneTileAnimationOffset, laneTileOffset } from '../../styles/variables';
 import Image from '../Image/Image';
 import Tile from './components/Tile/Tile';
 import VideoDetail from './components/VideoDetail/VideoDetail';
-import Switch from './components/Switch/Switch';
+import TileSwitch from './components/TileSwitch/TileSwitch';
 import { editorService } from '../../services/editorService';
+import { useApplicationContext } from '../../context';
 
 
-function Lane({ hide, size, onSlideOutComplete, navigationOpen }) {
+function Lane() {
+    const { appState } = useApplicationContext();
+
     const [ items, setItems ] = useState(null);
     const [ tiles, setTiles ] = useState(null);
-    const [ doneTransitioning, setDoneTransitioning ] = useState(false);
     const [ activeIndex, setActiveIndex ] = useState(0);
 
-    const onSelectPrev = useCallback(() => setActiveIndex(prevIndex => Math.max(prevIndex - 1, 0)), []);
-    const onSelectNext = useCallback(() => setActiveIndex(prevIndex => Math.min(prevIndex + 1, items?.length - 1)), [ items ]);
+    const [ showLane, setShowLane ] = useState(true);
+    const [ doneTransitioning, setDoneTransitioning ] = useState(false);
+
+    const visibleTilesCount = useRef(0);
+    const numTilesWhichShouldShow = useRef(0);
+
+    const onSelectPrev = useCallback(() => {
+        if (!doneTransitioning) {
+            return;
+        }
+        numTilesWhichShouldShow.current++;
+        setActiveIndex(prevIndex => Math.max(prevIndex - 1, 0));
+    }, [ doneTransitioning ]);
+
+    const onSelectNext = useCallback(() => {
+        if (!doneTransitioning) {
+            return;
+        }
+        numTilesWhichShouldShow.current--;
+        setActiveIndex(prevIndex => Math.min(prevIndex + 1, items?.length - 1));
+    }, [ doneTransitioning, items ]);
 
     const activeItem = items?.[activeIndex];
 
     /**
-     * Set items on hide undone
+     * When selected item changes, set show lane to false
+     */
+
+    /**
+     * Set and reset local state
      */
     useEffect(() => {
-        if (hide) {
+        if (!showLane) {
+            numTilesWhichShouldShow.current = 0;
+            setActiveIndex(0);
+            setDoneTransitioning(false);
             return;
         }
-        setItems(() => editorService.getVideos());
-    }, [ hide ]);
+        const updatedItems = editorService.getVideos();
+        numTilesWhichShouldShow.current = updatedItems.length;
+        setItems(updatedItems);
+    }, [ showLane ]);
 
     /**
      * Create tiles from items
@@ -65,23 +95,8 @@ function Lane({ hide, size, onSlideOutComplete, navigationOpen }) {
     }, [ onSelectPrev, onSelectNext ]);
 
     /**
-     * Set num tiles that should show for intersection observer to determine transition end
-     */
-    useEffect(() => {
-        if (items === null) {
-            numTilesWhichShouldShow.current = 0;
-            setDoneTransitioning(false);
-            return;
-        }
-        numTilesWhichShouldShow.current = items.length - activeIndex;
-    }, [ items, activeIndex ]);
-
-    /**
      * This intersection observer compares the num of tiles that should be visible with the ones it counted entering the screen to determine transition end
      */
-    const visibleTilesCount = useRef(0);
-    const numTilesWhichShouldShow = useRef(0);
-
     const tileObserver = useMemo(() => {
         if (!IntersectionObserver) {
             return null;
@@ -96,43 +111,43 @@ function Lane({ hide, size, onSlideOutComplete, navigationOpen }) {
                         ? visibleTilesCount.current + 1
                         : Math.max(visibleTilesCount.current - 1, 0);
 
-                    if (visibleTilesCount.current === numTilesWhichShouldShow.current) {
-                        if (visibleTilesCount.current === 0) {
-                            onSlideOutComplete();
-                            setDoneTransitioning(false);
-                            return;
-                        }
-                        setDoneTransitioning(true);
+                    if (visibleTilesCount.current !== numTilesWhichShouldShow.current) {
                         return;
                     }
-                    setDoneTransitioning(false);
+                    if (visibleTilesCount.current === 0) {
+                        setShowLane(true);
+                        setDoneTransitioning(false);
+                        return;
+                    }
+                    setDoneTransitioning(true);
                 });
             },
             {
                 rootMargin: '0px',
             },
         );
-    }, [ onSlideOutComplete ]);
+    }, []);
 
-    const showControls = !hide && doneTransitioning;
+    const showControls = showLane && doneTransitioning;
 
     return (
         <StyledLane
-            size={size}
+            size={appState.size}
             numTiles={tiles?.length}
-            navigationOpen={navigationOpen}
+            isMenuOpen={appState.isMenuOpen}
         >
-            <Switch
-                size={size}
+            <TileSwitch
+                size={appState.size}
                 onPrev={onSelectPrev}
                 onNext={onSelectNext}
                 numTiles={tiles?.length}
                 activeIndex={activeIndex}
+                visible={showControls}
             />
 
             {tiles?.map((tile, index) => {
                 const displayIndex = index - activeIndex;
-                const hideTile = hide || displayIndex < 0;
+                const hideTile = !showLane || displayIndex < 0;
                 const transform = displayIndex * laneTileOffset;
                 const zIndex = tiles.length - displayIndex;
                 const delay = (hideTile ? displayIndex : (tiles.length - 1 - index)) * laneTileAnimationOffset;
@@ -142,15 +157,15 @@ function Lane({ hide, size, onSlideOutComplete, navigationOpen }) {
                         hide={hideTile}
                         transform={transform}
                         zIndex={zIndex}
-                        size={size}
+                        size={appState.size}
                         delay={delay}
                         setActive={() => setActiveIndex(index)}
                         observer={tileObserver}
                     >
                         <Image
                             url={tile.url}
-                            width={size.width}
-                            height={size.height}
+                            width={appState.size.width}
+                            height={appState.size.height}
                             title={tile.title}
                         />
                     </Tile>
@@ -159,18 +174,18 @@ function Lane({ hide, size, onSlideOutComplete, navigationOpen }) {
 
             <VideoDetail
                 className="lane-video-detail"
-                size={size}
+                size={appState.size}
                 activeItem={activeItem}
-                showControls={showControls}
+                visible={showControls}
             />
 
             <Player className="lane-player"/>
 
-            <Controls
-                className="lane-controls"
-                size={size}
+            <PlayerOverlay
+                className="lane-player-overlay"
+                size={appState.size}
                 activeItem={activeItem}
-                showControls={showControls}
+                visible={showControls}
             />
         </StyledLane>
     );
