@@ -15,8 +15,9 @@ import { useApplicationContext } from '../../context';
 function Lane() {
     const { appState } = useApplicationContext();
 
+    const [ currentLaneConfig, setCurrentLaneConfig ] = useState(appState.selectedConfig);
+
     const [ items, setItems ] = useState(null);
-    const [ tiles, setTiles ] = useState(null);
     const [ activeIndex, setActiveIndex ] = useState(0);
 
     const [ showLane, setShowLane ] = useState(true);
@@ -42,36 +43,30 @@ function Lane() {
     }, [ doneTransitioning, items ]);
 
     const activeItem = items?.[activeIndex];
-
-    /**
-     * When selected item changes, set show lane to false
-     */
+    const tiles = items?.map(mapItemToTile);
 
     /**
      * Set and reset local state
      */
     useEffect(() => {
-        if (!showLane) {
+        if (appState.selectedConfig === null) {
+            return;
+        }
+        if (appState.selectedConfig !== currentLaneConfig) {
+            if (currentLaneConfig === null) {
+                setCurrentLaneConfig(appState.selectedConfig);
+                return;
+            }
             numTilesWhichShouldShow.current = 0;
             setActiveIndex(0);
+            setShowLane(false);
             setDoneTransitioning(false);
             return;
         }
-        const updatedItems = editorService.getVideos();
+        const updatedItems = editorService.getVideos(currentLaneConfig);
         numTilesWhichShouldShow.current = updatedItems.length;
         setItems(updatedItems);
-    }, [ showLane ]);
-
-    /**
-     * Create tiles from items
-     */
-    useEffect(() => {
-        if (items === null) {
-            return;
-        }
-        const tiles = items.map(mapItemToTile);
-        setTiles(tiles);
-    }, [ items ]);
+    }, [ appState.selectedConfig, currentLaneConfig ]);
 
     /**
      * Arrow key navigation

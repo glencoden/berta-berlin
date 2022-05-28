@@ -17,10 +17,11 @@ function reducer(state, action) {
                 ...state,
                 isMenuOpen: action.payload,
             };
-        case ApplicationActionType.SET_SELECTED_NAV_ITEM:
+        case ApplicationActionType.SET_SELECTED_CONFIG:
             return {
                 ...state,
-                selectedNavItem: action.payload,
+                isMenuOpen: false,
+                selectedConfig: action.payload,
             };
         case ApplicationActionType.SET_VIDEO_STARTED:
             return {
@@ -50,7 +51,7 @@ function reducer(state, action) {
 
 export const initialApplicationState = {
     isMenuOpen: false,
-    selectedNavItem: null,
+    selectedConfig: null,
     hasVideoStarted: false,
     size: defaultTileSize,
     isMobile: isMobile(),

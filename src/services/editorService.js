@@ -1,6 +1,4 @@
-import { FilterType } from '../enums/FilterType';
 import { ResourceType } from '../enums/ResourceType';
-import { MenuItemType } from '../enums/MenuItemType';
 import { playlistFilterKey } from '../styles/variables';
 
 function getRandomVideos(videos) {
@@ -16,47 +14,23 @@ function getRandomVideos(videos) {
 }
 
 class EditorService {
-    videos = null;
     playlists = null;
-    selectedPlaylistId = null;
-    filterType = FilterType.TRENDING;
-    resourceType = ResourceType.VIDEO;
+    videos = null;
 
-    // getVideos() {
-    //     return this.videos;
-    // }
-
-    getPlaylists() {
-        return this.playlists;
+    setPlaylists(playlists) {
+        this.playlists = playlists.filter(playlist => playlist.description.includes(playlistFilterKey));
     }
 
     setVideos(videos) {
         this.videos = videos;
     }
 
-    setPlaylists(playlists) {
-        this.playlists = playlists.filter(playlist => playlist.description.includes(playlistFilterKey));
+    getPlaylists() {
+        return this.playlists;
     }
 
-    onMenuItemSelect(menuItem) {
-        switch (menuItem.type) {
-            case MenuItemType.FILTER:
-                this.filterType = menuItem.value;
-                this.resourceType = ResourceType.VIDEO;
-                this.selectedPlaylistId = null;
-                break;
-            case MenuItemType.DASHBOARD:
-                this.filterType = FilterType.TRENDING;
-                this.resourceType = ResourceType.PLAYLIST;
-                this.selectedPlaylistId = menuItem.value?.value;
-                break;
-            default:
-                console.warn('unknown menu item type');
-        }
-    }
-
-    getVideos() {
-        switch (this.resourceType) {
+    getVideos({ filterType, resourceType, selectedPlaylistId }) {
+        switch (resourceType) {
             case ResourceType.VIDEO: {
                 if (this.videos === null) {
                     console.warn('no videos');
@@ -69,7 +43,7 @@ class EditorService {
                     console.warn('no playlists');
                     return;
                 }
-                const videos = this._getVideosForCurrentPlaylist();
+                const videos = this._getVideosForCurrentPlaylist(selectedPlaylistId);
                 return getRandomVideos(videos);
             }
             default:
@@ -77,12 +51,8 @@ class EditorService {
         }
     }
 
-    _getVideosForCurrentPlaylist() {
-        if (this.selectedPlaylistId === null) {
-            console.warn('no selected playlist id');
-            return;
-        }
-        const currentPlaylist = this.playlists?.find(playlist => playlist.id === this.selectedPlaylistId);
+    _getVideosForCurrentPlaylist(playlistId) {
+        const currentPlaylist = this.playlists?.find(playlist => playlist.id === playlistId);
         if (!currentPlaylist) {
             console.warn('playlist not found');
             return;

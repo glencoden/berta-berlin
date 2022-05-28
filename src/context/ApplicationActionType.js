@@ -1,6 +1,6 @@
 export const ApplicationActionType = {
     SET_MENU_OPEN: 'set-menu-open',
-    SET_SELECTED_NAV_ITEM: 'set-selected-nav-item',
+    SET_SELECTED_CONFIG: 'set-selected-config',
     SET_VIDEO_STARTED: 'set-video-started',
     SET_SIZE: 'set-size',
     CALC_IS_MOBILE: 'set-is-mobile',

@@ -9,12 +9,13 @@ import { UrlState } from '../../enums/UrlState';
 import { getMenuItems } from './helpers/getMenuItems';
 import { MenuItemType } from '../../enums/MenuItemType';
 import { FilterType } from '../../enums/FilterType';
-import { editorService } from '../../services/editorService';
 import DashboardMenu from './components/DashboardMenu/DashboardMenu';
 import Imprint from '../Imprint/Imprint';
 import NavigationTitle from './components/NavigationTitle/NavigationTitle';
 import { useApplicationContext } from '../../context';
 import { ApplicationActionType } from '../../context/ApplicationActionType';
+import { parseMenuItem } from './helpers/parseMenuItem';
+import { ResourceType } from '../../enums/ResourceType';
 
 
 function Navigation() {
@@ -30,12 +31,16 @@ function Navigation() {
      * Update state from url state on mount
      */
     useEffect(() => {
-        if (!filter) {
-            setFilter(FilterType.TRENDING);
-        }
-        if (!playlist) {
-            setPlaylist(playlist);
-        }
+        const filterType = filter || FilterType.TRENDING;
+        setFilter(filterType);
+        dispatch({
+            type: ApplicationActionType.SET_SELECTED_CONFIG,
+            payload: {
+                filterType,
+                resourceType: !playlist ? ResourceType.VIDEO : ResourceType.PLAYLIST,
+                selectedPlaylistId: playlist,
+            },
+        });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ filter, playlist ]);
 
@@ -43,14 +48,14 @@ function Navigation() {
         if (dispatch === null) {
             return;
         }
-        editorService.onMenuItemSelect(menuItem);
+        const config = parseMenuItem(menuItem);
 
-        setFilter(editorService.filterType);
-        setPlaylist(editorService.selectedPlaylistId);
+        setFilter(config.filterType);
+        setPlaylist(config.selectedPlaylistId);
 
         dispatch({
-            type: ApplicationActionType.SET_MENU_OPEN,
-            payload: false,
+            type: ApplicationActionType.SET_SELECTED_CONFIG,
+            payload: config,
         });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ dispatch ]);
