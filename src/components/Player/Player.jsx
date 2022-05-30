@@ -8,7 +8,7 @@ let PLAYER_INITIATED = false;
 /**
  * This component should only be rendered once
  */
-function Player({ className }) {
+function Player({ className, hasVideoStarted }) {
     const { playerState, dispatch } = usePlayerContext();
 
     const [ player, setPlayer ] = useState(null);
@@ -104,8 +104,8 @@ function Player({ className }) {
 
     return (
         <StyledPlayer
-            isPlaying={playerState.isPlaying}
             className={className}
+            hasVideoStarted={hasVideoStarted}
         >
             <div
                 id="youtube-player"

@@ -5,6 +5,6 @@ export const PlayerActionType = {
     ON_STOP: 'on-stop',
     SET_VIDEO: 'set-video',
     SET_PLAYLIST: 'set-playlist',
-    SET_SIZE: 'set-size',
+    SET_PLAYER_SIZE: 'set-player-size',
     SET_POSITION: 'set-position'
 };

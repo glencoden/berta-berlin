@@ -1,15 +1,18 @@
 import { StyledTileSwitch } from './styled-components/StyledTileSwitch';
 import Button from '@mui/material/Button';
 import { StyledProgressBar } from './styled-components/StyledProgressBar';
+import { useApplicationContext } from '../../../../context';
 
-function TileSwitch({ size, onPrev, onNext, numTiles, activeIndex, visible }) {
+function TileSwitch({ onPrev, onNext, numTiles, activeIndex, visible }) {
+    const { appState } = useApplicationContext();
+
     if (isNaN(numTiles)) {
         return null;
     }
 
     return (
         <StyledTileSwitch
-            size={size}
+            size={appState.tileSize}
             visible={visible}
         >
             <Button onClick={onPrev}>previous</Button>

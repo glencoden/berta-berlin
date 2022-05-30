@@ -2,21 +2,21 @@ import { StyledPlayerOverlay } from './styled-components/StyledPlayerOverlay';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect } from 'react';
 import { PlayerActionType } from '../../../Player/context/PlayerActionType';
 import { ResourceType } from '../../../../enums/ResourceType';
 import { usePlayerContext } from '../../../Player/context';
 import { StyledPlayerOverlayDescription } from './styled-components/StyledPlayerOverlayDescription';
 import { StyledPlayerOverlayPlayButton } from './styled-components/StyledPlayerOverlayPlayButton';
 import { useParsedDescription } from '../../hooks/useParsedDescription';
-import { editorService } from '../../../../services/editorService';
+import { useApplicationContext } from '../../../../context';
+import { ApplicationActionType } from '../../../../context/ApplicationActionType';
 
 
-function PlayerOverlay({ className, size, activeItem, visible }) {
-    const { playerState, dispatch } = usePlayerContext();
+function PlayerOverlay({ className, activeItem, visible }) {
+    const { appState, dispatch: appDispatch } = useApplicationContext();
 
-    const [ prevActiveItem, setPrevActiveItem ] = useState(activeItem);
-    const [ videoHasStarted, setVideoHasStarted ] = useState(false);
+    const { playerState, dispatch: playerDispatch } = usePlayerContext();
 
     const parsedDescription = useParsedDescription(activeItem);
 
@@ -24,12 +24,12 @@ function PlayerOverlay({ className, size, activeItem, visible }) {
      * Apply player size
      */
     useEffect(() => {
-        dispatch({
-            type: PlayerActionType.SET_SIZE,
-            payload: size,
+        playerDispatch({
+            type: PlayerActionType.SET_PLAYER_SIZE,
+            payload: appState.tileSize,
         });
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [ size ]);
+    }, [ appState.tileSize ]);
 
     /**
      * Play callback
@@ -38,15 +38,15 @@ function PlayerOverlay({ className, size, activeItem, visible }) {
         if (!activeItem) {
             return;
         }
-        switch (editorService.resourceType) {
+        switch (appState.selectedConfig?.resourceType) {
             case ResourceType.VIDEO:
-                dispatch({
+                playerDispatch({
                     type: PlayerActionType.SET_VIDEO,
                     payload: activeItem,
                 });
                 break;
             case ResourceType.PLAYLIST:
-                dispatch({
+                playerDispatch({
                     type: PlayerActionType.SET_PLAYLIST,
                     payload: activeItem,
                 });
@@ -54,14 +54,13 @@ function PlayerOverlay({ className, size, activeItem, visible }) {
             default:
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [ activeItem ]);
+    }, [ appState.selectedConfig, activeItem ]);
 
     /**
      * Pause callback
      */
     const onPause = useCallback(() => {
-        setVideoHasStarted(false);
-        dispatch({
+        playerDispatch({
             type: PlayerActionType.STOP,
         });
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -71,10 +70,13 @@ function PlayerOverlay({ className, size, activeItem, visible }) {
      * Pause player on active item change
      */
     useEffect(() => {
-        if (activeItem === prevActiveItem) {
+        if (activeItem === null) {
             return;
         }
-        setPrevActiveItem(activeItem);
+        appDispatch({
+            type: ApplicationActionType.SET_VIDEO_STARTED,
+            payload: false,
+        });
         onPause();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ activeItem, onPause ]);
@@ -86,7 +88,11 @@ function PlayerOverlay({ className, size, activeItem, visible }) {
         if (!playerState.isPlaying) {
             return;
         }
-        setVideoHasStarted(true);
+        appDispatch({
+            type: ApplicationActionType.SET_VIDEO_STARTED,
+            payload: true,
+        });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ playerState.isPlaying ]);
 
     if (!activeItem) {
@@ -98,9 +104,9 @@ function PlayerOverlay({ className, size, activeItem, visible }) {
     return (
         <StyledPlayerOverlay
             className={className}
-            size={size}
+            size={appState.tileSize}
             visible={visible}
-            videoHasStarted={videoHasStarted}
+            hasVideoStarted={appState.hasVideoStarted}
         >
             <StyledPlayerOverlayDescription>
                 <Typography
@@ -118,7 +124,7 @@ function PlayerOverlay({ className, size, activeItem, visible }) {
                 </Typography>
             </StyledPlayerOverlayDescription>
 
-            <StyledPlayerOverlayPlayButton size={size}>
+            <StyledPlayerOverlayPlayButton size={appState.tileSize}>
                 {!playerState.isPlaying && (
                     <Button
                         className="play-button"
@@ -128,7 +134,7 @@ function PlayerOverlay({ className, size, activeItem, visible }) {
                         disable={isVideoLoading}
                         onClick={playerState.isPlaying ? onPause : onPlay}
                     >
-                        {isVideoLoading ? <CircularProgress /> : <>&#9658;</>}&nbsp;Play
+                        {isVideoLoading ? <CircularProgress/> : <>&#9658;</>}&nbsp;Play
                     </Button>
                 )}
             </StyledPlayerOverlayPlayButton>

@@ -1,5 +1,6 @@
 import { createContext, useContext } from 'react';
-import { initialPlayerState, usePlayerReducer } from './reducer';
+import { usePlayerReducer } from './reducer';
+import { initialPlayerState } from './initialPlayerState';
 
 const initialContext = {
     playerState: initialPlayerState,

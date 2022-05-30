@@ -1,7 +1,7 @@
 /**
  * sizing
  */
-export const defaultTileSize = { width: 1280, height: 720 }; // px
+export const defaultTileWidth = 1280 // px
 export const minDeviceWidth = 600; // px
 export const maxMobileWidth = 900; // px
 

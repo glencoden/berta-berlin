@@ -13,7 +13,7 @@ export const StyledVideoDetail = styled.div`
     color: ${({ theme }) => theme.palette.primary.main};
     background-color: ${({ theme }) => theme.palette.background.paper};
     opacity: ${({ visible }) => visible ? '1' : '0'};
-    transform: translateY(${({ isPlaying }) => isPlaying ? '100%' : '0'});
+    transform: translateY(${({ hasVideoStarted }) => hasVideoStarted ? '100%' : '0'});
     transition: opacity ${({ theme }) => (theme.transitions.duration.standard / 1000)}s, transform ${({ theme }) => (theme.transitions.duration.standard / 1000)}s;
     overflow: scroll;
     

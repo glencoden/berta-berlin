@@ -13,6 +13,7 @@ import LoadingMessage from './components/LoadingMessage/LoadingMessage';
 import Headline from './components/Headline/Headline';
 import { useApplicationContext } from './context';
 import { ApplicationActionType } from './context/ApplicationActionType';
+import { TransitionType } from './enums/TransitionType';
 
 
 function App() {
@@ -33,15 +34,20 @@ function App() {
                 .then(response => {
                     editorService.setVideos(response.videos);
                     setIsVideosLoading(false);
+                    dispatch({
+                        type: ApplicationActionType.SET_CURRENT_TRANSITION,
+                        payload: TransitionType.SLIDE_IN,
+                    });
                     requestService.getYoutubeApiCache(ResourceType.PLAYLIST)
                         .then(response => {
                             editorService.setPlaylists(response.playlists);
                             setIsPlaylistsLoading(false);
                         });
                 });
-        }, 3000);
+        }, 2000);
 
         const onResize = () => {
+            dispatch({ type: ApplicationActionType.CALC_TILE_SIZE });
             dispatch({ type: ApplicationActionType.CALC_IS_MOBILE });
             dispatch({ type: ApplicationActionType.CALC_IS_VIEWPORT_TOO_SMALL });
         };

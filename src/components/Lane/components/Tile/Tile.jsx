@@ -1,11 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
 import { StyledTile } from './styled-components/StyledTile';
 import { laneLeft, laneTileSlideInDelay } from '../../../../styles/variables';
+import { useApplicationContext } from '../../../../context';
 
 const HIDE_OFFSET_SAFETY_MARGIN = 50;
 
 
-function Tile({ hide, transform, zIndex, size, delay, setActive, observer, children }) {
+function Tile({ hide, transform, zIndex, delay, setActive, observer, children }) {
+    const { appState } = useApplicationContext();
+
     const [ showTile, setShowTile ] = useState(false);
     const [ delayOnMount, setDelayOnMount ] = useState(delay + laneTileSlideInDelay);
 
@@ -45,9 +48,9 @@ function Tile({ hide, transform, zIndex, size, delay, setActive, observer, child
     return (
         <StyledTile
             ref={tileElement}
-            transform={showTile ? transform : -(size.width + laneLeft + HIDE_OFFSET_SAFETY_MARGIN)}
+            transform={showTile ? transform : -(appState.tileSize.width + laneLeft + HIDE_OFFSET_SAFETY_MARGIN)}
             zIndex={zIndex}
-            size={size}
+            size={appState.tileSize}
             onClick={setActive}
         >
             {children}

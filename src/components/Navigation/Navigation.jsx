@@ -16,6 +16,7 @@ import { useApplicationContext } from '../../context';
 import { ApplicationActionType } from '../../context/ApplicationActionType';
 import { parseMenuItem } from './helpers/parseMenuItem';
 import { ResourceType } from '../../enums/ResourceType';
+import { TransitionType } from '../../enums/TransitionType';
 
 
 function Navigation() {
@@ -56,6 +57,10 @@ function Navigation() {
         dispatch({
             type: ApplicationActionType.SET_SELECTED_CONFIG,
             payload: config,
+        });
+        dispatch({
+            type: ApplicationActionType.SET_CURRENT_TRANSITION,
+            payload: TransitionType.SLIDE_OUT,
         });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ dispatch ]);
@@ -120,7 +125,7 @@ function Navigation() {
                 })}
             </StyledNavigation>
 
-            <NavigationTitle visible={appState.isMenuOpen}/>
+            <NavigationTitle />
 
             <Imprint
                 open={isImprintOpen}

@@ -1,5 +1,6 @@
 import { useReducer } from 'react';
 import { PlayerActionType } from './PlayerActionType';
+import { initialPlayerState } from './initialPlayerState';
 
 function reducer(state, action) {
     switch (action.type) {
@@ -39,7 +40,7 @@ function reducer(state, action) {
                 video: null,
                 playlist: action.payload,
             };
-        case PlayerActionType.SET_SIZE:
+        case PlayerActionType.SET_PLAYER_SIZE:
             return {
                 ...state,
                 size: action.payload,
@@ -54,20 +55,5 @@ function reducer(state, action) {
             return state;
     }
 }
-
-export const initialPlayerState = {
-    shouldPlay: false,
-    isPlaying: false,
-    video: null,
-    playlist: null,
-    size: {
-        width: 640,
-        height: 360,
-    },
-    position: {
-        left: 0,
-        top: 0,
-    },
-};
 
 export const usePlayerReducer = () => useReducer(reducer, initialPlayerState);

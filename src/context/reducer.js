@@ -1,14 +1,9 @@
 import { useReducer } from 'react';
 import { ApplicationActionType } from './ApplicationActionType';
-import { defaultTileSize, maxMobileWidth, minDeviceWidth } from '../styles/variables';
-
-function isMobile() {
-    return window.innerWidth > maxMobileWidth;
-}
-
-function isViewPortTooSmall() {
-    return window.innerWidth < minDeviceWidth;
-}
+import { getTileSize } from './helpers/getTileSize';
+import { isMobile } from './helpers/isMobile';
+import { isViewportTooSmall } from './helpers/isViewportTooSmall';
+import { initialApplicationState } from './initialApplicationState';
 
 function reducer(state, action) {
     switch (action.type) {
@@ -23,15 +18,20 @@ function reducer(state, action) {
                 isMenuOpen: false,
                 selectedConfig: action.payload,
             };
+        case ApplicationActionType.SET_CURRENT_TRANSITION:
+            return {
+                ...state,
+                currentTransition: action.payload,
+            };
         case ApplicationActionType.SET_VIDEO_STARTED:
             return {
                 ...state,
                 hasVideoStarted: action.payload,
             };
-        case ApplicationActionType.SET_SIZE:
+        case ApplicationActionType.CALC_TILE_SIZE:
             return {
                 ...state,
-                size: action.payload,
+                tileSize: getTileSize(),
             };
         case ApplicationActionType.CALC_IS_MOBILE:
             return {
@@ -41,21 +41,12 @@ function reducer(state, action) {
         case ApplicationActionType.CALC_IS_VIEWPORT_TOO_SMALL:
             return {
                 ...state,
-                isViewPortTooSmall: isViewPortTooSmall(),
+                isViewPortTooSmall: isViewportTooSmall(),
             };
         default:
             console.log('unknown application action type');
             return state;
     }
 }
-
-export const initialApplicationState = {
-    isMenuOpen: false,
-    selectedConfig: null,
-    hasVideoStarted: false,
-    size: defaultTileSize,
-    isMobile: isMobile(),
-    isViewPortTooSmall: isViewPortTooSmall(),
-};
 
 export const useApplicationReducer = () => useReducer(reducer, initialApplicationState);

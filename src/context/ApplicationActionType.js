@@ -1,8 +1,9 @@
 export const ApplicationActionType = {
     SET_MENU_OPEN: 'set-menu-open',
     SET_SELECTED_CONFIG: 'set-selected-config',
+    SET_CURRENT_TRANSITION: 'set-current-transition',
     SET_VIDEO_STARTED: 'set-video-started',
-    SET_SIZE: 'set-size',
+    CALC_TILE_SIZE: 'set-tile-size',
     CALC_IS_MOBILE: 'set-is-mobile',
     CALC_IS_VIEWPORT_TOO_SMALL: 'set-is-viewport-too-small',
 };

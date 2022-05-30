@@ -1,5 +1,6 @@
 import { createContext, useContext } from 'react';
-import { initialApplicationState, useApplicationReducer } from './reducer';
+import { useApplicationReducer } from './reducer';
+import { initialApplicationState } from './initialApplicationState';
 
 const initialContext = {
     appState: initialApplicationState,

@@ -10,37 +10,34 @@ import VideoDetail from './components/VideoDetail/VideoDetail';
 import TileSwitch from './components/TileSwitch/TileSwitch';
 import { editorService } from '../../services/editorService';
 import { useApplicationContext } from '../../context';
+import { ApplicationActionType } from '../../context/ApplicationActionType';
+import { TransitionType } from '../../enums/TransitionType';
 
 
 function Lane() {
-    const { appState } = useApplicationContext();
-
-    const [ currentLaneConfig, setCurrentLaneConfig ] = useState(appState.selectedConfig);
+    const { appState, dispatch } = useApplicationContext();
 
     const [ items, setItems ] = useState(null);
     const [ activeIndex, setActiveIndex ] = useState(0);
-
-    const [ showLane, setShowLane ] = useState(true);
-    const [ doneTransitioning, setDoneTransitioning ] = useState(false);
 
     const visibleTilesCount = useRef(0);
     const numTilesWhichShouldShow = useRef(0);
 
     const onSelectPrev = useCallback(() => {
-        if (!doneTransitioning) {
+        if (appState.currentTransition !== TransitionType.NONE) {
             return;
         }
         numTilesWhichShouldShow.current++;
         setActiveIndex(prevIndex => Math.max(prevIndex - 1, 0));
-    }, [ doneTransitioning ]);
+    }, [ appState.currentTransition ]);
 
     const onSelectNext = useCallback(() => {
-        if (!doneTransitioning) {
+        if (appState.currentTransition !== TransitionType.NONE) {
             return;
         }
         numTilesWhichShouldShow.current--;
         setActiveIndex(prevIndex => Math.min(prevIndex + 1, items?.length - 1));
-    }, [ doneTransitioning, items ]);
+    }, [ appState.currentTransition, items ]);
 
     const activeItem = items?.[activeIndex];
     const tiles = items?.map(mapItemToTile);
@@ -52,21 +49,22 @@ function Lane() {
         if (appState.selectedConfig === null) {
             return;
         }
-        if (appState.selectedConfig !== currentLaneConfig) {
-            if (currentLaneConfig === null) {
-                setCurrentLaneConfig(appState.selectedConfig);
-                return;
-            }
-            numTilesWhichShouldShow.current = 0;
-            setActiveIndex(0);
-            setShowLane(false);
-            setDoneTransitioning(false);
-            return;
+        switch (appState.currentTransition) {
+            case TransitionType.NONE:
+                break;
+            case TransitionType.SLIDE_OUT:
+                numTilesWhichShouldShow.current = 0;
+                setActiveIndex(0);
+                break;
+            case TransitionType.SLIDE_IN:
+                const updatedItems = editorService.getVideos(appState.selectedConfig);
+                numTilesWhichShouldShow.current = updatedItems.length;
+                setItems(updatedItems);
+                break;
+            default:
         }
-        const updatedItems = editorService.getVideos(currentLaneConfig);
-        numTilesWhichShouldShow.current = updatedItems.length;
-        setItems(updatedItems);
-    }, [ appState.selectedConfig, currentLaneConfig ]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [ appState.selectedConfig, appState.currentTransition ]);
 
     /**
      * Arrow key navigation
@@ -110,29 +108,35 @@ function Lane() {
                         return;
                     }
                     if (visibleTilesCount.current === 0) {
-                        setShowLane(true);
-                        setDoneTransitioning(false);
+                        dispatch({
+                            type: ApplicationActionType.SET_CURRENT_TRANSITION,
+                            payload: TransitionType.SLIDE_IN,
+                        });
                         return;
                     }
-                    setDoneTransitioning(true);
+                    dispatch({
+                        type: ApplicationActionType.SET_CURRENT_TRANSITION,
+                        payload: TransitionType.NONE,
+                    });
                 });
             },
             {
                 rootMargin: '0px',
             },
         );
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const showControls = showLane && doneTransitioning;
+    const showTiles = appState.currentTransition !== TransitionType.SLIDE_OUT;
+    const showControls = appState.currentTransition === TransitionType.NONE;
 
     return (
         <StyledLane
-            size={appState.size}
+            size={appState.tileSize}
             numTiles={tiles?.length}
             isMenuOpen={appState.isMenuOpen}
         >
             <TileSwitch
-                size={appState.size}
                 onPrev={onSelectPrev}
                 onNext={onSelectNext}
                 numTiles={tiles?.length}
@@ -142,7 +146,7 @@ function Lane() {
 
             {tiles?.map((tile, index) => {
                 const displayIndex = index - activeIndex;
-                const hideTile = !showLane || displayIndex < 0;
+                const hideTile = !showTiles || displayIndex < 0;
                 const transform = displayIndex * laneTileOffset;
                 const zIndex = tiles.length - displayIndex;
                 const delay = (hideTile ? displayIndex : (tiles.length - 1 - index)) * laneTileAnimationOffset;
@@ -152,15 +156,14 @@ function Lane() {
                         hide={hideTile}
                         transform={transform}
                         zIndex={zIndex}
-                        size={appState.size}
                         delay={delay}
                         setActive={() => setActiveIndex(index)}
                         observer={tileObserver}
                     >
                         <Image
                             url={tile.url}
-                            width={appState.size.width}
-                            height={appState.size.height}
+                            width={appState.tileSize.width}
+                            height={appState.tileSize.height}
                             title={tile.title}
                         />
                     </Tile>
@@ -169,16 +172,17 @@ function Lane() {
 
             <VideoDetail
                 className="lane-video-detail"
-                size={appState.size}
                 activeItem={activeItem}
                 visible={showControls}
             />
 
-            <Player className="lane-player"/>
+            <Player
+                className="lane-player"
+                hasVideoStarted={appState.hasVideoStarted}
+            />
 
             <PlayerOverlay
                 className="lane-player-overlay"
-                size={appState.size}
                 activeItem={activeItem}
                 visible={showControls}
             />

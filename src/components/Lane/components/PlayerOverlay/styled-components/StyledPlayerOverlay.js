@@ -7,7 +7,7 @@ export const StyledPlayerOverlay = styled.div`
     width: ${({ size }) => size.width}px;
     height: ${({ size }) => size.height}px;
     opacity: ${({ visible }) => visible ? '1' : '0'};
-    ${({ videoHasStarted }) => videoHasStarted ? `
+    ${({ hasVideoStarted }) => hasVideoStarted ? `
         transform: translateY(100%);
         pointer-events: none;
     ` : ''}
