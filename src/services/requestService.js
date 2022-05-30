@@ -16,7 +16,7 @@ const DEV_CACHE = {
  */
 // const YOUTUBE_API_KEY = process.env.REACT_APP_YOUTUBE_API_KEY;
 // const YOUTUBE_API_URL = 'https://www.googleapis.com/youtube/v3';
-const CACHE_WEBWORKER_URL = 'https://berta.glencoden.workers.dev/';
+// const CACHE_WEBWORKER_URL = 'https://berta.glencoden.workers.dev/';
 
 class RequestService {
     _get(url, search = {}) {
@@ -29,10 +29,11 @@ class RequestService {
     }
 
     getYoutubeApiCache(resource) {
-        if (process.env.NODE_ENV === 'development') {
-            return Promise.resolve(DEV_CACHE[resource]);
-        }
-        return this._get(CACHE_WEBWORKER_URL, { resource });
+        return Promise.resolve(DEV_CACHE[resource]);
+        // if (process.env.NODE_ENV === 'development') {
+        //     return Promise.resolve(DEV_CACHE[resource]);
+        // }
+        // return this._get(CACHE_WEBWORKER_URL, { resource });
     }
 
     getChannel() {
