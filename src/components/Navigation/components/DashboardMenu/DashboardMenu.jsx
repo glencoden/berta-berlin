@@ -2,9 +2,13 @@ import { useState } from 'react';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import { useApplicationContext } from '../../../../context';
+import { ApplicationActionType } from '../../../../context/ApplicationActionType';
 
 
 function DashboardMenu({ className, menuItem, options, selectedOptionValue, onMenuItemClick, children }) {
+    const { dispatch } = useApplicationContext();
+
     const [ anchorEl, setAnchorEl ] = useState(null);
 
     const open = Boolean(anchorEl);
@@ -15,6 +19,10 @@ function DashboardMenu({ className, menuItem, options, selectedOptionValue, onMe
 
     const handleClose = (selectedOption) => {
         if (selectedOption === null) {
+            dispatch({
+                type: ApplicationActionType.SET_MENU_OPEN,
+                payload: false,
+            });
             setAnchorEl(null);
             return;
         }
