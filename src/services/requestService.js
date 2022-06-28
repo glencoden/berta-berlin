@@ -8,15 +8,14 @@ import channel from '../cache/channel.json';
 const DEV_CACHE = {
     video,
     playlist,
-    channel
+    channel,
 };
 
 /**
  * Environment
  */
-// const YOUTUBE_API_KEY = process.env.REACT_APP_YOUTUBE_API_KEY;
-// const YOUTUBE_API_URL = 'https://www.googleapis.com/youtube/v3';
-// const CACHE_WEBWORKER_URL = 'https://berta.glencoden.workers.dev/';
+const CACHE_WEBWORKER_URL = 'https://api.glencoden.io/berta';
+const USE_DEV_CACHE = false;
 
 class RequestService {
     _get(url, search = {}) {
@@ -29,16 +28,10 @@ class RequestService {
     }
 
     getYoutubeApiCache(resource) {
-        return Promise.resolve(DEV_CACHE[resource]);
-        // if (process.env.NODE_ENV === 'development') {
-        //     return Promise.resolve(DEV_CACHE[resource]);
-        // }
-        // return this._get(CACHE_WEBWORKER_URL, { resource });
-    }
-
-    getChannel() {
-        return Promise.resolve(DEV_CACHE.channel);
-        // return this._get(`${YOUTUBE_API_URL}/channels?id=${YOUTUBE_CHANNEL_ID}&key=${YOUTUBE_API_KEY}&part=snippet,contentDetails,brandingSettings`);
+        if (process.env.NODE_ENV === 'development' && USE_DEV_CACHE) {
+            return Promise.resolve(DEV_CACHE[resource]);
+        }
+        return this._get(CACHE_WEBWORKER_URL, { resource });
     }
 }
 

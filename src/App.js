@@ -29,22 +29,20 @@ function App() {
         if (dispatch === null) {
             return;
         }
-        setTimeout(() => {
-            requestService.getYoutubeApiCache(ResourceType.VIDEO)
-                .then(response => {
-                    editorService.setVideos(response.videos);
-                    setIsVideosLoading(false);
-                    dispatch({
-                        type: ApplicationActionType.SET_CURRENT_TRANSITION,
-                        payload: TransitionType.SLIDE_IN,
-                    });
-                    requestService.getYoutubeApiCache(ResourceType.PLAYLIST)
-                        .then(response => {
-                            editorService.setPlaylists(response.playlists);
-                            setIsPlaylistsLoading(false);
-                        });
+        requestService.getYoutubeApiCache(ResourceType.VIDEO)
+            .then(response => {
+                editorService.setVideos(response.videos);
+                setIsVideosLoading(false);
+                dispatch({
+                    type: ApplicationActionType.SET_CURRENT_TRANSITION,
+                    payload: TransitionType.SLIDE_IN,
                 });
-        }, 2000);
+                requestService.getYoutubeApiCache(ResourceType.PLAYLIST)
+                    .then(response => {
+                        editorService.setPlaylists(response.playlists);
+                        setIsPlaylistsLoading(false);
+                    });
+            });
 
         const onResize = () => {
             dispatch({ type: ApplicationActionType.CALC_TILE_SIZE });

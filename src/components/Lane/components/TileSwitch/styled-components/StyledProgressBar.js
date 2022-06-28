@@ -25,7 +25,7 @@ export const StyledProgressBar = styled.div`
             const progressInPercent = 100 / (numTiles - 1) * activeIndex;
             return progressBarWidth * (progressInPercent / 100);
 }       }px, -50%) rotate(45deg);
-        transition: transform ${({ theme }) => (theme.transitions.duration.short / 1000)}s;
+        transition: transform ${({ theme }) => (theme.transitions.duration.complex / 1000)}s;
         background-color: ${({ theme }) => theme.palette.primary.main};
         box-shadow: ${({ theme }) => theme.shadows[2]};
     }
