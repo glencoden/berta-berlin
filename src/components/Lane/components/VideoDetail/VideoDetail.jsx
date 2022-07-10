@@ -1,6 +1,6 @@
 import { useParsedDescription } from '../../hooks/useParsedDescription';
 import { StyledVideoDetail } from './styled-components/StyledVideoDetail';
-import { Typography } from '@mui/material';
+import Typography from '@mui/material/Typography';
 import { useApplicationContext } from '../../../../context';
 
 

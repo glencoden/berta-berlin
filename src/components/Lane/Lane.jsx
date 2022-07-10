@@ -12,6 +12,7 @@ import { editorService } from '../../services/editorService';
 import { useApplicationContext } from '../../context';
 import { ApplicationActionType } from '../../context/ApplicationActionType';
 import { TransitionType } from '../../enums/TransitionType';
+import TileSwitchMobile from './components/TileSwitch/TileSwitchMobile';
 
 
 function Lane() {
@@ -131,62 +132,74 @@ function Lane() {
     const showControls = appState.currentTransition === TransitionType.NONE;
 
     return (
-        <StyledLane
-            size={appState.tileSize}
-            numTiles={tiles?.length}
-            isMenuOpen={appState.isMenuOpen}
-        >
-            <TileSwitch
-                onPrev={onSelectPrev}
-                onNext={onSelectNext}
+        <>
+            {appState.isMobile && (
+                <TileSwitchMobile
+                    onPrev={onSelectPrev}
+                    onNext={onSelectNext}
+                    numTiles={tiles?.length}
+                />
+            )}
+            <StyledLane
+                size={appState.tileSize}
                 numTiles={tiles?.length}
-                activeIndex={activeIndex}
-                visible={showControls}
-            />
+                isMenuOpen={appState.isMenuOpen}
+            >
+                {!appState.isMobile && (
+                    <TileSwitch
+                        onPrev={onSelectPrev}
+                        onNext={onSelectNext}
+                        numTiles={tiles?.length}
+                        activeIndex={activeIndex}
+                        visible={showControls}
+                    />
+                )}
 
-            {tiles?.map((tile, index) => {
-                const displayIndex = index - activeIndex;
-                const hideTile = !showTiles || displayIndex < 0;
-                const transform = displayIndex * laneTileOffset;
-                const zIndex = tiles.length - displayIndex;
-                const delay = (hideTile ? displayIndex : (tiles.length - 1 - index)) * laneTileAnimationOffset;
-                return (
-                    <Tile
-                        key={`${tile.title}${index}`}
-                        hide={hideTile}
-                        transform={transform}
-                        zIndex={zIndex}
-                        delay={delay}
-                        setActive={() => setActiveIndex(index)}
-                        observer={tileObserver}
-                    >
-                        <Image
-                            url={tile.url}
-                            width={appState.tileSize.width}
-                            height={appState.tileSize.height}
-                            title={tile.title}
-                        />
-                    </Tile>
-                );
-            })}
+                {tiles?.map((tile, index) => {
+                    const displayIndex = index - activeIndex;
+                    const hideTile = !showTiles || displayIndex < 0;
+                    const transform = displayIndex * laneTileOffset;
+                    const zIndex = tiles.length - displayIndex;
+                    const delay = (hideTile ? displayIndex : (tiles.length - 1 - index)) * laneTileAnimationOffset;
+                    return (
+                        <Tile
+                            key={`${tile.title}${index}`}
+                            hide={hideTile}
+                            transform={transform}
+                            zIndex={zIndex}
+                            delay={delay}
+                            setActive={() => setActiveIndex(index)}
+                            observer={tileObserver}
+                        >
+                            <Image
+                                url={tile.url}
+                                width={appState.tileSize.width}
+                                height={appState.tileSize.height}
+                                title={tile.title}
+                            />
+                        </Tile>
+                    );
+                })}
 
-            <VideoDetail
-                className="lane-video-detail"
-                activeItem={activeItem}
-                visible={showControls}
-            />
+                <VideoDetail
+                    className="lane-video-detail"
+                    activeItem={activeItem}
+                    visible={showControls}
+                />
 
-            <Player
-                className="lane-player"
-                hasVideoStarted={appState.hasVideoStarted}
-            />
+                <Player
+                    className="lane-player"
+                    hasVideoStarted={appState.hasVideoStarted}
+                />
 
-            <PlayerOverlay
-                className="lane-player-overlay"
-                activeItem={activeItem}
-                visible={showControls}
-            />
-        </StyledLane>
+                <PlayerOverlay
+                    className="lane-player-overlay"
+                    activeItem={activeItem}
+                    visible={showControls}
+                />
+            </StyledLane>
+        </>
+
     );
 }
 

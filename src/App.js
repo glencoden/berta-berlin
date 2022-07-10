@@ -50,12 +50,14 @@ function App() {
             dispatch({ type: ApplicationActionType.CALC_IS_VIEWPORT_TOO_SMALL });
         };
 
+        const onOrientationChange = () => window.location.reload();
+
         window.addEventListener('resize', onResize);
-        window.addEventListener('orientationchange', onResize);
+        window.addEventListener('orientationchange', onOrientationChange);
 
         return () => {
             window.removeEventListener('resize', onResize);
-            window.removeEventListener('orientationchange', onResize);
+            window.removeEventListener('orientationchange', onOrientationChange);
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ dispatch ]);

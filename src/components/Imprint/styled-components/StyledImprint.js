@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { isMobile } from '../../../context/helpers/isMobile';
 
 export const StyledImprint = styled.div`
     position: absolute;
@@ -6,7 +7,7 @@ export const StyledImprint = styled.div`
     left: 50%;
     transform: translate(-50%, -50%);
     width: min(600px, 80vw);
-    max-height: 90vh;
+    max-height: ${isMobile() ? 50 : 90}vh;
     overflow: scroll;
     padding: 2rem;
     box-shadow: ${({ theme }) => theme.shadows[4]};

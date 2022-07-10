@@ -18,60 +18,60 @@ export const StyledBurgerIcon = styled.div`
         background-color: ${({ theme }) => theme.palette.primary.light};
     }
     
-    .BurgerIcon span:nth-child(even) {
+    .BurgerIcon span:nth-of-type(even) {
         left: 50%;
     }
     
-    .BurgerIcon span:nth-child(odd) {
+    .BurgerIcon span:nth-of-type(odd) {
         left: 0;
     }
     
-    .BurgerIcon span:nth-child(1), .BurgerIcon span:nth-child(2) {
+    .BurgerIcon span:nth-of-type(1), .BurgerIcon span:nth-of-type(2) {
         top: 0;
     }
     
-    .BurgerIcon span:nth-child(3), .BurgerIcon span:nth-child(4) {
+    .BurgerIcon span:nth-of-type(3), .BurgerIcon span:nth-of-type(4) {
         top: 10px;
     }
     
-    .BurgerIcon span:nth-child(5), .BurgerIcon span:nth-child(6) {
+    .BurgerIcon span:nth-of-type(5), .BurgerIcon span:nth-of-type(6) {
         top: 20px;
     }
     
-    .BurgerIcon.close span:nth-child(1), .BurgerIcon.close span:nth-child(6) {
+    .BurgerIcon.close span:nth-of-type(1), .BurgerIcon.close span:nth-of-type(6) {
         transform: rotate(45deg);
     }
     
-    .BurgerIcon.close span:nth-child(2), .BurgerIcon.close span:nth-child(5) {
+    .BurgerIcon.close span:nth-of-type(2), .BurgerIcon.close span:nth-of-type(5) {
         transform: rotate(-45deg);
     }
     
-    .BurgerIcon.close span:nth-child(1) {
+    .BurgerIcon.close span:nth-of-type(1) {
         top: 4px;
         left: 3px;
     }
     
-    .BurgerIcon.close span:nth-child(2) {
+    .BurgerIcon.close span:nth-of-type(2) {
         top: 4px;
         left: calc(50% - 3px);
     }
     
-    .BurgerIcon.close span:nth-child(3) {
+    .BurgerIcon.close span:nth-of-type(3) {
         opacity: 0;
         left: -50%;
     }
     
-    .BurgerIcon.close span:nth-child(4) {
+    .BurgerIcon.close span:nth-of-type(4) {
         opacity: 0;
         left: 100%;
     }
     
-    .BurgerIcon.close span:nth-child(5) {
+    .BurgerIcon.close span:nth-of-type(5) {
         top: 16px;
         left: 3px;
     }
     
-    .BurgerIcon.close span:nth-child(6) {
+    .BurgerIcon.close span:nth-of-type(6) {
         top: 16px;
         left: calc(50% - 3px);
     }

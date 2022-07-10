@@ -125,7 +125,7 @@ function Navigation() {
                 })}
             </StyledNavigation>
 
-            <NavigationTitle />
+            {!appState.isMobile && <NavigationTitle />}
 
             <Imprint
                 open={isImprintOpen}

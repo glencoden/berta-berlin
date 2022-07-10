@@ -1,6 +1,5 @@
 import styled from '@emotion/styled';
 import { navigationMargin, navigationZIndex, sidebarWidth } from '../../../styles/variables';
-
 export const StyledSidebar = styled.div`
     @keyframes slide-in {
         0% {
@@ -16,7 +15,7 @@ export const StyledSidebar = styled.div`
     left: 0;
     top: 0;
     width: ${sidebarWidth}px;
-    height: 100vh;
+    height: ${window.innerHeight}px;
     z-index: ${navigationZIndex};
     background-color: ${({ theme }) => theme.palette.primary.dark};
     

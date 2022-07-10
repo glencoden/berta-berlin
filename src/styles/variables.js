@@ -4,6 +4,7 @@
 export const defaultTileWidth = 1280 // px
 export const minDeviceWidth = 600; // px
 export const maxMobileWidth = 900; // px
+export const mobileContentMargin = 10; // px
 
 export const navigationMargin = 2; // rem
 export const navigationZIndex = 1000;
