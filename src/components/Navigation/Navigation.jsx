@@ -67,31 +67,6 @@ function Navigation() {
 
     return (
         <>
-            <StyledSidebar>
-                <Button
-                    className="sidebar-burger-button"
-                    onClick={() => dispatch({
-                        type: ApplicationActionType.SET_MENU_OPEN,
-                        payload: !appState.isMenuOpen,
-                    })}
-                >
-                    <BurgerIcon showCancelIcon={appState.isMenuOpen}/>
-                </Button>
-                <Button
-                    className="sidebar-imprint-button"
-                    onClick={() => setIsImprintOpen(true)}
-                    title="imprint"
-                >
-                    <Image
-                        className="sidebar-imprint-button-image"
-                        url="https://yt3.ggpht.com/ytc/AKedOLR5OTVSAD0TZcHUptjIRaZxc33qPhiyrHW0jb6X=s240-c-k-c0x00ffffff-no-rj"
-                        width={48}
-                        height={48}
-                        title="berta berlin icon"
-                    />
-                </Button>
-            </StyledSidebar>
-
             <StyledNavigation isOpen={appState.isMenuOpen}>
                 {menuItems.map((menuItem, index) => {
                     switch (menuItem.type) {
@@ -124,6 +99,31 @@ function Navigation() {
                     }
                 })}
             </StyledNavigation>
+
+            <StyledSidebar>
+                <Button
+                    className="sidebar-burger-button"
+                    onClick={() => dispatch({
+                        type: ApplicationActionType.SET_MENU_OPEN,
+                        payload: !appState.isMenuOpen,
+                    })}
+                >
+                    <BurgerIcon showCancelIcon={appState.isMenuOpen}/>
+                </Button>
+                <Button
+                    className="sidebar-imprint-button"
+                    onClick={() => setIsImprintOpen(true)}
+                    title="imprint"
+                >
+                    <Image
+                        className="sidebar-imprint-button-image"
+                        url="https://yt3.ggpht.com/ytc/AKedOLR5OTVSAD0TZcHUptjIRaZxc33qPhiyrHW0jb6X=s240-c-k-c0x00ffffff-no-rj"
+                        width={48}
+                        height={48}
+                        title="berta berlin icon"
+                    />
+                </Button>
+            </StyledSidebar>
 
             {!appState.isMobile && <NavigationTitle />}
 
