@@ -3,7 +3,7 @@ import { StyledMobileTileSwitchButton } from './styled-components/StyledMobileTi
 import ArrowBackIosNew from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIos from '@mui/icons-material/ArrowForwardIos';
 
-const ICON_BUTTON_STYLE = { backgroundColor: '#330e62', opacity: '0.5' };
+const ICON_BUTTON_STYLE = { backgroundColor: 'rgba(51, 14, 98, 0.5)' };
 const ICON_STYLE = { color: 'white' };
 
 function TileSwitchMobile({ onPrev, onNext, numTiles }) {
