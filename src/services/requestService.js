@@ -15,7 +15,7 @@ const DEV_CACHE = {
  * Environment
  */
 const CACHE_WEBWORKER_URL = 'https://api.glencoden.io/berta';
-const USE_DEV_CACHE = false;
+const USE_DEV_CACHE = true;
 
 class RequestService {
     _get(url, search = {}) {

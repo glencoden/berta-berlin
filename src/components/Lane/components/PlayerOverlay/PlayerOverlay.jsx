@@ -11,6 +11,9 @@ import { StyledPlayerOverlayPlayButton } from './styled-components/StyledPlayerO
 import { useParsedDescription } from '../../hooks/useParsedDescription';
 import { useApplicationContext } from '../../../../context';
 import { ApplicationActionType } from '../../../../context/ApplicationActionType';
+import { storageService } from '../../../../services/storageService';
+
+const PLAY_BUTTON_STYLE = { fontSize: '2rem' };
 
 
 function PlayerOverlay({ className, activeItem, visible }) {
@@ -38,6 +41,11 @@ function PlayerOverlay({ className, activeItem, visible }) {
         if (!activeItem) {
             return;
         }
+        console.log('activeItem', activeItem); // TODO remove dev code
+
+        storageService.setSeenVideoIds(activeItem);
+        storageService.setRecentlyWatchedGenres(activeItem);
+
         switch (appState.selectedConfig?.resourceType) {
             case ResourceType.VIDEO:
                 playerDispatch({
@@ -128,7 +136,7 @@ function PlayerOverlay({ className, activeItem, visible }) {
                 {!playerState.isPlaying && (
                     <Button
                         className="play-button"
-                        style={{ fontSize: '2rem' }}
+                        style={PLAY_BUTTON_STYLE}
                         variant="contained"
                         size="large"
                         disable={isVideoLoading}

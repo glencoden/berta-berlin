@@ -5,7 +5,7 @@ import { ApplicationProvider } from './context';
 import App from './App';
 
 console.log(
-    '%cglencoden ❤️ version 0.2.0',
+    '%cglencoden ❤️ version 1.0.0',
     `font-size: 1rem;
     padding: 1rem;
     margin: 1rem 0;
