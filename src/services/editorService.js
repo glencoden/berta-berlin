@@ -72,7 +72,8 @@ class EditorService {
         }
         switch (resourceType) {
             case ResourceType.VIDEO: {
-                return this._makeResultVideoList(selectedVideoList);
+                const filteredList = this._filterVideoListForUnseen(selectedVideoList);
+                return this._makeResultVideoList(filteredList);
             }
             case ResourceType.PLAYLIST: {
                 if (this.playlists === null) {
@@ -98,14 +99,12 @@ class EditorService {
         }
     }
 
-    _makeResultVideoList(selectedVideoList) {
-        const filteredVideoList = this._filterVideoListForUnseen(selectedVideoList);
-
+    _makeResultVideoList(videoList) {
         const numQuotaResults = Math.min(
             Math.floor(GENRE_QUOTA_PERCENTAGE / MAX_VIDEO_LIST_LENGTH),
-            Math.floor(filteredVideoList.length * GENRE_QUOTA_PERCENTAGE / 100),
+            Math.floor(videoList.length * GENRE_QUOTA_PERCENTAGE / 100),
         );
-        const resultVideoList = this._collectVideoListGenreQuota(filteredVideoList, numQuotaResults);
+        const resultVideoList = this._collectVideoListGenreQuota(videoList, numQuotaResults);
 
         this.numProvidedVideoLists++;
 
