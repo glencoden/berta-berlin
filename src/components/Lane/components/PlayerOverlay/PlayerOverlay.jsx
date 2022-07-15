@@ -4,7 +4,6 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
 import { useCallback, useEffect } from 'react';
 import { PlayerActionType } from '../../../Player/context/PlayerActionType';
-import { ResourceType } from '../../../../enums/ResourceType';
 import { usePlayerContext } from '../../../Player/context';
 import { StyledPlayerOverlayDescription } from './styled-components/StyledPlayerOverlayDescription';
 import { StyledPlayerOverlayPlayButton } from './styled-components/StyledPlayerOverlayPlayButton';
