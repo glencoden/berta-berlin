@@ -103,10 +103,13 @@ function Navigation() {
             <StyledSidebar>
                 <Button
                     className="sidebar-burger-button"
-                    onClick={() => dispatch({
-                        type: ApplicationActionType.SET_MENU_OPEN,
-                        payload: !appState.isMenuOpen,
-                    })}
+                    onClick={() => {
+                        window.scroll(0, 0);
+                        dispatch({
+                            type: ApplicationActionType.SET_MENU_OPEN,
+                            payload: !appState.isMenuOpen,
+                        })
+                    }}
                 >
                     <BurgerIcon showCancelIcon={appState.isMenuOpen}/>
                 </Button>

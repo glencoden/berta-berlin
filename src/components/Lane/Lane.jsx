@@ -163,7 +163,7 @@ function Lane() {
                     const delay = (hideTile ? displayIndex : (tiles.length - 1 - index)) * laneTileAnimationOffset;
                     return (
                         <Tile
-                            key={`${tile.title}${index}`}
+                            key={tile.key}
                             hide={hideTile}
                             transform={transform}
                             zIndex={zIndex}

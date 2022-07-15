@@ -16,6 +16,9 @@ import { getVideoGenres } from '../context/helpers/getVideoGenres';
 //     return result;
 // }
 
+const sortTrending = (a, b) => b.statistics.viewCount * b.statistics.likeCount - a.statistics.viewCount * a.statistics.likeCount;
+const sortRecent = (a, b) => new Date(b.publishedAt) > new Date(a.publishedAt) ? 1 : -1;
+
 const MAX_VIDEO_LIST_LENGTH = 10;
 const GENRE_QUOTA_PERCENTAGE = 20;
 
@@ -24,22 +27,30 @@ class EditorService {
     videos = null;
     videosByTrend = null;
     videosByCreatedAt = null;
+    numProvidedVideoLists = 0;
 
     setPlaylists(playlists) {
         this.playlists = playlists.filter(playlist => playlist.description.includes(playlistFilterKey));
     }
 
     setVideos(videos) {
-        this.videos = videos;
+        this.videos = [];
 
+        videos.forEach((video) => {
+            if (!this.videos.find(v => v.id === video.id)) {
+                this.videos.push(video);
+            }
+        });
+
+        // TODO remove dev code
         let genres = [];
         this.videos.forEach(video => {
             genres = [ ...genres, ...getVideoGenres(video) ];
         });
-        console.log('genres', genres); // TODO remove dev code
+        console.log('==== GENRES ====// TODO remove dev code', genres);
 
-        this.videosByTrend = videos.sort((a, b) => b.statistics.viewCount * b.statistics.likeCount - a.statistics.viewCount * a.statistics.likeCount);
-        this.videosByCreatedAt = videos.sort((a, b) => new Date(b.publishedAt) > new Date(a.publishedAt) ? 1 : -1);
+        this.videosByTrend = [ ...this.videos ].sort(sortTrending);
+        this.videosByCreatedAt = [ ...this.videos ].sort(sortRecent);
     }
 
     getPlaylists() {
@@ -94,9 +105,13 @@ class EditorService {
             Math.floor(GENRE_QUOTA_PERCENTAGE / MAX_VIDEO_LIST_LENGTH),
             Math.floor(filteredVideoList.length * GENRE_QUOTA_PERCENTAGE / 100),
         );
-        const quotaVideoList = this._fillVideoListGenreQuota(filteredVideoList, numQuotaResults);
+        const resultVideoList = this._collectVideoListGenreQuota(filteredVideoList, numQuotaResults);
 
-        return quotaVideoList.slice(0, MAX_VIDEO_LIST_LENGTH);
+        this.numProvidedVideoLists++;
+
+        resultVideoList.forEach(video => video.renderKey = `${video.id}_${this.numProvidedVideoLists}`);
+
+        return resultVideoList;
     }
 
     _filterVideoListForUnseen(videoList) {
@@ -108,30 +123,39 @@ class EditorService {
         return videoList.filter((video) => !seenVideoIds.includes(video.id));
     }
 
-    _fillVideoListGenreQuota(videoList, numResults) {
+    _collectVideoListGenreQuota(videoList, numResults) {
         const recentlyWatchedGenres = storageService.getRecentlyWatchedGenres();
 
         if (recentlyWatchedGenres === null) {
             return videoList;
         }
         const currentVideoList = [ ...videoList ];
-        const resultList = [];
+        const quotaResults = {};
         let currentVideoIndex = 0;
-        while (resultList.length < numResults && currentVideoIndex < currentVideoList.length) {
+        while (Object.keys(quotaResults).length < numResults && currentVideoIndex < currentVideoList.length) {
             const currentVideo = currentVideoList[currentVideoIndex];
-            currentVideoIndex++;
+            const currentVideoGenres = getVideoGenres(currentVideo);
             if (
-                Array.isArray(currentVideo.tags)
-                && getVideoGenres(currentVideo).some((tag) => recentlyWatchedGenres.includes(tag))
+                currentVideoGenres.length > 0
+                && currentVideoGenres.some((tag) => recentlyWatchedGenres.includes(tag))
             ) {
                 const splice = currentVideoList.splice(currentVideoIndex, 1);
-                resultList.push(splice[0]);
+                quotaResults[currentVideoIndex] = splice[0];
             }
+            currentVideoIndex++;
         }
-        return [
-            ...resultList,
-            ...currentVideoList,
-        ];
+        const numNonQuotaVideos = MAX_VIDEO_LIST_LENGTH - numResults;
+        const resultVideoList = currentVideoList.slice(0, numNonQuotaVideos);
+
+        Object.entries(quotaResults).forEach(([key, value]) => {
+            resultVideoList.splice(parseInt(key), 0, value);
+        })
+
+        // TODO remove dev code
+        console.log('==== QUOTA ====', quotaResults);
+        console.log('==== RESULT ====', resultVideoList);
+
+        return resultVideoList;
     }
 
     _getVideosForCurrentPlaylist(playlistId, videos) {
