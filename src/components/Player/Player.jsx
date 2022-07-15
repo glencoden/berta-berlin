@@ -45,26 +45,6 @@ function Player({ className, hasVideoStarted }) {
     }, [ playerState.shouldPlay, player ]);
 
     /**
-     * Hide unwanted player element, enable player controls
-     */
-    useEffect(() => {
-        // TODO implement
-        if (playerElement.current === null) {
-            return;
-        }
-        // const onKeydown = (event) => {
-        //     if (event.key === 'ArrowRight') {
-        //         console.log('fast forward', event);
-        //         playerElement.current.dispatchEvent(new Event('click'));
-        //     }
-        // };
-        //
-        // window.addEventListener('keydown', onKeydown);
-        //
-        // return () => window.removeEventListener('keydown', onKeydown);
-    }, []);
-
-    /**
      * Play video when not null
      */
     useEffect(() => {

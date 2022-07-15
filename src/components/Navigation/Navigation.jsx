@@ -17,10 +17,14 @@ import { ApplicationActionType } from '../../context/ApplicationActionType';
 import { parseMenuItem } from './helpers/parseMenuItem';
 import { ResourceType } from '../../enums/ResourceType';
 import { TransitionType } from '../../enums/TransitionType';
+import { PlayerActionType } from '../Player/context/PlayerActionType';
+import { usePlayerContext } from '../Player/context';
 
 
 function Navigation() {
-    const { appState, dispatch } = useApplicationContext();
+    const { appState, dispatch: appDispatch } = useApplicationContext();
+
+    const { dispatch: playerDispatch } = usePlayerContext();
 
     const [ menuItems ] = useState(() => getMenuItems());
     const [ isImprintOpen, setIsImprintOpen ] = useState(false);
@@ -34,7 +38,7 @@ function Navigation() {
     useEffect(() => {
         const filterType = filter || FilterType.TRENDING;
         setFilter(filterType);
-        dispatch({
+        appDispatch({
             type: ApplicationActionType.SET_SELECTED_CONFIG,
             payload: {
                 filterType,
@@ -46,7 +50,7 @@ function Navigation() {
     }, [ filter, playlist ]);
 
     const onMenuItemClick = useCallback((menuItem) => {
-        if (dispatch === null) {
+        if (appDispatch === null) {
             return;
         }
         const config = parseMenuItem(menuItem);
@@ -54,16 +58,23 @@ function Navigation() {
         setFilter(config.filterType);
         setPlaylist(config.selectedPlaylistId);
 
-        dispatch({
+        playerDispatch({
+            type: PlayerActionType.STOP,
+        });
+        appDispatch({
+            type: ApplicationActionType.SET_VIDEO_STARTED,
+            payload: false,
+        });
+        appDispatch({
             type: ApplicationActionType.SET_SELECTED_CONFIG,
             payload: config,
         });
-        dispatch({
+        appDispatch({
             type: ApplicationActionType.SET_CURRENT_TRANSITION,
             payload: TransitionType.SLIDE_OUT,
         });
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [ dispatch ]);
+    }, [ appDispatch ]);
 
     return (
         <>
@@ -105,7 +116,7 @@ function Navigation() {
                     className="sidebar-burger-button"
                     onClick={() => {
                         window.scroll(0, 0);
-                        dispatch({
+                        appDispatch({
                             type: ApplicationActionType.SET_MENU_OPEN,
                             payload: !appState.isMenuOpen,
                         })

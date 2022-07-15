@@ -41,26 +41,33 @@ function PlayerOverlay({ className, activeItem, visible }) {
         if (!activeItem) {
             return;
         }
-        console.log('activeItem', activeItem); // TODO remove dev code
-
         storageService.setSeenVideoIds(activeItem);
         storageService.setRecentlyWatchedGenres(activeItem);
 
-        switch (appState.selectedConfig?.resourceType) {
-            case ResourceType.VIDEO:
-                playerDispatch({
-                    type: PlayerActionType.SET_VIDEO,
-                    payload: activeItem,
-                });
-                break;
-            case ResourceType.PLAYLIST:
-                playerDispatch({
-                    type: PlayerActionType.SET_PLAYLIST,
-                    payload: activeItem,
-                });
-                break;
-            default:
-        }
+        playerDispatch({
+            type: PlayerActionType.SET_VIDEO,
+            payload: activeItem,
+        });
+
+        /**
+         * This switch would allow usage of the youtube player playlist functionality
+         */
+        // switch (appState.selectedConfig?.resourceType) {
+        //     case ResourceType.VIDEO:
+        //         playerDispatch({
+        //             type: PlayerActionType.SET_VIDEO,
+        //             payload: activeItem,
+        //         });
+        //         break;
+        //     case ResourceType.PLAYLIST:
+        //         playerDispatch({
+        //             type: PlayerActionType.SET_PLAYLIST,
+        //             payload: activeItem,
+        //         });
+        //         break;
+        //     default:
+        // }
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ appState.selectedConfig, activeItem ]);
 
@@ -133,7 +140,7 @@ function PlayerOverlay({ className, activeItem, visible }) {
             </StyledPlayerOverlayDescription>
 
             <StyledPlayerOverlayPlayButton size={appState.tileSize}>
-                {!playerState.isPlaying && (
+                {!appState.hasVideoStarted && (
                     <Button
                         className="play-button"
                         style={PLAY_BUTTON_STYLE}

@@ -47,7 +47,7 @@ class EditorService {
         this.videos.forEach(video => {
             genres = [ ...genres, ...getVideoGenres(video) ];
         });
-        console.log('==== GENRES ====// TODO remove dev code', genres);
+        console.log('==== GENRES ====', genres);
 
         this.videosByTrend = [ ...this.videos ].sort(sortTrending);
         this.videosByCreatedAt = [ ...this.videos ].sort(sortRecent);
