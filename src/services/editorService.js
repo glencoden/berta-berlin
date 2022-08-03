@@ -126,7 +126,7 @@ class EditorService {
         const recentlyWatchedGenres = storageService.getRecentlyWatchedGenres();
 
         if (recentlyWatchedGenres === null) {
-            return videoList;
+            return videoList.slice(0, MAX_VIDEO_LIST_LENGTH);
         }
         const currentVideoList = [ ...videoList ];
         const quotaResults = {};
