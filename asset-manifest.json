@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "https://glencoden.github.io/berta-berlin/static/css/main.ec19df64.css",
-    "main.js": "https://glencoden.github.io/berta-berlin/static/js/main.7c7c5b44.js",
+    "main.js": "https://glencoden.github.io/berta-berlin/static/js/main.a4f2b028.js",
     "index.html": "https://glencoden.github.io/berta-berlin/index.html",
     "main.ec19df64.css.map": "https://glencoden.github.io/berta-berlin/static/css/main.ec19df64.css.map",
-    "main.7c7c5b44.js.map": "https://glencoden.github.io/berta-berlin/static/js/main.7c7c5b44.js.map"
+    "main.a4f2b028.js.map": "https://glencoden.github.io/berta-berlin/static/js/main.a4f2b028.js.map"
   },
   "entrypoints": [
     "static/css/main.ec19df64.css",
-    "static/js/main.7c7c5b44.js"
+    "static/js/main.a4f2b028.js"
   ]
 }
