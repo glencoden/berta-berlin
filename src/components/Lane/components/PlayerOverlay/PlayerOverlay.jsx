@@ -149,7 +149,7 @@ function PlayerOverlay({ className, activeItem, visible }) {
                         disable={isVideoLoading}
                         onClick={playerState.isPlaying ? onPause : onPlay}
                     >
-                        {isVideoLoading ? <CircularProgress/> : <>&#9658;</>}&nbsp;Play
+                        {isVideoLoading ? <CircularProgress color="info"/> : <>&#9658;</>}&nbsp;Play
                     </Button>
                 )}
             </StyledPlayerOverlayPlayButton>
