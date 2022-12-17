@@ -19,5 +19,10 @@ export const StyledVideoDetail = styled.div`
     
     .video-detail-part {
         padding-bottom: ${controlsMargin}rem;
+        
+        a {
+            text-decoration: none;
+            color: ${({ theme }) => theme.palette.secondary.main};
+        }
     }
 `;
