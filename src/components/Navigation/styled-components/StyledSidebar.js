@@ -15,7 +15,7 @@ export const StyledSidebar = styled.div`
     left: 0;
     top: 0;
     width: ${sidebarWidth}px;
-    height: ${window.innerHeight}px;
+    height: 100vh;
     z-index: ${navigationZIndex};
     background-color: ${({ theme }) => theme.palette.primary.dark};
     

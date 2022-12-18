@@ -4,7 +4,7 @@ import './index.css';
 import { ApplicationProvider } from './context';
 import App from './App';
 
-const APP_VERSION = '1.0.0'
+const APP_VERSION = '1.0.0';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 

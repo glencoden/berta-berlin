@@ -6,7 +6,7 @@ import { useApplicationContext } from '../../../../context';
 const HIDE_OFFSET_SAFETY_MARGIN = 50;
 
 
-function Tile({ hide, transform, zIndex, delay, setActive, observer, children }) {
+function Tile({ hide, position, transform, zIndex, delay, setActive, observer, children }) {
     const { appState } = useApplicationContext();
 
     const [ showTile, setShowTile ] = useState(false);
@@ -47,6 +47,7 @@ function Tile({ hide, transform, zIndex, delay, setActive, observer, children })
 
     return (
         <StyledTile
+            data-position={position}
             ref={tileElement}
             transform={showTile ? transform : -(appState.tileSize.width + laneLeft + HIDE_OFFSET_SAFETY_MARGIN)}
             zIndex={zIndex}

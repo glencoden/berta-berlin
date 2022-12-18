@@ -44,10 +44,15 @@ function App() {
                     });
             });
 
+        let debounceTimeoutId;
+
         const onResize = () => {
-            dispatch({ type: ApplicationActionType.CALC_TILE_SIZE });
-            dispatch({ type: ApplicationActionType.CALC_IS_MOBILE });
-            dispatch({ type: ApplicationActionType.CALC_IS_VIEWPORT_TOO_SMALL });
+            clearTimeout(debounceTimeoutId);
+            debounceTimeoutId = setTimeout(() => {
+                dispatch({ type: ApplicationActionType.CALC_TILE_SIZE });
+                dispatch({ type: ApplicationActionType.CALC_IS_MOBILE });
+                dispatch({ type: ApplicationActionType.CALC_IS_VIEWPORT_TOO_SMALL });
+            }, 200);
         };
 
         const onOrientationChange = () => window.location.reload();

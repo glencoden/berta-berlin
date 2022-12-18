@@ -4,22 +4,10 @@ import { FilterType } from '../enums/FilterType';
 import { storageService } from './storageService';
 import { getVideoGenres } from '../context/helpers/getVideoGenres';
 
-// function getRandomVideos(videos) {
-//     const dupe = [ ...videos ];
-//     const result = [];
-//     for (let i = 0; i < Math.min(dupe.length, 10); i++) {
-//         const randomIndex = Math.floor(Math.random() * dupe.length);
-//         const randomItem = { ...dupe[randomIndex] };
-//         dupe.splice(randomIndex, 1);
-//         result.push(randomItem);
-//     }
-//     return result;
-// }
-
 const sortTrending = (a, b) => b.statistics.viewCount * b.statistics.likeCount - a.statistics.viewCount * a.statistics.likeCount;
 const sortRecent = (a, b) => new Date(b.publishedAt) > new Date(a.publishedAt) ? 1 : -1;
 
-const MAX_VIDEO_LIST_LENGTH = 10;
+const MAX_VIDEO_LIST_LENGTH = 50;
 const GENRE_QUOTA_PERCENTAGE = 20;
 
 class EditorService {

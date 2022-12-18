@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { StyledLane } from './styled-components/StyledLane';
 import Player from '../Player/Player';
 import PlayerOverlay from './components/PlayerOverlay/PlayerOverlay';
@@ -14,6 +14,14 @@ import { ApplicationActionType } from '../../context/ApplicationActionType';
 import { TransitionType } from '../../enums/TransitionType';
 import TileSwitchMobile from './components/TileSwitch/TileSwitchMobile';
 
+const TilePosition = {
+    INTERMEDIATE: 'intermediate',
+    FIRST: 'first',
+    LAST: 'last',
+};
+
+const NUM_RENDERED_TILES = 7; // TODO set this dynamically with window width
+
 
 function Lane() {
     const { appState, dispatch } = useApplicationContext();
@@ -21,14 +29,11 @@ function Lane() {
     const [ items, setItems ] = useState(null);
     const [ activeIndex, setActiveIndex ] = useState(0);
 
-    const visibleTilesCount = useRef(0);
-    const numTilesWhichShouldShow = useRef(0);
-
     const onSelectPrev = useCallback(() => {
         if (appState.currentTransition !== TransitionType.NONE) {
             return;
         }
-        numTilesWhichShouldShow.current++;
+        // numTilesWhichShouldShow.current++;
         setActiveIndex(prevIndex => Math.max(prevIndex - 1, 0));
     }, [ appState.currentTransition ]);
 
@@ -36,12 +41,14 @@ function Lane() {
         if (appState.currentTransition !== TransitionType.NONE) {
             return;
         }
-        numTilesWhichShouldShow.current--;
+        // numTilesWhichShouldShow.current--;
         setActiveIndex(prevIndex => Math.min(prevIndex + 1, items?.length - 1));
     }, [ appState.currentTransition, items ]);
 
     const activeItem = items?.[activeIndex];
-    const tiles = items?.map(mapItemToTile);
+    const tiles = items?.slice(0, activeIndex + NUM_RENDERED_TILES).map(mapItemToTile);
+
+    const transitionTypeRef = useRef(appState.currentTransition);
 
     /**
      * Set and reset local state
@@ -50,16 +57,15 @@ function Lane() {
         if (appState.selectedConfig === null) {
             return;
         }
+        transitionTypeRef.current = appState.currentTransition;
         switch (appState.currentTransition) {
             case TransitionType.NONE:
                 break;
             case TransitionType.SLIDE_OUT:
-                numTilesWhichShouldShow.current = 0;
-                setActiveIndex(0);
                 break;
             case TransitionType.SLIDE_IN:
+                setActiveIndex(0);
                 const updatedItems = editorService.getVideos(appState.selectedConfig);
-                numTilesWhichShouldShow.current = updatedItems.length;
                 setItems(updatedItems);
                 break;
             default:
@@ -98,27 +104,25 @@ function Lane() {
         return new IntersectionObserver(
             (entries) => {
                 entries.forEach((entry) => {
-                    if (!entry.isIntersecting && visibleTilesCount.current === 0) {
-                        return;
-                    }
-                    visibleTilesCount.current = entry.isIntersecting
-                        ? visibleTilesCount.current + 1
-                        : Math.max(visibleTilesCount.current - 1, 0);
-
-                    if (visibleTilesCount.current !== numTilesWhichShouldShow.current) {
-                        return;
-                    }
-                    if (visibleTilesCount.current === 0) {
+                    if (
+                        entry.isIntersecting
+                        && entry.target.dataset.position === TilePosition.FIRST
+                        && transitionTypeRef.current === TransitionType.SLIDE_IN
+                    ) {
+                        dispatch({
+                            type: ApplicationActionType.SET_CURRENT_TRANSITION,
+                            payload: TransitionType.NONE,
+                        });
+                    } else if (
+                        !entry.isIntersecting
+                        && entry.target.dataset.position === TilePosition.LAST
+                        && transitionTypeRef.current === TransitionType.SLIDE_OUT
+                    ) {
                         dispatch({
                             type: ApplicationActionType.SET_CURRENT_TRANSITION,
                             payload: TransitionType.SLIDE_IN,
                         });
-                        return;
                     }
-                    dispatch({
-                        type: ApplicationActionType.SET_CURRENT_TRANSITION,
-                        payload: TransitionType.NONE,
-                    });
                 });
             },
             {
@@ -158,6 +162,8 @@ function Lane() {
                 {tiles?.map((tile, index) => {
                     const displayIndex = index - activeIndex;
                     const hideTile = !showTiles || displayIndex < 0;
+                    // TODO extract and explain the position assignment below
+                    const position = index === 0 ? TilePosition.FIRST : (index === tiles.length - 2 || activeIndex === tiles.length - 1) ? TilePosition.LAST : TilePosition.INTERMEDIATE;
                     const transform = displayIndex * laneTileOffset;
                     const zIndex = tiles.length - displayIndex;
                     const delay = (hideTile ? displayIndex : (tiles.length - 1 - index)) * laneTileAnimationOffset;
@@ -165,6 +171,7 @@ function Lane() {
                         <Tile
                             key={tile.key}
                             hide={hideTile}
+                            position={position}
                             transform={transform}
                             zIndex={zIndex}
                             delay={delay}

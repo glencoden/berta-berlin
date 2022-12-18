@@ -1,12 +1,11 @@
 const imprintText = `
 GAVK Gesellschaft für Audio-Visuelle Kommunikation gUG (haftungsbeschränkt)
 
-c/o CREAM
-Manfred-von-Richthofen-Str. 15
-12101 Berlin
+c/o Halberschmidt
+Muskauer Str. 24
+10997 Berlin
 
 Managing director: Beat Halberschmidt
-Procuration: Jean-Paul Mendelsohn
 
 Amtsgericht Charlottenburg (Berlin), HRB 214913
 
