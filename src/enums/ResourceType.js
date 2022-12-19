@@ -1,4 +1,4 @@
 export const ResourceType = {
     VIDEO: 'video',
-    PLAYLIST: 'playlist'
+    PLAYLIST: 'playlist',
 };

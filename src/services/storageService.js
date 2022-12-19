@@ -1,13 +1,11 @@
 import { editorService } from './editorService';
 import { getVideoGenres } from '../context/helpers/getVideoGenres';
+import { genreListStaleTime, minNumUnseenVideos } from '../styles/variables';
 
-const StorageKeys = {
+const STORAGE_KEYS = {
     WATCHED_VIDEOS: 'BERTA.WATCHED_VIDEOS',
     RECENT_GENRES: 'BERTA.RECENT_GENRES',
 };
-
-const MIN_NUM_UNSEEN_VIDEOS = 50;
-const GENRE_LIST_STALE_TIME = 1000 * 60 * 60 * 24;
 
 class StorageService {
     _get(key) {
@@ -36,18 +34,18 @@ class StorageService {
     }
 
     getSeenVideoIds() {
-        return this._get(StorageKeys.WATCHED_VIDEOS);
+        return this._get(STORAGE_KEYS.WATCHED_VIDEOS);
     }
 
     setSeenVideoIds(video) {
-        const maxNumStoredIds = editorService.getNumVideos() - MIN_NUM_UNSEEN_VIDEOS;
+        const maxNumStoredIds = editorService.getNumVideos() - minNumUnseenVideos;
         const currentSeenVideoIds = this.getSeenVideoIds();
         const storageUpdate = [ video.id, ...(currentSeenVideoIds === null ? [] : currentSeenVideoIds) ].slice(0, maxNumStoredIds);
-        this._set(StorageKeys.WATCHED_VIDEOS, storageUpdate);
+        this._set(STORAGE_KEYS.WATCHED_VIDEOS, storageUpdate);
     }
 
     getRecentlyWatchedGenres() {
-        const storageValue = this._get(StorageKeys.RECENT_GENRES);
+        const storageValue = this._get(STORAGE_KEYS.RECENT_GENRES);
         if (storageValue === null) {
             return null;
         }
@@ -61,12 +59,12 @@ class StorageService {
         const inputGenreList = getVideoGenres(video);
         const currentStorage = this.getRecentlyWatchedGenres();
         const currentTimestamp = Date.now();
-        if (currentStorage === null || (currentStorage.updatedAt + GENRE_LIST_STALE_TIME) < currentTimestamp) {
+        if (currentStorage === null || (currentStorage.updatedAt + genreListStaleTime) < currentTimestamp) {
             const storageUpdate = {
                 updatedAt: currentTimestamp,
                 genreList: inputGenreList,
             };
-            this._set(StorageKeys.RECENT_GENRES, storageUpdate);
+            this._set(STORAGE_KEYS.RECENT_GENRES, storageUpdate);
             return;
         }
         const genreListUpdate = [ ...currentStorage ];
@@ -79,7 +77,7 @@ class StorageService {
             updatedAt: currentTimestamp,
             genreList: genreListUpdate,
         };
-        this._set(StorageKeys.RECENT_GENRES, storageUpdate);
+        this._set(STORAGE_KEYS.RECENT_GENRES, storageUpdate);
     }
 }
 

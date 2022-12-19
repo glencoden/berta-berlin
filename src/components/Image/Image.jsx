@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { StyledImage } from './styled-components/StyledImage';
 
 const IMAGE_LOADING_TIMEOUT = 5;

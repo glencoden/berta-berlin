@@ -28,8 +28,8 @@ function TileSwitch({ onPrev, onNext, numTiles, activeIndex, visible }) {
                 numTiles={numTiles}
                 activeIndex={activeIndex}
             >
-                <div className="progress-bar-scale" />
-                <div className="progress-bar-indicator" />
+                <div className="progress-bar-scale"/>
+                <div className="progress-bar-indicator"/>
             </StyledProgressBar>
 
             <Button onClick={onNext}>

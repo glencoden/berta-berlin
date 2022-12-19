@@ -119,7 +119,7 @@ function Navigation() {
                         appDispatch({
                             type: ApplicationActionType.SET_MENU_OPEN,
                             payload: !appState.isMenuOpen,
-                        })
+                        });
                     }}
                 >
                     <BurgerIcon showCancelIcon={appState.isMenuOpen}/>
@@ -139,7 +139,7 @@ function Navigation() {
                 </Button>
             </StyledSidebar>
 
-            {!appState.isMobile && <NavigationTitle />}
+            {!appState.isMobile && <NavigationTitle/>}
 
             <Imprint
                 open={isImprintOpen}

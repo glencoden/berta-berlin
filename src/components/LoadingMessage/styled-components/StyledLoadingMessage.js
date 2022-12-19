@@ -9,7 +9,7 @@ export const StyledLoadingMessage = styled.div`
             opacity: 1;
         }
     }
-    
+
     @keyframes fade-out {
         0% {
             opacity: 0.8;
@@ -20,7 +20,7 @@ export const StyledLoadingMessage = styled.div`
     }
 
     animation: ${({ visible }) => visible ? 'is-loading 0.7s linear infinite alternate' : 'fade-out 1s linear'};
-    
+
     position: absolute;
     left: 0;
     top: 50vh;

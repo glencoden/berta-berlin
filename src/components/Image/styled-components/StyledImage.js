@@ -5,7 +5,7 @@ export const StyledImage = styled.div`
     height: ${({ height }) => height}px;
     background-color: whitesmoke;
     overflow: hidden;
-    
+
     .image {
         object-fit: cover;
         width: ${({ width }) => width}px;

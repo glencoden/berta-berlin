@@ -40,11 +40,11 @@ export const getPlayer = (dispatch) => {
                 clearTimeout(onErrorTimeoutId);
                 onErrorTimeoutId = setTimeout(() => {
                     dispatch({
-                        type: PlayerActionType.STOP
+                        type: PlayerActionType.STOP,
                     });
                     setTimeout(() => {
                         dispatch({
-                            type: PlayerActionType.PLAY
+                            type: PlayerActionType.PLAY,
                         });
                     }, 500);
                 }, ERR_RETRY_TIMEOUT * 1000);

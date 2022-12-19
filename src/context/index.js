@@ -4,7 +4,7 @@ import { initialApplicationState } from './initialApplicationState';
 
 const initialContext = {
     appState: initialApplicationState,
-    dispatch: null
+    dispatch: null,
 };
 
 const ApplicationContext = createContext(initialContext);
@@ -12,7 +12,7 @@ const ApplicationContext = createContext(initialContext);
 export const useApplicationContext = () => useContext(ApplicationContext);
 
 export const ApplicationProvider = ({ children }) => {
-    const [state, dispatch] = useApplicationReducer();
+    const [ state, dispatch ] = useApplicationReducer();
 
     return (
         <ApplicationContext.Provider value={{ appState: state, dispatch }}>

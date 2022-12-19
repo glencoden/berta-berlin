@@ -9,7 +9,7 @@ export const StyledPlayerOverlayPlayButton = styled.div`
     }}px;
     top: 50%;
     transform: translate(50%, -50%);
-    
+
     .play-button {
         font-size: 2rem;
     }

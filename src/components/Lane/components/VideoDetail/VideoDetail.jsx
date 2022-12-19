@@ -6,7 +6,7 @@ import { useApplicationContext } from '../../../../context';
 function parseURLs(string) {
     const urlRegex = /(https?:\/\/.[^\s]+)/g;
     const URLs = string.match(urlRegex);
-    return URLs ||[];
+    return URLs || [];
 }
 
 function parseLinks(string) {
@@ -37,7 +37,7 @@ function VideoDetail({ activeItem, visible }) {
                         key={index}
                         dangerouslySetInnerHTML={{ __html: parseLinks(part) }}
                     />
-                )
+                );
             })}
         </StyledVideoDetail>
     );

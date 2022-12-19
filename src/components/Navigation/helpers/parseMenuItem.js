@@ -20,4 +20,4 @@ export const parseMenuItem = (menuItem) => {
             console.warn('unknown menu item type');
             return {};
     }
-}
+};

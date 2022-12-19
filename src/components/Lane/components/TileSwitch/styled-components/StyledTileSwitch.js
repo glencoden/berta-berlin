@@ -9,7 +9,7 @@ export const StyledTileSwitch = styled.div`
     transform: translateX(-50%);
     opacity: ${({ visible }) => visible ? '1' : '0'};
     transition: opacity ${({ theme }) => (theme.transitions.duration.standard / 1000)}s;
-    
+
     .arrow-icon {
         color: ${({ theme }) => theme.palette.primary.main};
     }

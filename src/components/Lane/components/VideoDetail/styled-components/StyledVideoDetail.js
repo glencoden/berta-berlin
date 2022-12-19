@@ -16,10 +16,10 @@ export const StyledVideoDetail = styled.div`
     transform: translateY(${({ hasVideoStarted }) => hasVideoStarted ? '100%' : '0'});
     transition: opacity ${({ theme }) => (theme.transitions.duration.standard / 1000)}s, transform ${({ theme }) => (theme.transitions.duration.standard / 1000)}s;
     overflow: scroll;
-    
+
     .video-detail-part {
         padding-bottom: ${controlsMargin}rem;
-        
+
         a {
             text-decoration: none;
             color: ${({ theme }) => theme.palette.secondary.main};

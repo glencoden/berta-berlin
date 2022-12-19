@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { StyledLane } from './styled-components/StyledLane';
 import Player from '../Player/Player';
 import PlayerOverlay from './components/PlayerOverlay/PlayerOverlay';

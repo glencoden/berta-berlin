@@ -33,7 +33,7 @@ function pollCacheUpdate() {
         if (currentTimestamp > staleTimestamp) {
             return await updateCache(resourceType);
         }
-        return Promise.resolve()
+        return Promise.resolve();
     }))
         .then(() => setTimeout(pollCacheUpdate, pollingInterval));
 }

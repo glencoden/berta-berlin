@@ -11,7 +11,7 @@ export const StyledPlayerOverlayDescription = styled.div`
     padding-bottom: calc(${controlsMargin}rem + 42px); // adding button height
     background-color: ${({ theme }) => theme.palette.action.active};
     overflow: scroll;
-    
+
     > * {
         padding: ${controlsMargin}rem;
     }
