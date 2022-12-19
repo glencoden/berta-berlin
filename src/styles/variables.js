@@ -3,6 +3,7 @@
  */
 export const defaultTileWidth = 1280 // px
 export const minDeviceWidth = 600; // px
+export const fullDeviceWidth = 1440; // px
 export const maxMobileWidth = 900; // px
 export const mobileContentMargin = 10; // px
 
@@ -15,7 +16,7 @@ export const laneTop = 110; // px
 export const laneTileOffset = 50; // px
 export const minNumRenderedTiles = 3; // count
 
-export const progressBarWidth = 240; // px
+export const progressBarWidth = 274; // px
 
 export const controlsMargin = 2; // rem
 export const controlsOverlayWidth = 38; // %
@@ -27,6 +28,6 @@ export const laneTileSlideInDelay = 200; // ms
 export const laneTileAnimationOffset = 50; // ms
 
 /**
- * Editor logic
+ * editor logic
  */
 export const playlistFilterKey = 'berta.berlin';
