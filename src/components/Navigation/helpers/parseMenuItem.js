@@ -12,7 +12,7 @@ export const parseMenuItem = (menuItem) => {
             };
         case MenuItemType.DASHBOARD:
             return {
-                filterType: FilterType.TRENDING,
+                filterType: FilterType.POPULAR,
                 resourceType: ResourceType.PLAYLIST,
                 selectedPlaylistId: menuItem.value?.value,
             };

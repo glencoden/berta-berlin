@@ -9,7 +9,7 @@ export const theme = createTheme({
             main: '#4a148c',
         },
         info: {
-            main: '#fff'
+            main: '#fff', // TODO find an easier white (eg #fcfcfc) and apply to body bg, button bg and info.main and all white
         },
     },
 });

@@ -1,7 +1,9 @@
 import { StyledTileSwitch } from './styled-components/StyledTileSwitch';
 import Button from '@mui/material/Button';
-import { StyledProgressBar } from './styled-components/StyledProgressBar';
 import { useApplicationContext } from '../../../../context';
+import ArrowBackIosNew from '@mui/icons-material/ArrowBackIosNew';
+import ArrowForwardIos from '@mui/icons-material/ArrowForwardIos';
+import { StyledProgressBar } from './styled-components/StyledProgressBar';
 
 function TileSwitch({ onPrev, onNext, numTiles, activeIndex, visible }) {
     const { appState } = useApplicationContext();
@@ -15,7 +17,12 @@ function TileSwitch({ onPrev, onNext, numTiles, activeIndex, visible }) {
             size={appState.tileSize}
             visible={visible}
         >
-            <Button onClick={onPrev}>previous</Button>
+            <Button onClick={onPrev}>
+                <ArrowBackIosNew
+                    fontSize="large"
+                    className="arrow-icon"
+                />
+            </Button>
 
             <StyledProgressBar
                 numTiles={numTiles}
@@ -25,7 +32,12 @@ function TileSwitch({ onPrev, onNext, numTiles, activeIndex, visible }) {
                 <div className="progress-bar-indicator" />
             </StyledProgressBar>
 
-            <Button onClick={onNext}>next</Button>
+            <Button onClick={onNext}>
+                <ArrowForwardIos
+                    fontSize="large"
+                    className="arrow-icon"
+                />
+            </Button>
         </StyledTileSwitch>
     );
 }

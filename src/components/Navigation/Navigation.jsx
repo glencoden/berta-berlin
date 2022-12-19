@@ -36,7 +36,7 @@ function Navigation() {
      * Update state from url state on mount
      */
     useEffect(() => {
-        const filterType = filter || FilterType.TRENDING;
+        const filterType = filter || FilterType.POPULAR;
         setFilter(filterType);
         appDispatch({
             type: ApplicationActionType.SET_SELECTED_CONFIG,

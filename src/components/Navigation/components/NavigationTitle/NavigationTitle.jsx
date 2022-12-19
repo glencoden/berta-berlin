@@ -12,7 +12,7 @@ function NavigationTitle() {
             <Typography
                 variant="h4"
                 as="h1"
-                color="primary.light"
+                color="secondary.light"
             >
                 <Headline/>
             </Typography>

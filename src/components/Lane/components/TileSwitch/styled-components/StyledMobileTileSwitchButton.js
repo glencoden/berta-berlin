@@ -7,4 +7,12 @@ export const StyledMobileTileSwitchButton = styled.div`
     ${({ moveRight }) => moveRight ? 'right' : 'left'}: ${navigationMargin}rem;
     top: 50%;
     transform: translateY(-50%);
+    
+    .icon-button {
+        background-color: rgba(51, 14, 98, 0.5);
+    }
+    
+    .arrow-icon {
+        color: #fff;
+    }
 `;

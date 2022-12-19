@@ -3,24 +3,20 @@ import { StyledMobileTileSwitchButton } from './styled-components/StyledMobileTi
 import ArrowBackIosNew from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIos from '@mui/icons-material/ArrowForwardIos';
 
-const ICON_BUTTON_STYLE = { backgroundColor: 'rgba(51, 14, 98, 0.5)' };
-const ICON_STYLE = { color: 'white' };
-
 function TileSwitchMobile({ onPrev, onNext, numTiles }) {
     if (isNaN(numTiles)) {
         return null;
     }
-
     return (
         <>
             <StyledMobileTileSwitchButton moveRight={false}>
                 <IconButton
                     onClick={onPrev}
-                    style={ICON_BUTTON_STYLE}
+                    className="icon-button"
                 >
                     <ArrowBackIosNew
                         fontSize="large"
-                        style={ICON_STYLE}
+                        className="arrow-icon"
                     />
                 </IconButton>
             </StyledMobileTileSwitchButton>
@@ -28,11 +24,11 @@ function TileSwitchMobile({ onPrev, onNext, numTiles }) {
             <StyledMobileTileSwitchButton moveRight={true}>
                 <IconButton
                     onClick={onNext}
-                    style={ICON_BUTTON_STYLE}
+                    className="icon-button"
                 >
                     <ArrowForwardIos
                         fontSize="large"
-                        style={ICON_STYLE}
+                        className="arrow-icon"
                     />
                 </IconButton>
             </StyledMobileTileSwitchButton>

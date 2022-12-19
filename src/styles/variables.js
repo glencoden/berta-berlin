@@ -15,7 +15,7 @@ export const laneTop = 110; // px
 export const laneTileOffset = 50; // px
 export const minNumRenderedTiles = 3; // count
 
-export const progressBarWidth = 320; // px
+export const progressBarWidth = 240; // px
 
 export const controlsMargin = 2; // rem
 export const controlsOverlayWidth = 38; // %

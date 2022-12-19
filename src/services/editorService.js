@@ -4,15 +4,30 @@ import { FilterType } from '../enums/FilterType';
 import { storageService } from './storageService';
 import { getVideoGenres } from '../context/helpers/getVideoGenres';
 
-const sortTrending = (a, b) => b.statistics.viewCount * b.statistics.likeCount - a.statistics.viewCount * a.statistics.likeCount;
-const sortRecent = (a, b) => new Date(b.publishedAt) > new Date(a.publishedAt) ? 1 : -1;
-
 const MAX_VIDEO_LIST_LENGTH = 100;
 const GENRE_QUOTA_PERCENTAGE = 20;
+const TRENDING_PERIOD_IN_DAYS = 14;
+
+const getPopFactor = (video, numDaysLimit) => {
+    const overallPop = video.statistics.viewCount * video.statistics.likeCount;
+    if (typeof numDaysLimit !== 'number' || numDaysLimit < 1) {
+        return overallPop;
+    }
+    const videoAgeInDays = Math.round(
+        (Date.now() - new Date(video.publishedAt).getTime()) / (1000 * 60 * 60 * 24)
+    );
+    // the older the video, the lower the popularity - this is a hack to mimic a trend
+    return Math.round(overallPop * (numDaysLimit / videoAgeInDays));
+};
+
+const sortPopular = (a, b) => getPopFactor(b) - getPopFactor(a);
+const sortTrending = (a, b) => getPopFactor(b, TRENDING_PERIOD_IN_DAYS) - getPopFactor(a, TRENDING_PERIOD_IN_DAYS);
+const sortRecent = (a, b) => new Date(b.publishedAt) > new Date(a.publishedAt) ? 1 : -1;
 
 class EditorService {
     playlists = null;
     videos = null;
+    videosByPopularity = null;
     videosByTrend = null;
     videosByCreatedAt = null;
     numProvidedVideoLists = 0;
@@ -37,6 +52,7 @@ class EditorService {
         });
         console.log('==== GENRES ====', genres);
 
+        this.videosByPopularity = [ ...this.videos ].sort(sortPopular);
         this.videosByTrend = [ ...this.videos ].sort(sortTrending);
         this.videosByCreatedAt = [ ...this.videos ].sort(sortRecent);
     }
@@ -55,7 +71,7 @@ class EditorService {
     getVideos({ filterType, resourceType, selectedPlaylistId }) {
         const selectedVideoList = this._selectVideoList(filterType);
         if (selectedVideoList === null) {
-            console.warn('no videos', filterType);
+            console.warn(`no videos for filter type "${filterType}"`);
             return;
         }
         switch (resourceType) {
@@ -78,11 +94,14 @@ class EditorService {
 
     _selectVideoList(filterType) {
         switch (filterType) {
+            case FilterType.POPULAR:
+                return this.videosByPopularity;
             case FilterType.TRENDING:
                 return this.videosByTrend;
             case FilterType.RECENT:
                 return this.videosByCreatedAt;
             default:
+                console.warn(`unknown filter type "${filterType}"`);
                 return this.videosByTrend;
         }
     }
