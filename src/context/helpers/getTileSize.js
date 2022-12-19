@@ -1,7 +1,15 @@
-import { defaultTileWidth, laneLeft, mobileContentMargin } from '../../styles/variables';
+import {
+    defaultTileWidth,
+    laneLeft,
+    laneTileOffset,
+    minNumRenderedTiles,
+    mobileContentMargin,
+} from '../../styles/variables'
 
 export const getTileSize = () => {
-    let width = Math.min((window.innerWidth - laneLeft), defaultTileWidth);
+    const marginRight = Math.max(minNumRenderedTiles - 1.5, 0) * laneTileOffset;
+
+    let width = Math.min((window.innerWidth - laneLeft - marginRight), defaultTileWidth);
     let height = width / 16 * 9;
 
     const maxHeight = window.innerHeight - (2 * mobileContentMargin);

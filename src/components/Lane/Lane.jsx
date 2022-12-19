@@ -13,14 +13,13 @@ import { useApplicationContext } from '../../context';
 import { ApplicationActionType } from '../../context/ApplicationActionType';
 import { TransitionType } from '../../enums/TransitionType';
 import TileSwitchMobile from './components/TileSwitch/TileSwitchMobile';
+import { getNumRenderedTiles } from './helpers/getNumRenderedTiles';
 
 const TilePosition = {
     INTERMEDIATE: 'intermediate',
     FIRST: 'first',
     LAST: 'last',
 };
-
-const NUM_RENDERED_TILES = 7; // TODO set this dynamically with window width
 
 
 function Lane() {
@@ -46,7 +45,10 @@ function Lane() {
     }, [ appState.currentTransition, items ]);
 
     const activeItem = items?.[activeIndex];
-    const tiles = items?.slice(0, activeIndex + NUM_RENDERED_TILES).map(mapItemToTile);
+
+    const tiles = items
+        ?.slice(0, activeIndex + getNumRenderedTiles(appState.tileSize))
+        .map(mapItemToTile);
 
     const transitionTypeRef = useRef(appState.currentTransition);
 
@@ -162,8 +164,7 @@ function Lane() {
                 {tiles?.map((tile, index) => {
                     const displayIndex = index - activeIndex;
                     const hideTile = !showTiles || displayIndex < 0;
-                    // TODO extract and explain the position assignment below
-                    const position = index === 0 ? TilePosition.FIRST : (index === tiles.length - 2 || activeIndex === tiles.length - 1) ? TilePosition.LAST : TilePosition.INTERMEDIATE;
+                    const position = index === 0 ? TilePosition.FIRST : index === tiles.length - 1 ? TilePosition.LAST : TilePosition.INTERMEDIATE;
                     const transform = displayIndex * laneTileOffset;
                     const zIndex = tiles.length - displayIndex;
                     const delay = (hideTile ? displayIndex : (tiles.length - 1 - index)) * laneTileAnimationOffset;

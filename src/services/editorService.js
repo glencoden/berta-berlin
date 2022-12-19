@@ -7,7 +7,7 @@ import { getVideoGenres } from '../context/helpers/getVideoGenres';
 const sortTrending = (a, b) => b.statistics.viewCount * b.statistics.likeCount - a.statistics.viewCount * a.statistics.likeCount;
 const sortRecent = (a, b) => new Date(b.publishedAt) > new Date(a.publishedAt) ? 1 : -1;
 
-const MAX_VIDEO_LIST_LENGTH = 50;
+const MAX_VIDEO_LIST_LENGTH = 100;
 const GENRE_QUOTA_PERCENTAGE = 20;
 
 class EditorService {
