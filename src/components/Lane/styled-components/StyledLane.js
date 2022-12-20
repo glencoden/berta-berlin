@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { laneLeft, laneTop, mobileContentMargin, sidebarWidth } from '../../../styles/variables';
+import { laneLeft, laneTop, mobileContentMargin, sidebarWidth } from '../../../variables';
 import { isMobile } from '../../../context/helpers/isMobile';
 
 export const StyledLane = styled.div`

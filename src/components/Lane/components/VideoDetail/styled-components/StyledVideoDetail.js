@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { controlsMargin, controlsOverlayWidth } from '../../../../../styles/variables';
+import { controlsMargin, controlsOverlayWidth } from '../../../../../variables';
 
 export const StyledVideoDetail = styled.div`
     position: absolute;

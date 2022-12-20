@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { progressBarWidth } from '../../../../../styles/variables';
+import { progressBarWidth } from '../../../../../variables';
 
 export const StyledProgressBar = styled.div`
     position: relative;

@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { navigationMargin } from '../../../../../styles/variables';
+import { navigationMargin } from '../../../../../variables';
 
 export const StyledMobileTileSwitchButton = styled.div`
     z-index: 10000;
@@ -13,6 +13,6 @@ export const StyledMobileTileSwitchButton = styled.div`
     }
 
     .arrow-icon {
-        color: #fff;
+        color: ${({ theme }) => theme.common.white};
     }
 `;

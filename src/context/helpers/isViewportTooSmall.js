@@ -1,4 +1,4 @@
-import { minDeviceWidth } from '../../styles/variables';
+import { minDeviceWidth } from '../../variables';
 
 export const isViewportTooSmall = () => {
     return window.innerWidth < minDeviceWidth;

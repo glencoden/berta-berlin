@@ -1,4 +1,4 @@
-import { maxMobileWidth } from '../../styles/variables';
+import { maxMobileWidth } from '../../variables';
 
 export const isMobile = () => {
     return window.innerWidth <= maxMobileWidth;

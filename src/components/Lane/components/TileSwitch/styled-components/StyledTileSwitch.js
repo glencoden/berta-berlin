@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { laneTop } from '../../../../../styles/variables';
+import { laneTop } from '../../../../../variables';
 
 export const StyledTileSwitch = styled.div`
     display: flex;

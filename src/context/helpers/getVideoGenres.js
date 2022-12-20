@@ -1,4 +1,4 @@
-import { validGenres } from '../../styles/variables';
+import { validGenres } from '../../variables';
 
 const GENRES = validGenres.map((genre) => genre.toLowerCase());
 

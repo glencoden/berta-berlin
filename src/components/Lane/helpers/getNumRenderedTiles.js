@@ -1,4 +1,4 @@
-import { defaultTileWidth, laneLeft, laneTileOffset, minNumRenderedTiles } from '../../../styles/variables';
+import { defaultTileWidth, laneLeft, laneTileOffset, minNumRenderedTiles } from '../../../variables';
 
 export const getNumRenderedTiles = (tileSize) => {
     if (tileSize < defaultTileWidth) {

@@ -50,7 +50,7 @@ function PlayerOverlay({ className, activeItem, visible }) {
         });
 
         /**
-         * This switch would allow usage of the youtube player playlist functionality
+         * Use this switch for youtube player playlist functionality
          */
         // switch (appState.selectedConfig?.resourceType) {
         //     case ResourceType.VIDEO:
@@ -148,7 +148,7 @@ function PlayerOverlay({ className, activeItem, visible }) {
                         size="large"
                         onClick={(isVideoLoading || playerState.isPlaying) ? onPause : onPlay}
                     >
-                        {isVideoLoading ? <CircularProgress color="info"/> : <>&#9658;</>}&nbsp;Play
+                        {isVideoLoading ? <CircularProgress color="common"/> : <>&#9658;</>}&nbsp;Play
                     </Button>
                 )}
             </StyledPlayerOverlayPlayButton>

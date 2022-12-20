@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { laneLeft, navigationMargin, navigationZIndex } from '../../../styles/variables';
+import { laneLeft, navigationMargin, navigationZIndex } from '../../../variables';
 
 export const StyledNavigation = styled.div`
     position: absolute;

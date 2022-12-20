@@ -1,5 +1,5 @@
 import { ResourceType } from '../enums/ResourceType';
-import { genreQuotaPercentage, maxVideoListLength, playlistFilterKey, trendingPeriodInDays } from '../styles/variables';
+import { genreQuotaPercentage, maxVideoListLength, playlistFilterKey, trendingPeriodInDays } from '../variables';
 import { FilterType } from '../enums/FilterType';
 import { storageService } from './storageService';
 import { getVideoGenres } from '../context/helpers/getVideoGenres';
@@ -41,12 +41,13 @@ class EditorService {
             }
         });
 
-        // TODO remove dev code
-        let genres = [];
-        this.videos.forEach(video => {
-            genres = [ ...genres, ...getVideoGenres(video) ];
-        });
-        console.log('==== GENRES ====', genres);
+        if (process.env.NODE_ENV === 'development') {
+            let genres = [];
+            this.videos.forEach(video => {
+                genres = [ ...genres, ...getVideoGenres(video) ];
+            });
+            console.log('==== GENRES ====', genres);
+        }
 
         this.videosByPopularity = [ ...this.videos ].sort(sortPopular);
         this.videosByTrend = [ ...this.videos ].sort(sortTrending);
@@ -153,10 +154,10 @@ class EditorService {
             resultVideoList.splice(parseInt(key), 0, value);
         });
 
-        // TODO remove dev code
-        console.log('==== QUOTA ====', quotaResults);
-        console.log('==== RESULT ====', resultVideoList);
-
+        if (process.env.NODE_ENV === 'development') {
+            console.log('==== QUOTA ====', quotaResults);
+            console.log('==== RESULT ====', resultVideoList);
+        }
         return resultVideoList;
     }
 

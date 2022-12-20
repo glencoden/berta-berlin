@@ -8,8 +8,10 @@ export const theme = createTheme({
         secondary: {
             main: '#4a148c',
         },
-        info: {
-            main: '#fff', // TODO find an easier white (eg #fcfcfc) and apply to body bg, button bg and info.main and all white
+        common: {
+            main: '#fff',
+            black: '#000',
+            white: '#fff',
         },
     },
 });

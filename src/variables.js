@@ -38,6 +38,10 @@ export const maxVideoListLength = 100; // count
 export const trendingPeriodInDays = 14; // days
 export const genreQuotaPercentage = 20; // percent
 
+// request service
+export const useLocalCache = true; // only applies in development
+export const cacheWebworkerUrl = 'https://api.glencoden.io/berta';
+
 // storage service
 export const minNumUnseenVideos = 50; // count
 export const genreListStaleTime = 1000 * 60 * 60 * 24 * 7; // ms

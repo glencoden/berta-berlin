@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { StyledTile } from './styled-components/StyledTile';
-import { laneLeft, laneTileSlideInDelay } from '../../../../styles/variables';
+import { laneLeft, laneTileSlideInDelay } from '../../../../variables';
 import { useApplicationContext } from '../../../../context';
 
 const HIDE_OFFSET_SAFETY_MARGIN = 50;

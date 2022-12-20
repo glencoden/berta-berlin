@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { controlsOverlayWidth } from '../../../../../styles/variables';
+import { controlsOverlayWidth } from '../../../../../variables';
 
 export const StyledPlayerOverlayPlayButton = styled.div`
     position: absolute;

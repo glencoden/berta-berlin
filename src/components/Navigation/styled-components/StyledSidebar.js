@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { navigationMargin, navigationZIndex, sidebarWidth } from '../../../styles/variables';
+import { navigationMargin, navigationZIndex, sidebarWidth } from '../../../variables';
 
 export const StyledSidebar = styled.div`
     @keyframes slide-in {

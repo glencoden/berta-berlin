@@ -4,7 +4,7 @@ import {
     laneTileOffset,
     minNumRenderedTiles,
     mobileContentMargin,
-} from '../../styles/variables';
+} from '../../variables';
 
 export const getTileSize = () => {
     const marginRight = Math.max(minNumRenderedTiles - 1.5, 0) * laneTileOffset;

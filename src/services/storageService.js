@@ -1,6 +1,6 @@
 import { editorService } from './editorService';
 import { getVideoGenres } from '../context/helpers/getVideoGenres';
-import { genreListStaleTime, minNumUnseenVideos } from '../styles/variables';
+import { genreListStaleTime, minNumUnseenVideos } from '../variables';
 
 const STORAGE_KEYS = {
     WATCHED_VIDEOS: 'BERTA.WATCHED_VIDEOS',

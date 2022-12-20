@@ -8,7 +8,7 @@ import Lane from './components/Lane/Lane';
 import { ResourceType } from './enums/ResourceType';
 import { QueryParamProvider } from 'use-query-params';
 import Navigation from './components/Navigation/Navigation';
-import { minDeviceWidth } from './styles/variables';
+import { minDeviceWidth } from './variables';
 import LoadingMessage from './components/LoadingMessage/LoadingMessage';
 import Headline from './components/Headline/Headline';
 import { useApplicationContext } from './context';

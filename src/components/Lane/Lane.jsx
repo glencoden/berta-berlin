@@ -3,7 +3,7 @@ import { StyledLane } from './styled-components/StyledLane';
 import Player from '../Player/Player';
 import PlayerOverlay from './components/PlayerOverlay/PlayerOverlay';
 import { mapItemToTile } from './helpers/mapItemToTile';
-import { laneTileAnimationOffset, laneTileOffset } from '../../styles/variables';
+import { laneTileAnimationOffset, laneTileOffset } from '../../variables';
 import Image from '../Image/Image';
 import Tile from './components/Tile/Tile';
 import VideoDetail from './components/VideoDetail/VideoDetail';
