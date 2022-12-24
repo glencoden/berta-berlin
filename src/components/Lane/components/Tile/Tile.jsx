@@ -1,9 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { StyledTile } from './styled-components/StyledTile';
-import { laneLeft, laneTileSlideInDelay } from '../../../../variables';
+import { hideTileSafetyOffset, laneLeft, laneTileSlideInDelay } from '../../../../variables';
 import { useApplicationContext } from '../../../../context';
-
-const HIDE_OFFSET_SAFETY_MARGIN = 50;
+import { TransitionType } from '../../../../enums/TransitionType';
 
 
 function Tile({ hide, position, transform, zIndex, delay, setActive, observer, children }) {
@@ -45,11 +44,14 @@ function Tile({ hide, position, transform, zIndex, delay, setActive, observer, c
         return () => observer.unobserve(currentElement);
     }, [ observer ]);
 
+    // when new tiles get rendered at the end of the list as the user is skipping through the videos (transition type none), their start transform is behind the tile pile and not out of viewport
+    const hideTransform = !hide && appState.currentTransition === TransitionType.NONE ? 0 : -(appState.tileSize.width + laneLeft + hideTileSafetyOffset);
+
     return (
         <StyledTile
             data-position={position}
             ref={tileElement}
-            transform={showTile ? transform : -(appState.tileSize.width + laneLeft + HIDE_OFFSET_SAFETY_MARGIN)}
+            transform={showTile ? transform : hideTransform}
             zIndex={zIndex}
             size={appState.tileSize}
             onClick={setActive}

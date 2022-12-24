@@ -37,7 +37,9 @@ function PlayerOverlay({ className, activeItem, visible }) {
      * Play callback
      */
     const onPlay = useCallback(() => {
-        console.log('==== ACTIVE ITEM ====', activeItem);
+        if (process.env.NODE_ENV === 'development') {
+            console.log('==== ACTIVE ITEM ====', activeItem);
+        }
         if (!activeItem) {
             return;
         }

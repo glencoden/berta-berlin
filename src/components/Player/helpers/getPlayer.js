@@ -36,7 +36,7 @@ export const getPlayer = (dispatch) => {
             let onErrorTimeoutId = 0;
 
             function onError(err) {
-                console.warn(`Player error. Retry in ${ERR_RETRY_TIMEOUT} seconds, unless player state changes to 'playing'.`, err);
+                console.warn(`Player error. Retry in ${ERR_RETRY_TIMEOUT} seconds unless player state changes to 'playing'.`, err);
                 clearTimeout(onErrorTimeoutId);
                 onErrorTimeoutId = setTimeout(() => {
                     dispatch({

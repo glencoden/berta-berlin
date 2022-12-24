@@ -14,6 +14,7 @@ export const sidebarWidth = 80; // px
 export const laneLeft = 110; // px
 export const laneTop = 110; // px
 export const laneTileOffset = 50; // px
+export const hideTileSafetyOffset = 50; // px
 
 export const progressBarWidth = 274; // px
 

@@ -104,11 +104,8 @@ class EditorService {
     }
 
     _makeResultVideoList(videoList) {
-        const numQuotaResults = Math.min(
-            Math.floor(genreQuotaPercentage / maxVideoListLength),
-            Math.floor(videoList.length * genreQuotaPercentage / 100),
-        );
-        const resultVideoList = this._collectVideoListGenreQuota(videoList, numQuotaResults);
+        const numQuotaResults = Math.floor(Math.min(videoList.length, maxVideoListLength) * genreQuotaPercentage / 100);
+        const resultVideoList = this._collectQuotaAndTrim(videoList, numQuotaResults);
 
         this.numProvidedVideoLists++;
 
@@ -126,7 +123,7 @@ class EditorService {
         return videoList.filter((video) => !seenVideoIds.includes(video.id));
     }
 
-    _collectVideoListGenreQuota(videoList, numResults) {
+    _collectQuotaAndTrim(videoList, numResults) {
         const recentlyWatchedGenres = storageService.getRecentlyWatchedGenres();
 
         if (recentlyWatchedGenres === null) {
@@ -134,7 +131,9 @@ class EditorService {
         }
         const currentVideoList = [ ...videoList ];
         const quotaResults = {};
+
         let currentVideoIndex = 0;
+
         while (Object.keys(quotaResults).length < numResults && currentVideoIndex < currentVideoList.length) {
             const currentVideo = currentVideoList[currentVideoIndex];
             const currentVideoGenres = getVideoGenres(currentVideo);
@@ -144,19 +143,25 @@ class EditorService {
             ) {
                 const splice = currentVideoList.splice(currentVideoIndex, 1);
                 quotaResults[currentVideoIndex] = splice[0];
+            } else {
+                currentVideoIndex++;
             }
-            currentVideoIndex++;
         }
-        const numNonQuotaVideos = maxVideoListLength - numResults;
+        const quotaResultKeys = Object.keys(quotaResults);
+        const highestQuotaIndex = quotaResultKeys[quotaResultKeys.length - 1];
+        const indexCompression = Math.min((maxVideoListLength - 1) / highestQuotaIndex, 1);
+
+        const numNonQuotaVideos = maxVideoListLength - quotaResultKeys.length;
         const resultVideoList = currentVideoList.slice(0, numNonQuotaVideos);
 
         Object.entries(quotaResults).forEach(([ key, value ]) => {
-            resultVideoList.splice(parseInt(key), 0, value);
+            const insertionIndex = Math.floor(parseInt(key) * indexCompression);
+            resultVideoList.splice(insertionIndex, 0, value);
         });
 
         if (process.env.NODE_ENV === 'development') {
             console.log('==== QUOTA ====', quotaResults);
-            console.log('==== RESULT ====', resultVideoList);
+            console.log('==== VIDEOS ====', resultVideoList);
         }
         return resultVideoList;
     }
