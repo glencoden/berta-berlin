@@ -13,6 +13,6 @@ export const StyledMobileTileSwitchButton = styled.div`
     }
 
     .arrow-icon {
-        color: ${({ theme }) => theme.common.white};
+        color: ${({ theme }) => theme.common?.white || '#fff'};
     }
 `;
