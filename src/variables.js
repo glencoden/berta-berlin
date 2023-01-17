@@ -17,7 +17,7 @@ export const genreQuotaPercentage = 10; // percent
 
 // request service
 export const useLocalCache = false; // only applies in development
-export const cacheWebworkerUrl = 'https://staging.bertabot.glencoden.io';
+export const cacheWebworkerUrl = 'https://bertabot.glencoden.io';
 
 // storage service
 export const minNumUnseenVideos = 50; // count
