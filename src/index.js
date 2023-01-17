@@ -3,8 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import { ApplicationProvider } from './context';
 import App from './App';
-
-const APP_VERSION = '1.0.0';
+import { appVersion } from './variables';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -17,7 +16,7 @@ root.render(
 );
 
 console.log(
-    `%cglencoden ❤️ version ${APP_VERSION}`,
+    `%cglencoden ❤️ version ${appVersion}`,
     `font-size: 1rem;
     padding: 1rem;
     margin: 1rem 0;

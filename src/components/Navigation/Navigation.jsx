@@ -112,18 +112,20 @@ function Navigation() {
             </StyledNavigation>
 
             <StyledSidebar>
-                <Button
-                    className="sidebar-burger-button"
-                    onClick={() => {
-                        window.scroll(0, 0);
-                        appDispatch({
-                            type: ApplicationActionType.SET_MENU_OPEN,
-                            payload: !appState.isMenuOpen,
-                        });
-                    }}
-                >
-                    <BurgerIcon showCancelIcon={appState.isMenuOpen}/>
-                </Button>
+                {appState.isMobile && (
+                    <Button
+                        className="sidebar-burger-button"
+                        onClick={() => {
+                            window.scroll(0, 0);
+                            appDispatch({
+                                type: ApplicationActionType.SET_MENU_OPEN,
+                                payload: !appState.isMenuOpen,
+                            });
+                        }}
+                    >
+                        <BurgerIcon showCancelIcon={appState.isMenuOpen}/>
+                    </Button>
+                )}
                 <Button
                     className="sidebar-imprint-button"
                     onClick={() => setIsImprintOpen(true)}

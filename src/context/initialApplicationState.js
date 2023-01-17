@@ -4,7 +4,7 @@ import { isViewportTooSmall } from './helpers/isViewportTooSmall';
 import { TransitionType } from '../enums/TransitionType';
 
 export const initialApplicationState = {
-    isMenuOpen: false,
+    isMenuOpen: !isMobile(),
     selectedConfig: null,
     currentTransition: TransitionType.NONE,
     hasVideoStarted: false,

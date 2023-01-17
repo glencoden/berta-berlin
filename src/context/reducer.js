@@ -10,12 +10,12 @@ function reducer(state, action) {
         case ApplicationActionType.SET_MENU_OPEN:
             return {
                 ...state,
-                isMenuOpen: action.payload,
+                isMenuOpen: !state.isMobile || action.payload,
             };
         case ApplicationActionType.SET_SELECTED_CONFIG:
             return {
                 ...state,
-                isMenuOpen: false,
+                isMenuOpen: !state.isMobile,
                 selectedConfig: action.payload,
             };
         case ApplicationActionType.SET_CURRENT_TRANSITION:
