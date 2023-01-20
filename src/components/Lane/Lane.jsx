@@ -70,6 +70,31 @@ function Lane() {
                 const updatedItems = editorService.getVideos(appState.selectedConfig);
                 setItems(updatedItems);
                 break;
+            case TransitionType.INSERT:
+                const insertVideo = editorService.getInsertVideo();
+                setItems(prevItems => {
+                    // if there is no insert return unchanged list
+                    if (insertVideo === null) {
+                        return prevItems;
+                    }
+                    const currentItemList = [...prevItems];
+                    const insertVideoIndex = currentItemList.findIndex(item => item.id === insertVideo.id);
+                    // if insert is part of current list, remove it
+                    if (insertVideoIndex > -1) {
+                        currentItemList.splice(insertVideoIndex, 1);
+                    }
+                    // add insert on top and move to top tile
+                    setActiveIndex(0);
+                    return [insertVideo, ...currentItemList];
+                });
+                // reset transition state on next stack to enable slide in animation of insert video
+                setTimeout(() => {
+                    dispatch({
+                        type: ApplicationActionType.SET_CURRENT_TRANSITION,
+                        payload: TransitionType.NONE,
+                    });
+                }, 0);
+                break;
             default:
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps

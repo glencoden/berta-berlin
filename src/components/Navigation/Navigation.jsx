@@ -19,6 +19,7 @@ import { ResourceType } from '../../enums/ResourceType';
 import { TransitionType } from '../../enums/TransitionType';
 import { PlayerActionType } from '../Player/context/PlayerActionType';
 import { usePlayerContext } from '../Player/context';
+import SimpleSearch from '../Search/SimpleSearch'
 
 
 function Navigation() {
@@ -109,6 +110,8 @@ function Navigation() {
                             return <div>unknown menu item type</div>;
                     }
                 })}
+
+                <SimpleSearch />
             </StyledNavigation>
 
             <StyledSidebar>

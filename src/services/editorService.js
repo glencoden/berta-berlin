@@ -27,6 +27,7 @@ class EditorService {
     videosByTrend = null;
     videosByCreatedAt = null;
     numProvidedVideoLists = 0;
+    insertVideo = null;
 
     setPlaylists(playlists) {
         this.playlists = playlists.filter(playlist => playlist.description.includes(playlistFilterKey));
@@ -54,8 +55,24 @@ class EditorService {
         this.videosByCreatedAt = [ ...this.videos ].sort(sortRecent);
     }
 
+    setInsertVideo(id) {
+        const insertVideo = this.getAllVideos().find((video) => video.id === id);
+        if (!insertVideo) {
+            return;
+        }
+        this.insertVideo = insertVideo;
+    }
+
     getPlaylists() {
         return this.playlists;
+    }
+
+    getAllVideos() {
+        return this.videos;
+    }
+
+    getInsertVideo() {
+        return this.insertVideo;
     }
 
     getNumVideos() {
