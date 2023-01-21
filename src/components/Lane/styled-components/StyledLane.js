@@ -3,12 +3,12 @@ import { laneLeft, laneTop, mobileContentMargin, sidebarWidth } from '../../../v
 import { isMobile } from '../../../context/helpers/isMobile';
 
 export const StyledLane = styled.div`
-    @keyframes fade-in {
+    @keyframes slide-in {
         0% {
-            opacity: 0;
+            translate: -200% 0;
         }
         100% {
-            opacity: 1;
+            translate: 0 0;
         }
     }
     
@@ -35,13 +35,13 @@ export const StyledLane = styled.div`
     
     ::before {
         content: '';
-        opacity: ${({ hasLoaded }) => hasLoaded ? 1 : 0};
-        animation: ${({ hasLoaded }) => hasLoaded ? `fade-in ${({ theme }) => (theme.transitions.duration.complex / 1000)}s` : 'none'};
+        translate: ${({ hasLoaded }) => hasLoaded ? '0 0' : '-200% 0'};
+        animation: ${({ hasLoaded }) => hasLoaded ? `slide-in 1s` : 'none'};
         position: absolute;
         left: -${isMobile() ? (sidebarWidth + mobileContentMargin) : laneLeft}px;
         top: ${({ size }) => size.height / 2}px;
-        width: 25vw;
-        height: 25vw;
+        width: ${({ size }) => size.width / 3}px;
+        height: ${({ size }) => size.width / 3}px;
         background-color: ${({ theme }) => theme.palette.primary.dark};
         transform-origin: 0 0;
         rotate: 45deg;

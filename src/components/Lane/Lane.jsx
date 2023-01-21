@@ -22,7 +22,7 @@ const TilePosition = {
 };
 
 
-function Lane() {
+function Lane({ isPlaylistsLoading }) {
     const { appState, dispatch } = useApplicationContext();
 
     const [ items, setItems ] = useState(null);
@@ -165,7 +165,7 @@ function Lane() {
 
     const showTiles = appState.currentTransition !== TransitionType.SLIDE_OUT;
     const showControls = appState.currentTransition === TransitionType.NONE;
-
+    console.log('isPlaylistsLoading', !isPlaylistsLoading);
     return (
         <>
             {appState.isMobile && (
@@ -179,7 +179,7 @@ function Lane() {
                 size={appState.tileSize}
                 numTiles={tiles?.length}
                 isMenuOpen={appState.isMenuOpen}
-                hasLoaded={appState.hasLoaded}
+                hasLoaded={!isPlaylistsLoading}
             >
                 {!appState.isMobile && (
                     <TileSwitch

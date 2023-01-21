@@ -86,7 +86,7 @@ function App() {
                             )}
 
                             {!isVideosLoading && (
-                                <Lane/>
+                                <Lane isPlaylistsLoading={isPlaylistsLoading} />
                             )}
                         </>
                     )}
