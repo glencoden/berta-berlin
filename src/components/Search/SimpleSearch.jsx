@@ -6,6 +6,7 @@ import { editorService } from '../../services/editorService';
 import { useApplicationContext } from '../../context';
 import { ApplicationActionType } from '../../context/ApplicationActionType';
 import { TransitionType } from '../../enums/TransitionType';
+import { isMobile } from "../../context/helpers/isMobile";
 
 const SEARCH_LABEL = 'search';
 
@@ -36,7 +37,7 @@ function SimpleSearch() {
                 </Button>
             ) : (
                 <Autocomplete
-                    sx={{ width: 240, display: 'inline-block' }}
+                    sx={{ width: isMobile() ? 180 : 240, display: 'inline-block' }}
                     size="small"
                     freeSolo
                     disableClearable
@@ -50,6 +51,12 @@ function SimpleSearch() {
                             type: ApplicationActionType.SET_CURRENT_TRANSITION,
                             payload: TransitionType.INSERT,
                         });
+                        if (isMobile()) {
+                            dispatch({
+                                type: ApplicationActionType.SET_MENU_OPEN,
+                                payload: false,
+                            });
+                        }
                     }}
                     onBlur={() => {
                         setSearchActive(false);

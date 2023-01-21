@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { navigationMargin, navigationZIndex, sidebarWidth } from '../../../variables';
+import { isMobile } from "../../../context/helpers/isMobile";
 
 export const StyledSidebar = styled.div`
     @keyframes slide-in {
@@ -16,7 +17,7 @@ export const StyledSidebar = styled.div`
     left: 0;
     top: 0;
     width: ${sidebarWidth}px;
-    height: 100vh;
+    height: ${isMobile() ? `${window.innerHeight}px` : '100vh'};
     z-index: ${navigationZIndex};
     background-color: ${({ theme }) => theme.palette.primary.dark};
 

@@ -18,4 +18,8 @@ export const StyledNavigation = styled.div`
         display: inline-block;
         margin-right: ${navigationMargin}rem;
     }
+    
+    input {
+        font-size: 16px !important;
+    }
 `;

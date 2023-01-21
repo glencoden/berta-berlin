@@ -165,7 +165,7 @@ function Lane({ isPlaylistsLoading }) {
 
     const showTiles = appState.currentTransition !== TransitionType.SLIDE_OUT;
     const showControls = appState.currentTransition === TransitionType.NONE;
-    console.log('isPlaylistsLoading', !isPlaylistsLoading);
+
     return (
         <>
             {appState.isMobile && (
