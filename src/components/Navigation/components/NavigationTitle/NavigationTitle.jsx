@@ -10,7 +10,7 @@ function NavigationTitle() {
     return (
         <StyledNavigationTitle visible={appState.isMenuOpen}>
             <Typography
-                variant="h4"
+                variant="h5"
                 as="h1"
                 color="secondary.light"
             >

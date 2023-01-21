@@ -19,7 +19,7 @@ import { ResourceType } from '../../enums/ResourceType';
 import { TransitionType } from '../../enums/TransitionType';
 import { PlayerActionType } from '../Player/context/PlayerActionType';
 import { usePlayerContext } from '../Player/context';
-import SimpleSearch from '../Search/SimpleSearch'
+import SimpleSearch from '../Search/SimpleSearch';
 
 
 function Navigation() {
@@ -79,6 +79,8 @@ function Navigation() {
 
     return (
         <>
+            {!appState.isMobile && <NavigationTitle />}
+
             <StyledNavigation isOpen={appState.isMenuOpen}>
                 {menuItems.map((menuItem, index) => {
                     switch (menuItem.type) {
@@ -126,7 +128,7 @@ function Navigation() {
                             });
                         }}
                     >
-                        <BurgerIcon showCancelIcon={appState.isMenuOpen}/>
+                        <BurgerIcon showCancelIcon={appState.isMenuOpen} />
                     </Button>
                 )}
                 <Button
@@ -143,8 +145,6 @@ function Navigation() {
                     />
                 </Button>
             </StyledSidebar>
-
-            {!appState.isMobile && <NavigationTitle/>}
 
             <Imprint
                 open={isImprintOpen}

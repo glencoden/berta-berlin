@@ -1,4 +1,6 @@
+
 export const ApplicationActionType = {
+    SET_HAS_LOADED: 'set-has-loaded',
     SET_MENU_OPEN: 'set-menu-open',
     SET_SELECTED_CONFIG: 'set-selected-config',
     SET_CURRENT_TRANSITION: 'set-current-transition',

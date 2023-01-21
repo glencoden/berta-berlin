@@ -7,6 +7,12 @@ import { initialApplicationState } from './initialApplicationState';
 
 function reducer(state, action) {
     switch (action.type) {
+        case ApplicationActionType.SET_HAS_LOADED:
+            return {
+                ...state,
+                hasLoaded: action.payload,
+                isMenuOpen: !state.isMobile,
+            };
         case ApplicationActionType.SET_MENU_OPEN:
             return {
                 ...state,
@@ -15,7 +21,7 @@ function reducer(state, action) {
         case ApplicationActionType.SET_SELECTED_CONFIG:
             return {
                 ...state,
-                isMenuOpen: !state.isMobile,
+                isMenuOpen: state.isMobile ? false : state.hasLoaded,
                 selectedConfig: action.payload,
             };
         case ApplicationActionType.SET_CURRENT_TRANSITION:

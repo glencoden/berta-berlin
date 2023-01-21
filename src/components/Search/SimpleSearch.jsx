@@ -1,5 +1,5 @@
-import { useMemo, useState } from 'react'
-import Autocomplete from '@mui/material/Autocomplete';
+import { useMemo, useState } from 'react';
+import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { editorService } from '../../services/editorService';
@@ -8,6 +8,11 @@ import { ApplicationActionType } from '../../context/ApplicationActionType';
 import { TransitionType } from '../../enums/TransitionType';
 
 const SEARCH_LABEL = 'search';
+
+const FILTER_OPTIONS = createFilterOptions({
+    stringify: (option) => `${option.label} ${option.description}`,
+});
+
 
 function SimpleSearch() {
     const { dispatch } = useApplicationContext();
@@ -26,17 +31,19 @@ function SimpleSearch() {
     return (
         <>
             {!searchActive ? (
-                <Button onClick={() => setSearchActive(true)}>
+                <Button variant="" onClick={() => setSearchActive(true)}>
                     {SEARCH_LABEL}
                 </Button>
             ) : (
                 <Autocomplete
                     sx={{ width: 240, display: 'inline-block' }}
+                    size="small"
                     freeSolo
                     disableClearable
                     clearOnEscape
                     blurOnSelect
                     options={options}
+                    filterOptions={FILTER_OPTIONS}
                     onChange={(_event, value) => {
                         editorService.setInsertVideo(value.id);
                         dispatch({

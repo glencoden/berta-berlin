@@ -140,6 +140,10 @@ function Lane() {
                             type: ApplicationActionType.SET_CURRENT_TRANSITION,
                             payload: TransitionType.NONE,
                         });
+                        dispatch({
+                            type: ApplicationActionType.SET_HAS_LOADED,
+                            payload: true,
+                        });
                     } else if (
                         !entry.isIntersecting
                         && entry.target.dataset.position === TilePosition.LAST
@@ -175,6 +179,7 @@ function Lane() {
                 size={appState.tileSize}
                 numTiles={tiles?.length}
                 isMenuOpen={appState.isMenuOpen}
+                hasLoaded={appState.hasLoaded}
             >
                 {!appState.isMobile && (
                     <TileSwitch
