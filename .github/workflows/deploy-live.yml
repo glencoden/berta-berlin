@@ -15,12 +15,13 @@ jobs:
         run: npm install
       - name: build app
         run: npm run build
-      - name: sync files
-        uses: SamKirkland/FTP-Deploy-Action@4.3.2
+      - name: upload files
+        id: upload
+        uses: Creepios/sftp-action@v1.0.3
         with:
-          local-dir: ./build/
-          server: access800891440.webspace-data.io
+          host: access800891440.webspace-data.io
+          port: 22
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          protocol: ftps
-          port: 22
+          localPath: ./build/
+          remotePath: ./
