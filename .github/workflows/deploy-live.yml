@@ -22,5 +22,5 @@ jobs:
           server: access800891440.webspace-data.io
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          protocol: sftp
+          protocol: ftps
           port: 22
