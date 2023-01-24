@@ -9,7 +9,7 @@ export const StyledPlayerOverlayDescription = styled.div`
     height: 100%;
     box-sizing: border-box;
     padding-bottom: calc(${controlsMargin}rem + 42px); // adding button height
-    background-color: ${({ theme }) => theme.palette.action.active};
+    background-color: ${({ theme }) => theme.palette.text.primary};
     overflow: scroll;
 
     > * {
