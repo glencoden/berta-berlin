@@ -80,7 +80,7 @@ function Player({ className, hasVideoStarted }) {
     /**
      * Set position when it changes
      */
-    // TODO implement useEffect
+    // implement useEffect
 
     return (
         <StyledPlayer
