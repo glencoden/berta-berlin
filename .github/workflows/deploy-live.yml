@@ -1,0 +1,26 @@
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy-live:
+    runs-on: ubuntu-latest
+    steps:
+      - name: get latest code
+        uses: actions/checkout@v2
+      - name: install node
+        uses: actions/setup-node@v2
+      - name: install dependencies
+        run: npm install
+      - name: build app
+        run: npm run build
+      - name: sync files
+        uses: SamKirkland/FTP-Deploy-Action@4.3.2
+        with:
+          local-dir: ./build/
+          server: access800891440.webspace-data.io
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: sftp
+          port: 22

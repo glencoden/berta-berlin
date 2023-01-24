@@ -1,31 +1,33 @@
-// cache
-import videoCache from '../cache/videos.json';
-import channelCache from '../cache/channel.json'
+/**
+ * Local cache
+ */
+import video from '../cache/video.json';
+import playlist from '../cache/playlist.json';
+import channel from '../cache/channel.json';
+import { cacheWebworkerUrl, useLocalCache } from '../variables';
 
-// env
-const YOUTUBE_API_URL = 'https://www.googleapis.com/youtube/v3';
+const DEV_CACHE = {
+    video,
+    playlist,
+    channel,
+};
 
 class RequestService {
-    _get(url) {
-        return fetch(url)
-            .then(resp => resp.json())
+    _get(url, search = {}) {
+        const requestUrl = new URL(url);
+        requestUrl.search = new URLSearchParams(search).toString();
+
+        return fetch(requestUrl.toString())
+            .then(response => response.json())
             .catch(console.error);
     }
 
-    getVideos() {
-        return process.env.NODE_ENV === 'development'
-            ? Promise.resolve(videoCache)
-            : this._get('https://berta.glencoden.workers.dev/'); // TODO update webworker url
+    getYoutubeApiCache(resource) {
+        if (process.env.NODE_ENV === 'development' && useLocalCache) {
+            return Promise.resolve(DEV_CACHE[resource]);
+        }
+        return this._get(cacheWebworkerUrl, { resource });
     }
-
-    getChannel() {
-        return Promise.resolve(channelCache);
-        // return this._get(`${YOUTUBE_API_URL}/channels?id=${YOUTUBE_CHANNEL_ID}&key=${YOUTUBE_API_KEY}&part=snippet,contentDetails,brandingSettings`);
-    }
-
-    // getPlaylists() {
-    //     return this._get(`${YOUTUBE_API_URL}/playlists?channelId=${YOUTUBE_CHANNEL_ID}&key=${YOUTUBE_API_KEY}&part=contentDetails,player,snippet,status`);
-    // }
 }
 
 export const requestService = new RequestService();

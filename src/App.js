@@ -1,115 +1,98 @@
 import { useEffect, useState } from 'react';
 import { requestService } from './services/requestService';
+import { PlayerProvider } from './components/Player/context';
+import { ThemeProvider } from '@mui/material';
+import { theme } from './styles/mui-theme';
+import { editorService } from './services/editorService';
+import Lane from './components/Lane/Lane';
+import { ResourceType } from './enums/ResourceType';
+import { QueryParamProvider } from 'use-query-params';
+import Navigation from './components/Navigation/Navigation';
+import { minDeviceWidth } from './variables';
+import LoadingMessage from './components/LoadingMessage/LoadingMessage';
+import Headline from './components/Headline/Headline';
+import { useApplicationContext } from './context';
+import { ApplicationActionType } from './context/ApplicationActionType';
+import { TransitionType } from './enums/TransitionType';
 
-let MOUNTED = false;
-
-let player = null;
-
-function makePlayer(id) {
-    if (player) {
-        return Promise.resolve(player);
-    }
-    if (!window.YT) {
-        return new Promise(resolve => {
-            setTimeout(() => resolve(makePlayer(id)), 1000);
-        });
-    }
-
-    player = new window.YT.Player('player', {
-        height: '360',
-        width: '640',
-        videoId: id,
-        playerVars: { autoplay: 1, controls: 0 },
-        events: {
-            'onReady': onPlayerReady,
-            'onStateChange': onPlayerStateChange,
-        },
-    });
-
-    // 4. The API will call this function when the video player is ready.
-    function onPlayerReady(event) {
-        // console.log('event.target', event.target)
-        // setTimeout(player.playVideo, 3000)
-    }
-
-    // 5. The API calls this function when the player's state changes.
-    //    The function indicates that when playing a video (state=1),
-    //    the player should play for six seconds and then stop.
-    let done = false;
-
-    function onPlayerStateChange(event) {
-        if (event.data == window.YT.PlayerState.PLAYING && !done) {
-            // setTimeout(stopVideo, 6000);
-            // setTimeout(() => console.log(player.getOptions()), 8000);
-            done = true;
-        }
-    }
-
-    // function stopVideo() {
-    //     player.stopVideo();
-    // }
-
-    return Promise.resolve(player);
-}
 
 function App() {
-    const [ videoId, setVideoId ] = useState('');
+    const { appState, dispatch } = useApplicationContext();
 
+    const [ isVideosLoading, setIsVideosLoading ] = useState(true);
+    const [ isPlaylistsLoading, setIsPlaylistsLoading ] = useState(true);
+
+    /**
+     * Get videos on mount
+     */
     useEffect(() => {
-        if (MOUNTED) {
+        if (dispatch === null) {
             return;
         }
-        MOUNTED = true;
+        requestService.getYoutubeApiCache(ResourceType.VIDEO)
+            .then(response => {
+                editorService.setVideos(response.videos);
+                setIsVideosLoading(false);
+                dispatch({
+                    type: ApplicationActionType.SET_CURRENT_TRANSITION,
+                    payload: TransitionType.SLIDE_IN,
+                });
+                requestService.getYoutubeApiCache(ResourceType.PLAYLIST)
+                    .then(response => {
+                        editorService.setPlaylists(response.playlists);
+                        setIsPlaylistsLoading(false);
+                    });
+            });
 
-        requestService.getVideos()
+        let debounceTimeoutId;
 
-        setVideoId('hbx-atIPXxA');
-    }, []);
+        const onResize = () => {
+            clearTimeout(debounceTimeoutId);
+            debounceTimeoutId = setTimeout(() => {
+                dispatch({ type: ApplicationActionType.CALC_TILE_SIZE });
+                dispatch({ type: ApplicationActionType.CALC_IS_MOBILE });
+                dispatch({ type: ApplicationActionType.CALC_IS_VIEWPORT_TOO_SMALL });
+            }, 200);
+        };
 
-    useEffect(() => {
-        if (!videoId) {
-            return;
-        }
-        const tag = document.createElement('script');
-        tag.src = 'https://www.youtube.com/iframe_api';
-        document.body.appendChild(tag);
+        const onOrientationChange = () => window.location.reload();
 
-        makePlayer(videoId);
-    }, [ videoId ]);
+        window.addEventListener('resize', onResize);
+        window.addEventListener('orientationchange', onOrientationChange);
 
-    const onPlay = () => {
-        if (player === null) {
-            console.log('no player')
-            return
-        }
-        console.log('glen was here', player)
-        player.playVideo()
-    }
+        return () => {
+            window.removeEventListener('resize', onResize);
+            window.removeEventListener('orientationchange', onOrientationChange);
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [ dispatch ]);
 
     return (
-        <div>
-            <div className="text-3xl font-bold text-center py-12">
-                glen coden - berta berlin
-            </div>
+        <ThemeProvider theme={theme}>
+            <QueryParamProvider>
+                <PlayerProvider>
+                    {appState.isViewPortTooSmall ? (
+                        <LoadingMessage visible>
+                            Please turn device or view on a larger screen<br/>(min width {minDeviceWidth}px)
+                        </LoadingMessage>
+                    ) : (
+                        <>
+                            <LoadingMessage visible={isPlaylistsLoading}>
+                                <Headline/>
+                            </LoadingMessage>
 
-            <button style={{ width: '100px', height: '50px', backgroundColor: 'lime' }} type="button" onClick={onPlay} />
+                            {!isPlaylistsLoading && (
+                                <Navigation/>
+                            )}
 
-            {/*<iframe*/}
-            {/*    src={`https://www.youtube.com/embed/${videoId}`}*/}
-            {/*    frameBorder="0"*/}
-            {/*    allow="autoplay; encrypted-media"*/}
-            {/*    allowFullScreen*/}
-            {/*    title="video"*/}
-            {/*/>*/}
-
-            <div id="player"/>
-
-            <iframe width="640" height="360"
-                    src="http://www.youtube.com/embed/videoseries?list=PL5E56nME5FEWLqVOK-vo40vViHTIBc3vn"
-                    frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen></iframe>
-        </div>
+                            {!isVideosLoading && (
+                                <Lane isPlaylistsLoading={isPlaylistsLoading} />
+                            )}
+                        </>
+                    )}
+                </PlayerProvider>
+            </QueryParamProvider>
+        </ThemeProvider>
     );
 }
 
