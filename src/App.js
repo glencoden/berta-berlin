@@ -17,6 +17,17 @@ import { TransitionType } from './enums/TransitionType';
 
 
 function App() {
+    /**
+     * Https redirect in production
+     */
+    if (process.env.NODE_ENV !== 'development') {
+        const currentLocation = `${window.location.href}`;
+
+        if (currentLocation.startsWith('http://')) {
+            window.location.href = currentLocation.replace('http://', 'https://');
+        }
+    }
+
     const { appState, dispatch } = useApplicationContext();
 
     const [ isVideosLoading, setIsVideosLoading ] = useState(true);
