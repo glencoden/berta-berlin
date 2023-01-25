@@ -5,12 +5,23 @@ import { ApplicationProvider } from './context';
 import App from './App';
 import { appVersion } from './variables';
 
+/**
+ * Https redirect in production
+ */
+if (process.env.NODE_ENV !== 'development') {
+    const currentLocation = `${window.location.href}`;
+
+    if (currentLocation.startsWith('http://')) {
+        window.location.href = currentLocation.replace('http://', 'https://');
+    }
+}
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
     <React.StrictMode>
         <ApplicationProvider>
-            <App/>
+            <App />
         </ApplicationProvider>
     </React.StrictMode>,
 );
