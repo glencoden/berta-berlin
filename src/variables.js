@@ -1,7 +1,7 @@
 /**
  * release
  */
-export const appVersion = '1.0.2';
+export const appVersion = '1.0.3';
 
 /**
  * setup

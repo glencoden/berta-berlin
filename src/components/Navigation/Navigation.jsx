@@ -136,13 +136,15 @@ function Navigation() {
                     onClick={() => setIsImprintOpen(true)}
                     title="imprint"
                 >
-                    <Image
-                        className="sidebar-imprint-button-image"
-                        url="https://yt3.ggpht.com/ytc/AKedOLR5OTVSAD0TZcHUptjIRaZxc33qPhiyrHW0jb6X=s240-c-k-c0x00ffffff-no-rj"
-                        width={48}
-                        height={48}
-                        title="berta berlin icon"
-                    />
+                    <div className="sidebar-imprint-button-image-box">
+                        <Image
+                            className="sidebar-imprint-button-image"
+                            url="/bertaberlin_logo_2023_black.svg"
+                            width={96}
+                            height={96}
+                            title="berta berlin icon"
+                        />
+                    </div>
                 </Button>
             </StyledSidebar>
 
