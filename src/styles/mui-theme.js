@@ -15,4 +15,47 @@ export const theme = createTheme({
             white: '#fff',
         },
     },
+    typography: {
+        fontFamily: '"BebasNeue", sans-serif;',
+        h1: {
+            fontFamily: '"BebasNeue", sans-serif;',
+        },
+        h2: {
+            fontFamily: '"BebasNeue", sans-serif;',
+        },
+        h3: {
+            fontFamily: '"BebasNeue", sans-serif;',
+        },
+        h4: {
+            fontFamily: '"BebasNeue", sans-serif;',
+        },
+        h5: {
+            fontFamily: '"BebasNeue", sans-serif;',
+        },
+        h6: {
+            fontFamily: '"BebasNeue", sans-serif;',
+        },
+        subtitle1: {
+            fontFamily: '"BebasNeue", sans-serif;',
+        },
+        subtitle2: {
+            fontFamily: '"BebasNeue", sans-serif;',
+        },
+        body1: {
+            fontFamily: '"BebasNeue", sans-serif;',
+        },
+        body2: {
+            fontFamily: '"BebasNeue", sans-serif;',
+        },
+        button: {
+            fontFamily: '"BebasNeue", sans-serif;',
+            fontSize: '18px',
+        },
+        caption: {
+            fontFamily: '"BebasNeue", sans-serif;',
+        },
+        overline: {
+            fontFamily: '"BebasNeue", sans-serif;',
+        }
+    },
 });
