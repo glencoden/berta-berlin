@@ -139,7 +139,7 @@ function Navigation() {
                     <div className="sidebar-imprint-button-image-box">
                         <Image
                             className="sidebar-imprint-button-image"
-                            url="/bertaberlin_logo_2023_black.svg"
+                            url={`${process.env.PUBLIC_URL}/bertaberlin_logo_2023_black.svg`}
                             width={96}
                             height={96}
                             title="berta berlin icon"
