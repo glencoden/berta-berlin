@@ -1,5 +1,5 @@
 function Headline() {
-    return <>berta.berlin&nbsp;-&nbsp;authenticity, diversity&nbsp;&&nbsp;love&nbsp;only</>;
+    return <>LOVE&nbsp;FROM&nbsp;BERLIN</>;
 }
 
 export default Headline;
