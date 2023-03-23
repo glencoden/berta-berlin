@@ -1,5 +1,5 @@
 function Headline() {
-    return <>LOVE&nbsp;FROM&nbsp;BERLIN</>;
+    return <>LIVE&nbsp;FROM&nbsp;BERLIN</>;
 }
 
 export default Headline;
