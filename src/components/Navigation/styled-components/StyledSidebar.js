@@ -34,9 +34,19 @@ export const StyledSidebar = styled.div`
         bottom: ${navigationMargin}rem;
         transform: translateX(-50%);
     }
-
-    .sidebar-imprint-button-image {
+    
+    .sidebar-imprint-button-image-box {
+        position: relative;
+        width: 48px;
+        height: 48px;
         border-radius: ${({ theme }) => theme.shape.borderRadius}px;
         overflow: hidden;
+    }
+
+    .sidebar-imprint-button-image {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
     }
 `;

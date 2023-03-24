@@ -113,7 +113,7 @@ class EditorService {
             case FilterType.TRENDING:
                 return this.videosByTrend;
             case FilterType.RECENT:
-                return this.videosByCreatedAt;
+                return this.videosByCreatedAt.filter((video) => !video.description?.includes('#shorts'));
             default:
                 console.warn(`unknown filter type "${filterType}"`);
                 return this.videosByTrend;
