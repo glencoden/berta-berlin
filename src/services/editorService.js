@@ -1,23 +1,11 @@
 import { ResourceType } from '../enums/ResourceType';
-import { genreQuotaPercentage, maxVideoListLength, playlistFilterKey, trendingPeriodInDays } from '../variables';
+import { genreQuotaPercentage, maxVideoListLength, playlistFilterKey } from '../variables';
 import { FilterType } from '../enums/FilterType';
 import { storageService } from './storageService';
 import { getVideoGenres } from '../context/helpers/getVideoGenres';
 
-const getPopFactor = (video, numDaysLimit) => {
-    const overallPop = video.statistics.viewCount * video.statistics.likeCount;
-    if (typeof numDaysLimit !== 'number' || numDaysLimit < 1) {
-        return overallPop;
-    }
-    const videoAgeInDays = Math.round(
-        (Date.now() - new Date(video.publishedAt).getTime()) / (1000 * 60 * 60 * 24),
-    );
-    // the older the video, the lower the popularity - this is a hack to mimic a trend
-    return Math.round(overallPop * (numDaysLimit / videoAgeInDays));
-};
-
-const sortPopular = (a, b) => getPopFactor(b) - getPopFactor(a);
-const sortTrending = (a, b) => getPopFactor(b, trendingPeriodInDays) - getPopFactor(a, trendingPeriodInDays);
+const sortPopular = (a, b) => b.statistics.popularity - a.statistics.popularity;
+const sortTrending = (a, b) => b.statistics.trend - a.statistics.trend;
 const sortRecent = (a, b) => new Date(b.publishedAt) > new Date(a.publishedAt) ? 1 : -1;
 
 class EditorService {
