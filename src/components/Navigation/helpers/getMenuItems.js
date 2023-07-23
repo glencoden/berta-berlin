@@ -11,6 +11,11 @@ export const getMenuItems = () => {
     return [
         {
             type: MenuItemType.FILTER,
+            label: FilterType.RECENT,
+            value: FilterType.RECENT,
+        },
+        {
+            type: MenuItemType.FILTER,
             label: FilterType.POPULAR,
             value: FilterType.POPULAR,
         },
@@ -18,11 +23,6 @@ export const getMenuItems = () => {
             type: MenuItemType.FILTER,
             label: FilterType.TRENDING,
             value: FilterType.TRENDING,
-        },
-        {
-            type: MenuItemType.FILTER,
-            label: FilterType.RECENT,
-            value: FilterType.RECENT,
         },
         {
             type: MenuItemType.DASHBOARD,
