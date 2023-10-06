@@ -90,6 +90,10 @@ function Lane({ isPlaylistsLoading }) {
                     if (insertVideo === null) {
                         return prevItems;
                     }
+                    // if there is no current list, add list with inserted item
+                    if (prevItems === null) {
+                        return [insertVideo];
+                    }
                     const currentItemList = [...prevItems];
                     const insertVideoIndex = currentItemList.findIndex(item => item.id === insertVideo.id);
                     // if insert is part of current list, remove it
