@@ -5,9 +5,11 @@ import { editorService } from '../../../services/editorService';
 
 export const getMenuItems = () => {
     const playlists = editorService.getPlaylists();
+
     if (playlists === null) {
         return [];
     }
+
     return [
         {
             type: MenuItemType.FILTER,
