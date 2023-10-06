@@ -31,6 +31,7 @@ class EditorService {
         });
 
         if (process.env.NODE_ENV === 'development') {
+            console.log('==== INPUT VS DUPE FILTERED LENGTH ====', videos.length, this.videos.length);
             let genres = [];
             this.videos.forEach(video => {
                 genres = [ ...genres, ...getVideoGenres(video) ];

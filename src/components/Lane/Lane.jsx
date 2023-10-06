@@ -51,6 +51,7 @@ function Lane({ isPlaylistsLoading }) {
         .map(mapItemToTile);
 
     const transitionTypeRef = useRef(appState.currentTransition);
+    const isEmptyListRef = useRef(false);
 
     /**
      * Set and reset local state
@@ -60,22 +61,38 @@ function Lane({ isPlaylistsLoading }) {
             return;
         }
         transitionTypeRef.current = appState.currentTransition;
+
         switch (appState.currentTransition) {
             case TransitionType.NONE:
                 break;
             case TransitionType.SLIDE_OUT:
+                if (isEmptyListRef.current) {
+                    dispatch({
+                        type: ApplicationActionType.SET_CURRENT_TRANSITION,
+                        payload: TransitionType.SLIDE_IN,
+                    });
+                }
                 break;
             case TransitionType.SLIDE_IN:
                 setActiveIndex(0);
+
                 const updatedItems = editorService.getVideos(appState.selectedConfig);
-                setItems(updatedItems);
+
+                isEmptyListRef.current = updatedItems.length === 0;
+
+                setItems(updatedItems.length === 0 ? null : updatedItems);
                 break;
             case TransitionType.INSERT:
                 const insertVideo = editorService.getInsertVideo();
+
                 setItems(prevItems => {
                     // if there is no insert return unchanged list
                     if (insertVideo === null) {
                         return prevItems;
+                    }
+                    // if there is no current list, add list with inserted item
+                    if (prevItems === null) {
+                        return [insertVideo];
                     }
                     const currentItemList = [...prevItems];
                     const insertVideoIndex = currentItemList.findIndex(item => item.id === insertVideo.id);
