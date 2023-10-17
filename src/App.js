@@ -43,16 +43,25 @@ function App() {
         requestService.getYoutubeApiCache(ResourceType.VIDEO)
             .then(response => {
                 editorService.setVideos(response.videos);
+
                 setIsVideosLoading(false);
+
                 dispatch({
                     type: ApplicationActionType.SET_CURRENT_TRANSITION,
                     payload: TransitionType.SLIDE_IN,
                 });
-                requestService.getYoutubeApiCache(ResourceType.PLAYLIST)
-                    .then(response => {
-                        editorService.setPlaylists(response.playlists);
-                        setIsPlaylistsLoading(false);
-                    });
+
+                return requestService.getYoutubeApiCache(ResourceType.PLAYLIST);
+            })
+            .then(response => {
+                editorService.setPlaylists(response.playlists);
+
+                return requestService.getYoutubeApiCache(ResourceType.EXTERNAL_VIDEO);
+            })
+            .then(response => {
+                editorService.setExternalVideos(response.videos);
+
+                setIsPlaylistsLoading(false);
             });
 
         let debounceTimeoutId;
