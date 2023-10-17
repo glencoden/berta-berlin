@@ -11,6 +11,7 @@ const sortRecent = (a, b) => new Date(b.publishedAt) > new Date(a.publishedAt) ?
 class EditorService {
     playlists = null;
     videos = null;
+    externalVideos = null;
     videosByPopularity = null;
     videosByTrend = null;
     videosByCreatedAt = null;
@@ -44,6 +45,16 @@ class EditorService {
         this.videosByCreatedAt = [ ...this.videos ].sort(sortRecent);
     }
 
+    setExternalVideos(videos) {
+        this.externalVideos = [];
+
+        videos.forEach((video) => {
+            if (!this.externalVideos.find(v => v.id === video.id)) {
+                this.externalVideos.push(video);
+            }
+        });
+    }
+
     setInsertVideo(id) {
         const insertVideo = this.getAllVideos().find((video) => video.id === id);
         if (!insertVideo) {
@@ -73,10 +84,12 @@ class EditorService {
 
     getVideos({ filterType, resourceType, selectedPlaylistId }) {
         const selectedVideoList = this._selectVideoList(filterType);
+
         if (selectedVideoList === null) {
             console.warn(`no videos for filter type "${filterType}"`);
             return;
         }
+
         switch (resourceType) {
             case ResourceType.VIDEO: {
                 const filteredList = this._filterVideoListForUnseen(selectedVideoList);
@@ -87,11 +100,13 @@ class EditorService {
                     console.warn('no playlists');
                     return;
                 }
-                const videosForPlaylist = this._getVideosForCurrentPlaylist(selectedPlaylistId, selectedVideoList);
+                const allPlaylistVideos = Array.isArray(this.externalVideos) ? [ ...selectedVideoList, ...this.externalVideos ] : selectedVideoList;
+                const videosForPlaylist = this._getVideosForCurrentPlaylist(selectedPlaylistId, allPlaylistVideos);
+
                 return this._makeResultVideoList(videosForPlaylist);
             }
             default:
-                console.warn('unknown resource type');
+                console.warn('unsupported resource type');
         }
     }
 
@@ -174,10 +189,12 @@ class EditorService {
 
     _getVideosForCurrentPlaylist(playlistId, videos) {
         const currentPlaylist = this.playlists?.find(playlist => playlist.id === playlistId);
+
         if (!currentPlaylist) {
             console.warn('playlist not found');
             return;
         }
+
         return currentPlaylist.videoIds
             .map(videoId => videos.find(video => video.id === videoId))
             .filter(Boolean);
