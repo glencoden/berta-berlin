@@ -29,4 +29,12 @@ export const StyledProgressBar = styled.div`
         background-color: ${({ theme }) => theme.palette.primary.main};
         box-shadow: ${({ theme }) => theme.shadows[2]};
     }
+    
+    .progress-bar-count {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: ${({ theme }) => theme.palette.primary.main};
+    }
 `;

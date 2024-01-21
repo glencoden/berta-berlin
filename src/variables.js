@@ -11,7 +11,7 @@ export const minNumRenderedTiles = 3; // count
 
 // editor service
 export const playlistFilterKey = 'berta.berlin';
-export const maxVideoListLength = 100; // count
+export const maxVideoListLength = Infinity; // count
 export const genreQuotaPercentage = 10; // percent
 
 // request service
