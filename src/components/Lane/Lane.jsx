@@ -14,6 +14,7 @@ import { ApplicationActionType } from '../../context/ApplicationActionType';
 import { TransitionType } from '../../enums/TransitionType';
 import TileSwitchMobile from './components/TileSwitch/TileSwitchMobile';
 import { getNumRenderedTiles } from './helpers/getNumRenderedTiles';
+import VideoCount from "./components/VideoCount/VideoCount";
 
 const TilePosition = {
     INTERMEDIATE: 'intermediate',
@@ -199,13 +200,21 @@ function Lane({ isPlaylistsLoading }) {
                 hasLoaded={!isPlaylistsLoading}
             >
                 {!appState.isMobile && (
-                    <TileSwitch
-                        onPrev={onSelectPrev}
-                        onNext={onSelectNext}
-                        numTiles={tiles?.length}
-                        activeIndex={activeIndex}
-                        visible={showControls}
-                    />
+                    <>
+                        {items && showControls && (
+                            <VideoCount
+                                label={`${activeIndex + 1} / ${items.length}`}
+                            />
+                        )}
+
+                        <TileSwitch
+                            onPrev={onSelectPrev}
+                            onNext={onSelectNext}
+                            numTiles={tiles?.length}
+                            activeIndex={activeIndex}
+                            visible={showControls}
+                        />
+                    </>
                 )}
 
                 {tiles?.map((tile, index) => {
