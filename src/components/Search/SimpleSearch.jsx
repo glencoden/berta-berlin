@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import Search from '@mui/icons-material/Search';
 import { editorService } from '../../services/editorService';
 import { useApplicationContext } from '../../context';
 import { ApplicationActionType } from '../../context/ApplicationActionType';
@@ -33,7 +34,7 @@ function SimpleSearch() {
         <>
             {!searchActive ? (
                 <Button variant="" onClick={() => setSearchActive(true)}>
-                    {SEARCH_LABEL}
+                    <Search />&nbsp;&nbsp;&nbsp;{SEARCH_LABEL}
                 </Button>
             ) : (
                 <Autocomplete
