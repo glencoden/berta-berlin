@@ -4,9 +4,30 @@ import { FilterType } from '../enums/FilterType';
 import { storageService } from './storageService';
 import { getVideoGenres } from '../context/helpers/getVideoGenres';
 
-const sortPopular = (a, b) => b.statistics.popularity - a.statistics.popularity;
-const sortTrending = (a, b) => b.statistics.trend - a.statistics.trend;
-const sortRecent = (a, b) => new Date(b.publishedAt) > new Date(a.publishedAt) ? 1 : -1;
+const sortPopular = (videos) => {
+    return videos.toSorted((a, b) => b.statistics.popularity - a.statistics.popularity);
+};
+
+const sortTrending = (videos) => {
+    const videosByTrend = videos.toSorted((a, b) => b.statistics.trend - a.statistics.trend);
+    const videosByGain = videosByTrend.toSorted((a, b) => b.statistics.gain - a.statistics.gain);
+
+    const rankByVideoId = {};
+
+    videosByTrend.forEach((video, index) => {
+        rankByVideoId[video.id] = index;
+    });
+
+    videosByGain.forEach((video, index) => {
+        rankByVideoId[video.id] += index;
+    });
+
+    return videos.toSorted((a, b) => rankByVideoId[a.id] - rankByVideoId[b.id]);
+};
+
+const sortRecent = (videos) => {
+    return videos.toSorted((a, b) => new Date(b.publishedAt) > new Date(a.publishedAt) ? 1 : -1);
+};
 
 class EditorService {
     playlists = null;
@@ -40,9 +61,9 @@ class EditorService {
             console.log('==== GENRES ====', genres);
         }
 
-        this.videosByPopularity = [ ...this.videos ].sort(sortPopular);
-        this.videosByTrend = [ ...this.videos ].sort(sortTrending);
-        this.videosByCreatedAt = [ ...this.videos ].sort(sortRecent);
+        this.videosByPopularity = sortPopular(this.videos);
+        this.videosByTrend = sortTrending(this.videos);
+        this.videosByCreatedAt = sortRecent(this.videos);
     }
 
     setExternalVideos(videos) {
