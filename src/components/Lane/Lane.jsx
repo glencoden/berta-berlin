@@ -202,7 +202,7 @@ function Lane({ isPlaylistsLoading }) {
                     <TileSwitch
                         onPrev={onSelectPrev}
                         onNext={onSelectNext}
-                        numTiles={tiles?.length}
+                        numTiles={items?.length}
                         activeIndex={activeIndex}
                         visible={showControls}
                     />
